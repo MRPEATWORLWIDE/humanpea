@@ -8,10 +8,7 @@ export default function SplashPage() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // detect mobile
-    if (typeof window !== "undefined") {
-      setIsMobile(window.innerWidth < 768);
-    }
+    if (typeof window !== "undefined") setIsMobile(window.innerWidth < 768);
   }, []);
 
   const handleClick = () => {
@@ -19,7 +16,7 @@ export default function SplashPage() {
     setTimeout(() => router.push("/home"), 800);
   };
 
-  const videoSrc = isMobile
+  const src = isMobile
     ? "https://pub-60eb47fd560a457198614015a4c2a5a0.r2.dev/human-pea-muted.mp4"
     : "https://pub-60eb47fd560a457198614015a4c2a5a0.r2.dev/human-pea-splash.mp4";
 
@@ -28,18 +25,17 @@ export default function SplashPage() {
       className={`flex items-center justify-center h-screen w-screen overflow-hidden transition-opacity duration-700 ${
         fadeOut ? "opacity-0" : "opacity-100"
       }`}
-      style={{ backgroundColor: "#000" }}
+      style={{ background: "#000" }}
     >
       <video
-        key={videoSrc} // ensures correct reload when switching between mobile/desktop
-        src={videoSrc}
+        key={src}
+        src={src}
         autoPlay
         muted={isMobile}
         playsInline
         loop
         onClick={handleClick}
-        className="h-full w-full object-cover cursor-pointer transition-transform duration-500 hover:scale-105 bg-black"
-        style={{ backgroundColor: "#000" }}
+        className="max-h-screen max-w-screen w-auto h-auto object-contain cursor-pointer bg-black"
       />
     </main>
   );
