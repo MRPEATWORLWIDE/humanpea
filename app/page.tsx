@@ -18,7 +18,7 @@ export default function SplashPage() {
       }`}
     >
       <img
-        src="/images/pea-head.png"
+        src="/images/pea-human.png"
         alt="HumanPea head"
         className="w-[80vw] max-w-[500px] h-auto transition-transform duration-500 ease-out hover:scale-105 cursor-pointer select-none"
         onClick={handleClick}
