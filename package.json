@@ -1,7 +1,11 @@
 {
   "name": "humanpea-site",
   "private": true,
-  "scripts": { "build": "next build", "start": "next start", "dev": "next dev" },
+  "scripts": {
+    "build": "next build",
+    "start": "next start",
+    "dev": "next dev"
+  },
   "dependencies": {
     "next": "14.2.5",
     "react": "18.2.0",
@@ -11,6 +15,8 @@
     "tailwindcss": "3.4.13",
     "autoprefixer": "10.4.19",
     "postcss": "8.4.39",
-    "typescript": "5.6.2"
+    "typescript": "5.6.2",
+    "@types/react": "18.2.44",
+    "@types/node": "20.14.10"
   }
 }
