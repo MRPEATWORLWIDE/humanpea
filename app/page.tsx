@@ -13,16 +13,17 @@ export default function SplashPage() {
 
   return (
     <main
-      className={`flex items-center justify-center min-h-screen bg-black transition-opacity duration-700 ${
+      className={`flex items-center justify-center min-h-screen bg-white transition-opacity duration-700 ${
         fadeOut ? "opacity-0" : "opacity-100"
       }`}
     >
-      <img
-        src="/images/pea-human.png"
-        alt="HumanPea head"
-        className="w-[80vw] max-w-[500px] h-auto transition-transform duration-500 ease-out hover:scale-105 cursor-pointer select-none"
+      <video
+        src="/videos/splash-video.mp4"
+        autoPlay
+        muted
+        playsInline
+        className="w-[90vw] max-w-[600px] rounded-lg cursor-pointer transition-transform duration-500 hover:scale-105"
         onClick={handleClick}
-        draggable={false}
       />
     </main>
   );
