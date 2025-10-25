@@ -1,34 +1,32 @@
 import React from "react";
 
-// HumanPea – Proportions-Match Landing Template (Tailwind version)
-// -------------------------------------------------
-// - Tailwind utilities
-// - Section proportions via CSS variables
-// - 3 pricing cards, promo badge top-right on HYBRID_01
-// - Jotform links on buttons
-
-export default function HumanPeaLanding() {
+export default function HumanPeaHome() {
   return (
     <main
-      className="min-h-screen bg-black text-white"
+      className="min-h-screen bg-white text-black"
       style={{
         fontFamily:
           "Helvetica Neue, Helvetica, Arial, ui-sans-serif, system-ui, -apple-system",
       }}
     >
-      {/* Layout proportions as CSS variables to keep the same feel across breakpoints */}
+      {/* Layout proportions via CSS variables */}
       <style>{`
         :root {
           --hp-container-max: 1120px;
           --hp-section-pad-x: 1.25rem;
+          --hp-section-pad-x-lg: 1.5rem;
+
           --hp-header-h: 64px;
           --hp-hero-min-h: 36vh;
           --hp-hero-max-w: 920px;
           --hp-grid-gap: 1.25rem;
           --hp-card-min-h: 420px;
           --hp-card-pad: 1.25rem;
+          --hp-card-radius: 1rem;
           --hp-footer-h: 72px;
+
           --hp-accent: #00C853;
+          --hp-muted: #666666;
         }
 
         @media (min-width: 1024px) {
@@ -41,7 +39,7 @@ export default function HumanPeaLanding() {
 
       {/* HEADER */}
       <header
-        className="sticky top-0 z-30 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black/60"
+        className="sticky top-0 z-30 border-b border-black/10 backdrop-blur supports-[backdrop-filter]:bg-white/80"
         style={{ height: "var(--hp-header-h)" }}
       >
         <div
@@ -51,14 +49,18 @@ export default function HumanPeaLanding() {
             padding: "0 var(--hp-section-pad-x)",
           }}
         >
-          <div className="text-sm tracking-[0.14em]">HUMANPEA® LONDON</div>
-          <div className="text-xs text-white/60">00C853 / LIMITED SERIES</div>
+          <div className="text-sm tracking-[0.14em] font-semibold">
+            HUMANPEA® LONDON
+          </div>
+          <div className="text-xs text-black/60">
+            00C853 / LIMITED SERIES
+          </div>
         </div>
       </header>
 
       {/* HERO */}
       <section
-        className="border-b border-white/10"
+        className="border-b border-black/10"
         style={{ minHeight: "var(--hp-hero-min-h)" }}
       >
         <div
@@ -68,17 +70,17 @@ export default function HumanPeaLanding() {
             padding: "3rem var(--hp-section-pad-x)",
           }}
         >
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
             <span className="opacity-70">'FUNCTIONAL'</span> HYBRID TRAINING SYSTEM
           </h1>
-          <p className="mt-4 max-w-prose text-sm text-white/70">
+          <p className="mt-4 max-w-prose text-sm text-black/70">
             Private Studio • Precision Coaching • Adaptive Programming
           </p>
         </div>
       </section>
 
       {/* PRICING GRID */}
-      <section className="py-10 border-b border-white/10">
+      <section className="py-8 sm:py-10 md:py-12 border-b border-black/10">
         <div
           className="mx-auto"
           style={{
@@ -89,26 +91,26 @@ export default function HumanPeaLanding() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
             {/* CARD 1 */}
             <article
-              className="relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/5"
+              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/[0.03]"
               style={{
                 minHeight: "var(--hp-card-min-h)",
                 padding: "var(--hp-card-pad)",
               }}
             >
+              {/* Promo badge */}
               <div className="absolute right-3 top-3">
-                <span className="rounded-full border border-white/15 bg-[var(--hp-accent)]/15 px-3 py-1 text-xs font-medium tracking-wide text-[var(--hp-accent)]">
+                <span className="rounded-full border border-black/15 bg-[var(--hp-accent)]/10 px-3 py-1 text-xs font-medium tracking-wide text-[var(--hp-accent)]">
                   Promo
                 </span>
               </div>
 
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">HYBRID_01</h3>
-                <p className="mt-2 text-sm text-white/75">
+                <p className="mt-2 text-sm text-black/75">
                   8 Sessions / 2x Per Week / Private Studio
                 </p>
-                <p className="mt-3 text-sm text-white/65 max-w-prose">
-                  Entry-level structure to rebuild consistency. Foundation,
-                  discipline, routine.
+                <p className="mt-3 text-sm text-black/65 max-w-prose">
+                  Entry-level structure to rebuild consistency. Foundation, discipline, routine.
                 </p>
               </div>
 
@@ -130,7 +132,7 @@ export default function HumanPeaLanding() {
 
             {/* CARD 2 */}
             <article
-              className="relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/5"
+              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/[0.03]"
               style={{
                 minHeight: "var(--hp-card-min-h)",
                 padding: "var(--hp-card-pad)",
@@ -138,10 +140,10 @@ export default function HumanPeaLanding() {
             >
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">HYBRID_02</h3>
-                <p className="mt-2 text-sm text-white/75">
+                <p className="mt-2 text-sm text-black/75">
                   12 Sessions / 3x Per Week / Private Studio / Balanced Progression
                 </p>
-                <p className="mt-3 text-sm text-white/65 max-w-prose">
+                <p className="mt-3 text-sm text-black/65 max-w-prose">
                   Designed for transformation. Feedback, accountability, measurable output.
                 </p>
               </div>
@@ -153,7 +155,7 @@ export default function HumanPeaLanding() {
                 <div className="mt-4">
                   <a
                     href="https://form.jotform.com/252973068946371"
-                    className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm font-medium hover:border-white/40 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
                   >
                     Enquire
                   </a>
@@ -163,7 +165,7 @@ export default function HumanPeaLanding() {
 
             {/* CARD 3 */}
             <article
-              className="relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/5"
+              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/[0.03]"
               style={{
                 minHeight: "var(--hp-card-min-h)",
                 padding: "var(--hp-card-pad)",
@@ -171,10 +173,10 @@ export default function HumanPeaLanding() {
             >
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">HYBRID_03</h3>
-                <p className="mt-2 text-sm text-white/75">
+                <p className="mt-2 text-sm text-black/75">
                   16 Sessions / 4x Per Week / Private Studio / Performance Tier
                 </p>
-                <p className="mt-3 text-sm text-white/65 max-w-prose">
+                <p className="mt-3 text-sm text-black/65 max-w-prose">
                   Precision coaching. Adaptive programming. Maximum accountability.
                 </p>
               </div>
@@ -186,7 +188,7 @@ export default function HumanPeaLanding() {
                 <div className="mt-4">
                   <a
                     href="https://form.jotform.com/252973068946371"
-                    className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm font-medium hover:border-white/40 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
                   >
                     Enquire
                   </a>
@@ -199,11 +201,11 @@ export default function HumanPeaLanding() {
 
       {/* FOOTER */}
       <footer
-        className="flex items-center border-t border-white/10"
+        className="flex items-center border-t border-black/10"
         style={{ height: "var(--hp-footer-h)" }}
       >
         <div
-          className="mx-auto flex w-full items-center justify-between text-xs text-white/60"
+          className="mx-auto flex w-full items-center justify-between text-xs text-black/60"
           style={{
             maxWidth: "var(--hp-container-max)",
             padding: "0 var(--hp-section-pad-x)",
