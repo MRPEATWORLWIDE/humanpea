@@ -40,4 +40,179 @@ export default function HumanPeaLanding() {
       `}</style>
 
       {/* HEADER */}
-      <head
+      <header
+        className="sticky top-0 z-30 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black/60"
+        style={{ height: "var(--hp-header-h)" }}
+      >
+        <div
+          className="mx-auto flex h-full w-full items-center justify-between"
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "0 var(--hp-section-pad-x)",
+          }}
+        >
+          <div className="text-sm tracking-[0.14em]">HUMANPEA® LONDON</div>
+          <div className="text-xs text-white/60">00C853 / LIMITED SERIES</div>
+        </div>
+      </header>
+
+      {/* HERO */}
+      <section
+        className="border-b border-white/10"
+        style={{ minHeight: "var(--hp-hero-min-h)" }}
+      >
+        <div
+          className="mx-auto flex h-full w-full flex-col justify-center"
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "3rem var(--hp-section-pad-x)",
+          }}
+        >
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
+            <span className="opacity-70">'FUNCTIONAL'</span> HYBRID TRAINING SYSTEM
+          </h1>
+          <p className="mt-4 max-w-prose text-sm text-white/70">
+            Private Studio • Precision Coaching • Adaptive Programming
+          </p>
+        </div>
+      </section>
+
+      {/* PRICING GRID */}
+      <section className="py-10 border-b border-white/10">
+        <div
+          className="mx-auto"
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "0 var(--hp-section-pad-x)",
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
+            {/* CARD 1 */}
+            <article
+              className="relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/5"
+              style={{
+                minHeight: "var(--hp-card-min-h)",
+                padding: "var(--hp-card-pad)",
+              }}
+            >
+              <div className="absolute right-3 top-3">
+                <span className="rounded-full border border-white/15 bg-[var(--hp-accent)]/15 px-3 py-1 text-xs font-medium tracking-wide text-[var(--hp-accent)]">
+                  Promo
+                </span>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold tracking-wide">HYBRID_01</h3>
+                <p className="mt-2 text-sm text-white/75">
+                  8 Sessions / 2x Per Week / Private Studio
+                </p>
+                <p className="mt-3 text-sm text-white/65 max-w-prose">
+                  Entry-level structure to rebuild consistency. Foundation,
+                  discipline, routine.
+                </p>
+              </div>
+
+              <div>
+                <div className="mt-6 flex items-baseline gap-2">
+                  <span className="text-2xl line-through opacity-60">£450.00</span>
+                  <span className="text-2xl font-bold text-[var(--hp-accent)]">£0.00</span>
+                </div>
+                <div className="mt-4">
+                  <a
+                    href="https://form.jotform.com/252973068946371"
+                    className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] bg-[var(--hp-accent)]/10 px-4 py-2 text-sm font-medium hover:bg-[var(--hp-accent)]/20 transition"
+                  >
+                    Claim
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            {/* CARD 2 */}
+            <article
+              className="relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/5"
+              style={{
+                minHeight: "var(--hp-card-min-h)",
+                padding: "var(--hp-card-pad)",
+              }}
+            >
+              <div>
+                <h3 className="text-lg font-semibold tracking-wide">HYBRID_02</h3>
+                <p className="mt-2 text-sm text-white/75">
+                  12 Sessions / 3x Per Week / Private Studio / Balanced Progression
+                </p>
+                <p className="mt-3 text-sm text-white/65 max-w-prose">
+                  Designed for transformation. Feedback, accountability, measurable output.
+                </p>
+              </div>
+
+              <div>
+                <div className="mt-6 flex items-baseline gap-2">
+                  <span className="text-2xl font-bold">£600.00</span>
+                </div>
+                <div className="mt-4">
+                  <a
+                    href="https://form.jotform.com/252973068946371"
+                    className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm font-medium hover:border-white/40 transition"
+                  >
+                    Enquire
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            {/* CARD 3 */}
+            <article
+              className="relative flex flex-col justify-between rounded-xl border border-white/10 bg-white/5"
+              style={{
+                minHeight: "var(--hp-card-min-h)",
+                padding: "var(--hp-card-pad)",
+              }}
+            >
+              <div>
+                <h3 className="text-lg font-semibold tracking-wide">HYBRID_03</h3>
+                <p className="mt-2 text-sm text-white/75">
+                  16 Sessions / 4x Per Week / Private Studio / Performance Tier
+                </p>
+                <p className="mt-3 text-sm text-white/65 max-w-prose">
+                  Precision coaching. Adaptive programming. Maximum accountability.
+                </p>
+              </div>
+
+              <div>
+                <div className="mt-6 flex items-baseline gap-2">
+                  <span className="text-2xl font-bold">£750.00</span>
+                </div>
+                <div className="mt-4">
+                  <a
+                    href="https://form.jotform.com/252973068946371"
+                    className="inline-flex items-center justify-center rounded-lg border border-white/20 px-4 py-2 text-sm font-medium hover:border-white/40 transition"
+                  >
+                    Enquire
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer
+        className="flex items-center border-t border-white/10"
+        style={{ height: "var(--hp-footer-h)" }}
+      >
+        <div
+          className="mx-auto flex w-full items-center justify-between text-xs text-white/60"
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "0 var(--hp-section-pad-x)",
+          }}
+        >
+          <span>©2025 HUMANPEA FUNCTIONAL SYSTEMS</span>
+          <span className="tracking-[0.18em]">ㅎㅍ</span>
+        </div>
+      </footer>
+    </main>
+  );
+}
