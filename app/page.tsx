@@ -8,12 +8,12 @@ export default function SplashPage() {
 
   const handleClick = () => {
     setFadeOut(true);
-    setTimeout(() => router.push("/home"), 800);
+    setTimeout(() => router.push("/home"), 800); // fade-out duration
   };
 
   return (
     <main
-      className={`flex items-center justify-center min-h-screen bg-white transition-opacity duration-700 ${
+      className={`flex items-center justify-center min-h-screen bg-black transition-opacity duration-700 ${
         fadeOut ? "opacity-0" : "opacity-100"
       }`}
     >
@@ -26,5 +26,3 @@ export default function SplashPage() {
         onClick={handleClick}
       />
     </main>
-  );
-}
