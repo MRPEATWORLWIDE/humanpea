@@ -39,27 +39,24 @@ export default function SplashPage() {
     const v = videoRef.current;
     if (!v) return;
 
-    const t = v.currentTime; // remember position
+    const t = v.currentTime; // remember playback time
 
     if (isMuted) {
-      // Switch to audio version
       setIsMuted(false);
       v.muted = false;
       setVideoSrc(AUDIO_SRC);
-      // when new src is ready, jump to same time and play
       const onLoaded = () => {
-        v.currentTime = Math.min(t, (v.duration || t));
+        v.currentTime = Math.min(t, v.duration || t);
         v.play().catch(() => {});
         v.removeEventListener("loadeddata", onLoaded);
       };
       v.addEventListener("loadeddata", onLoaded);
     } else {
-      // Switch back to muted version (for mobile-friendly autoplay)
       setIsMuted(true);
       v.muted = true;
       setVideoSrc(MUTED_SRC);
       const onLoaded = () => {
-        v.currentTime = Math.min(t, (v.duration || t));
+        v.currentTime = Math.min(t, v.duration || t);
         v.play().catch(() => {});
         v.removeEventListener("loadeddata", onLoaded);
       };
@@ -76,17 +73,17 @@ export default function SplashPage() {
     >
       <video
         ref={videoRef}
-        key={videoSrc}                 // force reload on src change
+        key={videoSrc}
         src={videoSrc}
         autoPlay
-        muted={isMuted}               // muted for autoplay; unmuted when toggled
+        muted={isMuted}
         playsInline
         loop
         preload="auto"
         className="max-h-screen max-w-screen w-auto h-auto object-contain bg-black cursor-default"
       />
 
-      {/* Mute / Unmute (doesn't trigger navigation) */}
+      {/* Mute / Unmute */}
       <button
         onClick={toggleMute}
         className="absolute bottom-6 right-6 text-white text-xs tracking-[0.14em] bg-black/60 px-3 py-2 rounded-lg border border-white/20"
@@ -94,14 +91,18 @@ export default function SplashPage() {
         {isMuted ? "🔇 SOUND OFF" : "🔊 SOUND ON"}
       </button>
 
-      {/* HUMAN PEA (Korean) – appears after 3s; only this enters the site */}
+      {/* HUMAN PEA (Korean) – center middle */}
       <button
         onClick={enterSite}
         disabled={!titleVisible}
-        className={`absolute inset-x-0 mx-auto bottom-10 text-white tracking-[0.3em] text-sm md:text-base 
-          transition-opacity duration-700 ${titleVisible ? "opacity-100" : "opacity-0"} 
-          border border-white/20 bg-black/50 px-5 py-3 rounded-lg`}
-        style={{ width: "fit-content" }}
+        className={`absolute text-white tracking-[0.3em] text-base md:text-lg transition-opacity duration-700 ${
+          titleVisible ? "opacity-100" : "opacity-0"
+        } border border-white/20 bg-black/50 px-5 py-3 rounded-lg`}
+        style={{
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+        }}
         aria-label="Enter site"
       >
         인간 완두콩
