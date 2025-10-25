@@ -13,7 +13,7 @@ export default function SplashPage() {
 
   return (
     <main
-      className={`flex items-center justify-center min-h-screen transition-opacity duration-700 ${
+      className={`flex items-center justify-center h-screen w-screen overflow-hidden transition-opacity duration-700 ${
         fadeOut ? "opacity-0" : "opacity-100"
       }`}
       style={{ backgroundColor: "#000" }}
@@ -25,7 +25,7 @@ export default function SplashPage() {
         playsInline
         loop
         onClick={handleClick}
-        className="w-[90vw] max-w-[600px] rounded-lg cursor-pointer transition-transform duration-500 hover:scale-105 bg-black"
+        className="h-full w-full object-contain cursor-pointer transition-transform duration-500 hover:scale-105 bg-black"
         style={{ backgroundColor: "#000" }}
       />
     </main>
