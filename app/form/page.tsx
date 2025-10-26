@@ -4,15 +4,17 @@ export default function FormPage() {
       <iframe
         src="https://form.jotform.com/252973068946371"
         title="HumanPea Form"
-        width="100%"
-        height="1200"
+        className="w-full"
+        height="1400"
         style={{
           border: "1px solid #00000015",
           borderRadius: "12px",
           maxWidth: "720px",
           backgroundColor: "#f9f9f9",
         }}
-      ></iframe>
+        allow="payment *; geolocation *; microphone *; camera *; autoplay *"
+        referrerPolicy="no-referrer-when-downgrade"
+      />
     </main>
   );
 }
