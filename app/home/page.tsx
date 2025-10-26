@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function HumanPeaHome() {
+// HumanPea – Light Theme Home Page
+// -------------------------------------------------
+// White background / black text version
+// "Claim" and "Enquire" buttons now link to /form
+
+export default function HumanPeaLanding() {
   return (
     <main
       className="min-h-screen bg-white text-black"
@@ -9,13 +14,12 @@ export default function HumanPeaHome() {
           "Helvetica Neue, Helvetica, Arial, ui-sans-serif, system-ui, -apple-system",
       }}
     >
-      {/* Layout proportions via CSS variables */}
+      {/* Layout proportions */}
       <style>{`
         :root {
           --hp-container-max: 1120px;
           --hp-section-pad-x: 1.25rem;
           --hp-section-pad-x-lg: 1.5rem;
-
           --hp-header-h: 64px;
           --hp-hero-min-h: 36vh;
           --hp-hero-max-w: 920px;
@@ -24,37 +28,24 @@ export default function HumanPeaHome() {
           --hp-card-pad: 1.25rem;
           --hp-card-radius: 1rem;
           --hp-footer-h: 72px;
-
           --hp-accent: #00C853;
           --hp-muted: #666666;
-        }
-
-        @media (min-width: 1024px) {
-          :root {
-            --hp-hero-min-h: 42vh;
-            --hp-card-min-h: 460px;
-          }
         }
       `}</style>
 
       {/* HEADER */}
       <header
-        className="sticky top-0 z-30 border-b border-black/10 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+        className="sticky top-0 z-30 border-b border-black/10 backdrop-blur supports-[backdrop-filter]:bg-white/60"
         style={{ height: "var(--hp-header-h)" }}
       >
         <div
           className="mx-auto flex h-full w-full items-center justify-between"
-          style={{
-            maxWidth: "var(--hp-container-max)",
-            padding: "0 var(--hp-section-pad-x)",
-          }}
+          style={{ maxWidth: "var(--hp-container-max)", padding: "0 var(--hp-section-pad-x)" }}
         >
           <div className="text-sm tracking-[0.14em] font-semibold">
             HUMANPEA® LONDON
           </div>
-          <div className="text-xs text-black/60">
-            00C853 / LIMITED SERIES
-          </div>
+          <div className="text-xs text-black/60">00C853 / LIMITED SERIES</div>
         </div>
       </header>
 
@@ -83,19 +74,13 @@ export default function HumanPeaHome() {
       <section className="py-8 sm:py-10 md:py-12 border-b border-black/10">
         <div
           className="mx-auto"
-          style={{
-            maxWidth: "var(--hp-container-max)",
-            padding: "0 var(--hp-section-pad-x)",
-          }}
+          style={{ maxWidth: "var(--hp-container-max)", padding: "0 var(--hp-section-pad-x)" }}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
             {/* CARD 1 */}
             <article
-              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/[0.03]"
-              style={{
-                minHeight: "var(--hp-card-min-h)",
-                padding: "var(--hp-card-pad)",
-              }}
+              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
+              style={{ minHeight: "var(--hp-card-min-h)", padding: "var(--hp-card-pad)" }}
             >
               {/* Promo badge */}
               <div className="absolute right-3 top-3">
@@ -121,7 +106,7 @@ export default function HumanPeaHome() {
                 </div>
                 <div className="mt-4">
                   <a
-                    href="https://form.jotform.com/252973068946371"
+                    href="/form"
                     className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] bg-[var(--hp-accent)]/10 px-4 py-2 text-sm font-medium hover:bg-[var(--hp-accent)]/20 transition"
                   >
                     Claim
@@ -132,11 +117,8 @@ export default function HumanPeaHome() {
 
             {/* CARD 2 */}
             <article
-              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/[0.03]"
-              style={{
-                minHeight: "var(--hp-card-min-h)",
-                padding: "var(--hp-card-pad)",
-              }}
+              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
+              style={{ minHeight: "var(--hp-card-min-h)", padding: "var(--hp-card-pad)" }}
             >
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">HYBRID_02</h3>
@@ -154,7 +136,7 @@ export default function HumanPeaHome() {
                 </div>
                 <div className="mt-4">
                   <a
-                    href="https://form.jotform.com/252973068946371"
+                    href="/form"
                     className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
                   >
                     Enquire
@@ -165,11 +147,8 @@ export default function HumanPeaHome() {
 
             {/* CARD 3 */}
             <article
-              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/[0.03]"
-              style={{
-                minHeight: "var(--hp-card-min-h)",
-                padding: "var(--hp-card-pad)",
-              }}
+              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
+              style={{ minHeight: "var(--hp-card-min-h)", padding: "var(--hp-card-pad)" }}
             >
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">HYBRID_03</h3>
@@ -187,7 +166,7 @@ export default function HumanPeaHome() {
                 </div>
                 <div className="mt-4">
                   <a
-                    href="https://form.jotform.com/252973068946371"
+                    href="/form"
                     className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
                   >
                     Enquire
@@ -206,10 +185,7 @@ export default function HumanPeaHome() {
       >
         <div
           className="mx-auto flex w-full items-center justify-between text-xs text-black/60"
-          style={{
-            maxWidth: "var(--hp-container-max)",
-            padding: "0 var(--hp-section-pad-x)",
-          }}
+          style={{ maxWidth: "var(--hp-container-max)", padding: "0 var(--hp-section-pad-x)" }}
         >
           <span>©2025 HUMANPEA FUNCTIONAL SYSTEMS</span>
           <span className="tracking-[0.18em]">ㅎㅍ</span>
