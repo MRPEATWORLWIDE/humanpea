@@ -10,9 +10,7 @@
   "dependencies": {
     "next": "14.2.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "@vercel/analytics": "latest",
-    "@vercel/speed-insights": "latest"
+    "react-dom": "18.2.0"
   },
   "devDependencies": {
     "autoprefixer": "10.4.19",
