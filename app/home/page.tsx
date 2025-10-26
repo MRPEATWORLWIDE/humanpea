@@ -1,9 +1,8 @@
 import React from "react";
+import Link from "next/link";
 
 // HumanPea – Light Theme Home Page
-// -------------------------------------------------
-// White background / black text version
-// "Claim" and "Enquire" buttons now link to /form
+// Internal navigation for Claim / Enquire buttons → /form
 
 export default function HumanPeaLanding() {
   return (
@@ -40,7 +39,10 @@ export default function HumanPeaLanding() {
       >
         <div
           className="mx-auto flex h-full w-full items-center justify-between"
-          style={{ maxWidth: "var(--hp-container-max)", padding: "0 var(--hp-section-pad-x)" }}
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "0 var(--hp-section-pad-x)",
+          }}
         >
           <div className="text-sm tracking-[0.14em] font-semibold">
             HUMANPEA® LONDON
@@ -74,13 +76,19 @@ export default function HumanPeaLanding() {
       <section className="py-8 sm:py-10 md:py-12 border-b border-black/10">
         <div
           className="mx-auto"
-          style={{ maxWidth: "var(--hp-container-max)", padding: "0 var(--hp-section-pad-x)" }}
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "0 var(--hp-section-pad-x)",
+          }}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
             {/* CARD 1 */}
             <article
               className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
-              style={{ minHeight: "var(--hp-card-min-h)", padding: "var(--hp-card-pad)" }}
+              style={{
+                minHeight: "var(--hp-card-min-h)",
+                padding: "var(--hp-card-pad)",
+              }}
             >
               {/* Promo badge */}
               <div className="absolute right-3 top-3">
@@ -105,12 +113,12 @@ export default function HumanPeaLanding() {
                   <span className="text-2xl font-bold text-[var(--hp-accent)]">£0.00</span>
                 </div>
                 <div className="mt-4">
-                  <a
+                  <Link
                     href="/form"
                     className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] bg-[var(--hp-accent)]/10 px-4 py-2 text-sm font-medium hover:bg-[var(--hp-accent)]/20 transition"
                   >
                     Claim
-                  </a>
+                  </Link>
                 </div>
               </div>
             </article>
@@ -118,7 +126,10 @@ export default function HumanPeaLanding() {
             {/* CARD 2 */}
             <article
               className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
-              style={{ minHeight: "var(--hp-card-min-h)", padding: "var(--hp-card-pad)" }}
+              style={{
+                minHeight: "var(--hp-card-min-h)",
+                padding: "var(--hp-card-pad)",
+              }}
             >
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">HYBRID_02</h3>
@@ -135,12 +146,12 @@ export default function HumanPeaLanding() {
                   <span className="text-2xl font-bold">£600.00</span>
                 </div>
                 <div className="mt-4">
-                  <a
+                  <Link
                     href="/form"
                     className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
                   >
                     Enquire
-                  </a>
+                  </Link>
                 </div>
               </div>
             </article>
@@ -148,7 +159,10 @@ export default function HumanPeaLanding() {
             {/* CARD 3 */}
             <article
               className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
-              style={{ minHeight: "var(--hp-card-min-h)", padding: "var(--hp-card-pad)" }}
+              style={{
+                minHeight: "var(--hp-card-min-h)",
+                padding: "var(--hp-card-pad)",
+              }}
             >
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">HYBRID_03</h3>
@@ -165,12 +179,12 @@ export default function HumanPeaLanding() {
                   <span className="text-2xl font-bold">£750.00</span>
                 </div>
                 <div className="mt-4">
-                  <a
+                  <Link
                     href="/form"
                     className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
                   >
                     Enquire
-                  </a>
+                  </Link>
                 </div>
               </div>
             </article>
@@ -185,7 +199,10 @@ export default function HumanPeaLanding() {
       >
         <div
           className="mx-auto flex w-full items-center justify-between text-xs text-black/60"
-          style={{ maxWidth: "var(--hp-container-max)", padding: "0 var(--hp-section-pad-x)" }}
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "0 var(--hp-section-pad-x)",
+          }}
         >
           <span>©2025 HUMANPEA FUNCTIONAL SYSTEMS</span>
           <span className="tracking-[0.18em]">ㅎㅍ</span>
