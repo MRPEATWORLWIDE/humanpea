@@ -47,7 +47,22 @@ export default function HumanPeaLanding() {
           <div className="text-sm tracking-[0.14em] font-semibold">
             HUMANPEA® LONDON
           </div>
-          <div className="text-xs text-black/60">00C853 / LIMITED SERIES</div>
+
+          {/* Right meta + top-right CTA */}
+          <div className="flex items-center gap-4 text-xs text-black/60">
+            <span>00C853 / LIMITED SERIES</span>
+            <Link
+              href="/pt-packages/onboarding"
+              className="text-[11px] underline-offset-2 hover:underline hover:text-black"
+            >
+              Onboard now
+            </Link>
+            {/*
+              TODO (plans):
+              Later you can pass a plan, e.g.
+              href="/pt-packages/onboarding?plan=HYBRID_01"
+            */}
+          </div>
         </div>
       </header>
 
@@ -64,11 +79,26 @@ export default function HumanPeaLanding() {
           }}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
-            <span className="opacity-70">'FUNCTIONAL'</span> HYBRID TRAINING SYSTEM
+            <span className="opacity-70">&apos;FUNCTIONAL&apos;</span> HYBRID TRAINING SYSTEM
           </h1>
           <p className="mt-4 max-w-prose text-sm text-black/70">
             Private Studio • Precision Coaching • Adaptive Programming
           </p>
+
+          {/* Hero CTA — subtle button under subtitle */}
+          <div className="mt-5">
+            <Link
+              href="/pt-packages/onboarding"
+              className="inline-flex items-center justify-center rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-black hover:bg-black/[0.03] transition"
+            >
+              Onboard now
+            </Link>
+            {/*
+              TODO (plans):
+              Swap to a specific plan later if needed:
+              href="/pt-packages/onboarding?plan=HYBRID_01"
+            */}
+          </div>
         </div>
       </section>
 
