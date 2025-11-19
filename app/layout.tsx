@@ -1,6 +1,9 @@
-import "./globals.css";
-import { Analytics } from "@vercel/analytics/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+// FIXED: corrected CSS import path
+import "../styles/globals.css";
+
+// REMOVED: Vercel Analytics / Speed Insights imports
+// import { Analytics } from "@vercel/analytics/react";
+// import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata = {
   title: "HumanPea — Functional Hybrid Training",
@@ -12,9 +15,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         {children}
-        {/* Vercel Analytics & Speed Insights */}
-        <Analytics />
-        <SpeedInsights />
+        {/* REMOVED: Vercel Analytics & Speed Insights */}
+        {/* <Analytics /> */}
+        {/* <SpeedInsights /> */}
       </body>
     </html>
   );
