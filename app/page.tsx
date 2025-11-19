@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState, FormEvent } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 
 type ChecklistItemId = "everfit" | "loseit" | "profiles" | "book";
@@ -80,59 +80,14 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
   const [bookingCompleted, setBookingCompleted] = useState(false);
   const [hasConfirmedOnboarding, setHasConfirmedOnboarding] = useState(false);
 
-  const [weightKg, setWeightKg] = useState("");
-  const [avgSleepHours, setAvgSleepHours] = useState("");
-  const [notes, setNotes] = useState("");
-
-  const [baselineSubmitting, setBaselineSubmitting] = useState(false);
-  const [baselineSuccess, setBaselineSuccess] = useState<string | null>(null);
-  const [baselineError, setBaselineError] = useState<string | null>(null);
-
   const [showBookingModal, setShowBookingModal] = useState(false);
-
-  // NEW: separate terms modal + thank-you modal state
-  const [showTermsModal, setShowTermsModal] = useState(false);
-  const [termsChecked, setTermsChecked] = useState(false);
+  const [termsMessage, setTermsMessage] = useState<string | null>(null);
+  const [showTerms, setShowTerms] = useState(false);
   const [showThankYouModal, setShowThankYouModal] = useState(false);
-  const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
+  const [termsChecked, setTermsChecked] = useState(false);
 
   const handleToggleChecklist = (id: ChecklistItemId) => {
     setCompletedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const handleBaselineSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setBaselineSuccess(null);
-    setBaselineError(null);
-    setBaselineSubmitting(true);
-
-    try {
-      const payload = {
-        weightKg: weightKg ? Number(weightKg) : null,
-        avgSleepHours: avgSleepHours ? Number(avgSleepHours) : null,
-        notes: notes || null,
-        plan,
-      };
-
-      const res = await fetch("/api/onboarding/baseline", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      if (!data?.success) throw new Error("Unexpected response");
-
-      setBaselineSuccess("Baseline details submitted. Thank you!");
-      setWeightKg("");
-      setAvgSleepHours("");
-      setNotes("");
-    } catch (err) {
-      console.error(err);
-      setBaselineError("Something went wrong. Please try again.");
-    } finally {
-      setBaselineSubmitting(false);
-    }
   };
 
   const handleConfirmOnboarding = () => {
@@ -144,12 +99,14 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
     setHasConfirmedOnboarding(true);
   };
 
-  // NEW: submit inside the terms modal
-  const handleSubmitTerms = () => {
+  const handleAgreeTerms = () => {
     if (!termsChecked) return;
-    setHasAgreedTerms(true);
+
     setBookingCompleted(true);
-    setShowTermsModal(false);
+    setTermsMessage(
+      "Thank you for agreeing to the Studio terms and conditions. A member of the team will be in touch with you soon."
+    );
+    setShowTerms(false);
     setShowThankYouModal(true);
   };
 
@@ -295,6 +252,9 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
                   handleToggleChecklist(item.id);
                   if (item.id === "book") {
                     setShowBookingModal(true);
+                    setTermsMessage(null);
+                    setShowTerms(false);
+                    setTermsChecked(false);
                   }
                 };
 
@@ -366,100 +326,14 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
               type="button"
               onClick={() => {
                 setShowBookingModal(true);
+                setTermsMessage(null);
+                setShowTerms(false);
+                setTermsChecked(false);
               }}
               className="inline-flex items-center justify-center rounded-full border border-black/20 bg-white px-4 py-2 text-sm font-medium hover:border-black/40"
             >
               Open calendar &amp; terms
             </button>
-          </section>
-
-          {/* BASELINE METRICS */}
-          <section className="mt-10 space-y-6">
-            <h2 className="text-xl font-semibold sm:text-2xl">
-              Optional: Baseline Details
-            </h2>
-            <p className="text-sm text-black/65 max-w-xl">
-              Helps me tailor your plan from day one.
-            </p>
-
-            <div className="rounded-xl border border-black/10 bg-black/[0.02] p-4 shadow-sm">
-              <form
-                onSubmit={handleBaselineSubmit}
-                className="mx-auto flex max-w-xl flex-col gap-4"
-              >
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="weightKg"
-                      className="text-xs text-black/80 font-medium"
-                    >
-                      Weight (kg)
-                    </label>
-                    <input
-                      id="weightKg"
-                      type="number"
-                      step="0.1"
-                      value={weightKg}
-                      onChange={(e) => setWeightKg(e.target.value)}
-                      className="w-full rounded-lg border border-black/15 bg-white px-3 py-2 text-sm focus:border-[var(--hp-accent)] outline-none"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="avgSleepHours"
-                      className="text-xs text-black/80 font-medium"
-                    >
-                      Average sleep (hrs)
-                    </label>
-                    <input
-                      id="avgSleepHours"
-                      type="number"
-                      step="0.1"
-                      value={avgSleepHours}
-                      onChange={(e) => setAvgSleepHours(e.target.value)}
-                      className="w-full rounded-lg border border-black/15 bg-white px-3 py-2 text-sm focus:border-[var(--hp-accent)] outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label
-                    htmlFor="notes"
-                    className="text-xs text-black/80 font-medium"
-                  >
-                    Notes
-                  </label>
-                  <textarea
-                    id="notes"
-                    rows={4}
-                    value={notes}
-                    onChange={(e) => setNotes(e.target.value)}
-                    placeholder="Injuries, goals, schedule…"
-                    className="w-full rounded-lg border border-black/15 bg-white px-3 py-2 text-sm focus:border-[var(--hp-accent)] outline-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={baselineSubmitting}
-                  className="rounded-full bg-[var(--hp-accent)] px-4 py-2 text-sm font-semibold text-black shadow hover:bg-[#00b648] disabled:opacity-60"
-                >
-                  {baselineSubmitting
-                    ? "Submitting…"
-                    : "Submit Baseline Details"}
-                </button>
-
-                {baselineSuccess && (
-                  <p className="text-xs text-[var(--hp-accent)]">
-                    {baselineSuccess}
-                  </p>
-                )}
-                {baselineError && (
-                  <p className="text-xs text-red-500">{baselineError}</p>
-                )}
-              </form>
-            </div>
           </section>
 
           {/* CONFIRMATION */}
@@ -529,13 +403,16 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
         </div>
       </footer>
 
-      {/* BOOKING MODAL (Cal.com) */}
+      {/* BOOKING MODAL (lightbox) */}
       {showBookingModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4">
           <div className="relative w-full max-w-3xl rounded-2xl bg-white p-4 shadow-xl">
             <button
               type="button"
-              onClick={() => setShowBookingModal(false)}
+              onClick={() => {
+                setShowBookingModal(false);
+                setShowTerms(false);
+              }}
               className="absolute right-3 top-3 text-xs text-black/50 hover:text-black"
             >
               Close
@@ -558,49 +435,44 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
               />
             </div>
 
-            {/* Button to open the separate terms modal */}
+            {/* Button to open separate Terms modal */}
             <button
               type="button"
               onClick={() => {
+                setShowTerms(true);
+                setTermsMessage(null);
                 setTermsChecked(false);
-                setShowTermsModal(true);
               }}
               className="mt-4 text-xs font-semibold text-[#00C853] underline underline-offset-4"
             >
               Click here to review Studio terms
             </button>
 
-            {hasAgreedTerms && (
-              <p className="mt-2 text-xs text-black/60">
-                Terms accepted. You can now finalise your onboarding below.
-              </p>
+            {termsMessage && (
+              <p className="mt-2 text-xs text-black/70">{termsMessage}</p>
             )}
           </div>
         </div>
       )}
 
       {/* TERMS MODAL */}
-      {showTermsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="relative w-full max-w-2xl rounded-2xl bg-white p-5 shadow-2xl max-h-[90vh] flex flex-col">
+      {showTerms && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="relative w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl max-h-[80vh] flex flex-col">
             <button
               type="button"
-              onClick={() => setShowTermsModal(false)}
+              onClick={() => setShowTerms(false)}
               className="absolute right-3 top-3 text-xs text-black/50 hover:text-black"
             >
               Close
             </button>
 
-            <h3 className="text-lg font-semibold mb-3">
+            <h3 className="text-lg font-semibold mb-2 text-center">
               Studio Terms &amp; Conditions
             </h3>
 
-            <div className="flex-1 overflow-y-auto border border-black/10 rounded-lg p-3 bg-black/[0.02] space-y-2 text-xs text-black/70">
-              <p>
-                Please read the following terms carefully before training at the
-                Private Studio.
-              </p>
-              <ul className="list-disc pl-5 space-y-1">
+            <div className="mt-2 flex-1 overflow-y-auto rounded-lg border border-black/10 bg-black/[0.02] p-3 space-y-2">
+              <ul className="list-disc pl-5 text-xs text-black/70 space-y-1">
                 <li>
                   All sessions are by appointment only at the Private Studio in
                   Walworth, SE17.
@@ -632,43 +504,49 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
               </ul>
             </div>
 
-            <div className="mt-4 space-y-3">
-              <label className="flex items-center gap-2 text-xs text-black/80">
-                <input
-                  type="checkbox"
-                  checked={termsChecked}
-                  onChange={(e) => setTermsChecked(e.target.checked)}
-                />
-                <span>I have read and agree to all Studio Terms.</span>
+            <div className="mt-3 flex items-center gap-2 text-xs text-black/80">
+              <input
+                id="termsCheckbox"
+                type="checkbox"
+                checked={termsChecked}
+                onChange={(e) => setTermsChecked(e.target.checked)}
+                className="h-4 w-4 rounded border-black/30"
+              />
+              <label htmlFor="termsCheckbox">
+                I have read and agree to all Studio Terms.
               </label>
-
-              <button
-                type="button"
-                disabled={!termsChecked}
-                onClick={handleSubmitTerms}
-                className="inline-flex items-center rounded-full bg-[#00C853] px-4 py-2 text-xs font-semibold text-black shadow hover:bg-[#00b648] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Submit Agreement
-              </button>
             </div>
+
+            <button
+              type="button"
+              onClick={handleAgreeTerms}
+              disabled={!termsChecked}
+              className={`mt-3 inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold text-black shadow ${
+                termsChecked
+                  ? "bg-[#00C853] hover:bg-[#00b648]"
+                  : "bg-black/5 text-black/40 cursor-not-allowed"
+              }`}
+            >
+              Submit agreement
+            </button>
           </div>
         </div>
       )}
 
-      {/* THANK-YOU MODAL */}
+      {/* CENTRE THANK-YOU MODAL */}
       {showThankYouModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-2xl">
-            <h3 className="text-lg font-semibold mb-3">
-              Thank you for agreeing to the Studio terms.
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
+            <h3 className="text-lg font-semibold mb-2">
+              Thank you for agreeing to terms
             </h3>
-            <p className="text-sm text-black/70 mb-4">
+            <p className="text-sm text-black/70">
               A member of staff will be in contact with you within 24 hours.
             </p>
             <button
               type="button"
               onClick={() => setShowThankYouModal(false)}
-              className="rounded-full bg-[var(--hp-accent)] px-4 py-2 text-sm font-semibold text-black shadow hover:bg-[#00b648]"
+              className="mt-4 inline-flex items-center justify-center rounded-full bg-[#00C853] px-4 py-2 text-sm font-semibold text-black shadow hover:bg-[#00b648]"
             >
               Close
             </button>
