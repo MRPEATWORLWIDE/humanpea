@@ -89,20 +89,15 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
   const [baselineError, setBaselineError] = useState<string | null>(null);
 
   const [showBookingModal, setShowBookingModal] = useState(false);
-  const [showTermsDrawer, setShowTermsDrawer] = useState(false);
+
+  // NEW: separate terms modal + thank-you modal state
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const [termsChecked, setTermsChecked] = useState(false);
   const [showThankYouModal, setShowThankYouModal] = useState(false);
   const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
 
   const handleToggleChecklist = (id: ChecklistItemId) => {
     setCompletedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const openBookingModal = () => {
-    setShowBookingModal(true);
-    setShowTermsDrawer(false);
-    setTermsChecked(false);
-    setShowThankYouModal(false);
   };
 
   const handleBaselineSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -149,11 +144,12 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
     setHasConfirmedOnboarding(true);
   };
 
+  // NEW: submit inside the terms modal
   const handleSubmitTerms = () => {
     if (!termsChecked) return;
     setHasAgreedTerms(true);
     setBookingCompleted(true);
-    setShowTermsDrawer(false);
+    setShowTermsModal(false);
     setShowThankYouModal(true);
   };
 
@@ -286,6 +282,9 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
                   smooth and results focused.
                 </p>
               </div>
+              <p className="text-xs text-black/45">
+                Progress is saved locally in your browser.
+              </p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -295,7 +294,7 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
                 const handleClick = () => {
                   handleToggleChecklist(item.id);
                   if (item.id === "book") {
-                    openBookingModal();
+                    setShowBookingModal(true);
                   }
                 };
 
@@ -365,7 +364,9 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
 
             <button
               type="button"
-              onClick={openBookingModal}
+              onClick={() => {
+                setShowBookingModal(true);
+              }}
               className="inline-flex items-center justify-center rounded-full border border-black/20 bg-white px-4 py-2 text-sm font-medium hover:border-black/40"
             >
               Open calendar &amp; terms
@@ -528,7 +529,7 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
         </div>
       </footer>
 
-      {/* BOOKING MODAL (lightbox) */}
+      {/* BOOKING MODAL (Cal.com) */}
       {showBookingModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4">
           <div className="relative w-full max-w-3xl rounded-2xl bg-white p-4 shadow-xl">
@@ -557,12 +558,12 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
               />
             </div>
 
-            {/* Open Terms Drawer */}
+            {/* Button to open the separate terms modal */}
             <button
               type="button"
               onClick={() => {
-                setShowTermsDrawer(true);
                 setTermsChecked(false);
+                setShowTermsModal(true);
               }}
               className="mt-4 text-xs font-semibold text-[#00C853] underline underline-offset-4"
             >
@@ -570,122 +571,104 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
             </button>
 
             {hasAgreedTerms && (
-              <p className="mt-2 text-[11px] text-black/60">
-                You’ve agreed to the Studio terms. You can still review them
-                again if needed.
+              <p className="mt-2 text-xs text-black/60">
+                Terms accepted. You can now finalise your onboarding below.
               </p>
             )}
           </div>
         </div>
       )}
 
-      {/* TERMS DRAWER (slide-up modal from bottom) */}
-      {showTermsDrawer && (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/60 px-0 sm:px-4">
-          <div className="mx-auto w-full max-w-2xl rounded-t-2xl bg-white p-4 sm:p-6 shadow-xl">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold">
-                  Studio Terms &amp; Conditions
-                </h3>
-                <p className="mt-1 text-[11px] sm:text-xs text-black/60">
-                  Please read through the terms below. Tick the box and submit
-                  to confirm your agreement.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowTermsDrawer(false)}
-                className="text-xs text-black/50 hover:text-black"
-              >
-                Close
-              </button>
-            </div>
-
-            <div className="mt-3 max-h-[60vh] overflow-y-auto space-y-3 text-xs text-black/70">
-              <p>
-                <strong>1. Studio Location &amp; Access</strong> — All sessions
-                are by appointment only at the Private Studio in Walworth, SE17.
-                Entry times are linked to your confirmed booking slot.
-              </p>
-              <p>
-                <strong>2. Cancellations &amp; Rescheduling</strong> — 24 hours’
-                notice is required to cancel or reschedule any session. Late
-                cancellations or no-shows may be charged in full or result in a
-                session being forfeited from your package.
-              </p>
-              <p>
-                <strong>3. Health &amp; Medical</strong> — You must inform your
-                coach of any injuries, medical conditions, medication or changes
-                in your health before each session. If you have ongoing
-                illnesses, recent surgery, chest pain, shortness of breath or
-                any other concerns, you should consult your GP or healthcare
-                professional before starting personal training.
-              </p>
-              <p>
-                <strong>4. Safety &amp; Conduct</strong> — You agree to follow
-                Studio safety instructions at all times, to use equipment as
-                demonstrated and to maintain a respectful, tidy training
-                environment for other clients and residents.
-              </p>
-              <p>
-                <strong>5. Packages &amp; Payments</strong> — Session packages
-                are non-transferable and should be used within the agreed time
-                frame unless otherwise discussed. Payment terms and any promo
-                pricing will be confirmed at the start of your programme.
-              </p>
-              <p>
-                <strong>6. Media &amp; Progress Tracking</strong> — Training may
-                include progress photos or short video clips for coaching and/or
-                social media. You will always be asked for consent before any
-                media is shared publicly.
-              </p>
-              <p>
-                <strong>7. Personal Responsibility</strong> — You understand
-                that training carries an inherent risk. By participating you
-                accept responsibility for your own body, effort and recovery,
-                and you’ll communicate openly if anything doesn’t feel right.
-              </p>
-            </div>
-
-            <label className="mt-4 flex items-start gap-2 text-xs text-black/80">
-              <input
-                type="checkbox"
-                checked={termsChecked}
-                onChange={(e) => setTermsChecked(e.target.checked)}
-                className="mt-[2px] h-4 w-4 rounded border-black/30"
-              />
-              <span>
-                I have read and agree to all Studio Terms &amp; Conditions.
-              </span>
-            </label>
-
+      {/* TERMS MODAL */}
+      {showTermsModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
+          <div className="relative w-full max-w-2xl rounded-2xl bg-white p-5 shadow-2xl max-h-[90vh] flex flex-col">
             <button
               type="button"
-              onClick={handleSubmitTerms}
-              disabled={!termsChecked}
-              className="mt-4 inline-flex items-center justify-center rounded-full bg-[#00C853] px-4 py-2 text-xs font-semibold text-black shadow hover:bg-[#00b648] disabled:opacity-60"
+              onClick={() => setShowTermsModal(false)}
+              className="absolute right-3 top-3 text-xs text-black/50 hover:text-black"
             >
-              Submit Agreement
+              Close
             </button>
+
+            <h3 className="text-lg font-semibold mb-3">
+              Studio Terms &amp; Conditions
+            </h3>
+
+            <div className="flex-1 overflow-y-auto border border-black/10 rounded-lg p-3 bg-black/[0.02] space-y-2 text-xs text-black/70">
+              <p>
+                Please read the following terms carefully before training at the
+                Private Studio.
+              </p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>
+                  All sessions are by appointment only at the Private Studio in
+                  Walworth, SE17.
+                </li>
+                <li>
+                  24 hours’ notice is required to cancel or reschedule a
+                  session. Late cancellations or no-shows may be charged in
+                  full.
+                </li>
+                <li>
+                  You must inform your coach of any injuries, medical
+                  conditions, medication or changes in your health before each
+                  session.
+                </li>
+                <li>
+                  If you have any ongoing illnesses, recent surgery, chest pain,
+                  shortness of breath, or other health concerns, you should
+                  consult your GP or healthcare professional before starting
+                  personal training.
+                </li>
+                <li>
+                  You agree to follow studio safety instructions at all times
+                  and to use equipment as demonstrated.
+                </li>
+                <li>
+                  Packages and sessions are non-transferable and should be used
+                  within the agreed time frame unless otherwise discussed.
+                </li>
+              </ul>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              <label className="flex items-center gap-2 text-xs text-black/80">
+                <input
+                  type="checkbox"
+                  checked={termsChecked}
+                  onChange={(e) => setTermsChecked(e.target.checked)}
+                />
+                <span>I have read and agree to all Studio Terms.</span>
+              </label>
+
+              <button
+                type="button"
+                disabled={!termsChecked}
+                onClick={handleSubmitTerms}
+                className="inline-flex items-center rounded-full bg-[#00C853] px-4 py-2 text-xs font-semibold text-black shadow hover:bg-[#00b648] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Submit Agreement
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      {/* THANK YOU MODAL (centered) */}
+      {/* THANK-YOU MODAL */}
       {showThankYouModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-xl">
-            <h3 className="text-lg font-semibold mb-2">
-              Thank you for agreeing to the terms
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-2xl">
+            <h3 className="text-lg font-semibold mb-3">
+              Thank you for agreeing to the Studio terms.
             </h3>
-            <p className="text-sm text-black/70">
+            <p className="text-sm text-black/70 mb-4">
               A member of staff will be in contact with you within 24 hours.
             </p>
             <button
               type="button"
               onClick={() => setShowThankYouModal(false)}
-              className="mt-4 inline-flex items-center justify-center rounded-full border border-black/20 bg-white px-4 py-2 text-sm font-medium hover:border-black/40"
+              className="rounded-full bg-[var(--hp-accent)] px-4 py-2 text-sm font-semibold text-black shadow hover:bg-[#00b648]"
             >
               Close
             </button>
