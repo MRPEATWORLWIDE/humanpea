@@ -1,3 +1,4 @@
+// v2 build-safe
 "use client";
 
 import React, { useMemo, useState, FormEvent } from "react";
@@ -18,8 +19,8 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
     title: "Step 1 — Download Everfit",
     description: "Your training plan, habit tracking and progress photos will live here.",
     actions: [
-      { label: "Download on iOS", href: "#" }, // TODO: replace with App Store URL
-      { label: "Download on Android", href: "#" }, // TODO: replace with Play Store URL
+      { label: "Download on iOS", href: "#" }, 
+      { label: "Download on Android", href: "#" },
     ],
   },
   {
@@ -39,11 +40,10 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
   {
     id: "terms",
     title: "Step 4 — Review Terms & Studio Info",
-    description:
-      "Please review the training terms, cancellation policy and studio directions.",
+    description: "Please review the training terms, cancellation policy and studio directions.",
     actions: [
-      { label: "View Terms", href: "/terms" }, // TODO: confirm terms route
-      { label: "Studio Info", href: "/studio" }, // TODO: confirm studio route
+      { label: "View Terms", href: "/terms" },
+      { label: "Studio Info", href: "/studio" },
     ],
   },
   {
@@ -54,17 +54,12 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
 ];
 
 type OnboardingPageProps = {
-  searchParams?: {
-    plan?: string;
-  };
+  searchParams?: { plan?: string };
 };
 
 export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
   const planFromQuery = searchParams?.plan;
-  const plan = useMemo(
-    () => planFromQuery || "UNSPECIFIED",
-    [planFromQuery]
-  );
+  const plan = useMemo(() => planFromQuery || "UNSPECIFIED", [planFromQuery]);
 
   const [completedSteps, setCompletedSteps] = useState<Record<ChecklistItemId, boolean>>({
     everfit: false,
@@ -86,10 +81,7 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
   const [baselineError, setBaselineError] = useState<string | null>(null);
 
   const handleToggleChecklist = (id: ChecklistItemId) => {
-    setCompletedSteps((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+    setCompletedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const handleBaselineSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -112,19 +104,13 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to submit baseline details");
-      }
-
       const data = await res.json();
-      if (data?.success) {
-        setBaselineSuccess("Baseline details submitted. Thank you!");
-        setWeightKg("");
-        setAvgSleepHours("");
-        setNotes("");
-      } else {
-        throw new Error("Unexpected response from server");
-      }
+      if (!data?.success) throw new Error("Unexpected response");
+
+      setBaselineSuccess("Baseline details submitted. Thank you!");
+      setWeightKg("");
+      setAvgSleepHours("");
+      setNotes("");
     } catch (err) {
       console.error(err);
       setBaselineError("Something went wrong. Please try again.");
@@ -143,8 +129,9 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#000000] text-white">
+    <div className="min-h-screen bg-black text-white">
       <main className="mx-auto max-w-5xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+        
         {/* HERO */}
         <header className="space-y-8">
           <div className="text-xs uppercase tracking-[0.2em] text-neutral-400">
@@ -153,43 +140,37 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
 
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
             <div className="space-y-4">
-              <h1 className="text-3xl font-semibold sm:text-4xl">
-                PT Onboarding
-              </h1>
+              <h1 className="text-3xl font-semibold sm:text-4xl">PT Onboarding</h1>
               <p className="max-w-xl text-sm text-neutral-300">
                 Complete these steps before your first session at the Private Studio.
               </p>
               <p className="max-w-xl text-xs text-neutral-500 sm:text-sm">
-                This onboarding flow currently supports the Functional Hybrid Training System and all
-                future PT packages.
+                This onboarding flow currently supports the Functional Hybrid Training System and all future PT packages.
               </p>
             </div>
 
             <div className="inline-flex items-center gap-2 rounded-full border border-neutral-800 bg-neutral-900 px-4 py-2 text-xs uppercase tracking-[0.2em] text-neutral-400">
               <span className="h-2 w-2 rounded-full bg-[#00C853]" />
               <span>Plan</span>
-              <span className="font-semibold text-[#E8D7A8]">
-                {planFromQuery ?? "Universal PT"}
-              </span>
+              <span className="font-semibold text-[#E8D7A8]">{planFromQuery ?? "Universal PT"}</span>
             </div>
           </div>
 
-          {/* Progress bar */}
+          {/* PROGRESS BAR */}
           <div className="space-y-3">
             <div className="flex items-center justify-between text-xs text-neutral-400">
               <span>Onboarding Steps</span>
-              <span className="text-neutral-500">
-                Apps · Checklist · Book Session · Confirm
-              </span>
+              <span className="text-neutral-500">Apps · Checklist · Book Session · Confirm</span>
             </div>
+
             <div className="flex items-center gap-4">
-              {["Apps", "Checklist", "Book Session", "Confirm"].map((label, index) => (
+              {["Apps", "Checklist", "Book Session", "Confirm"].map((label, i) => (
                 <div key={label} className="flex flex-1 items-center gap-2">
                   <div className="flex h-7 w-7 items-center justify-center rounded-full border border-neutral-700 bg-neutral-900 text-[11px] font-semibold">
-                    {index + 1}
+                    {i + 1}
                   </div>
                   <span className="text-xs text-neutral-300">{label}</span>
-                  {index < 3 && <div className="h-px flex-1 bg-neutral-700" />}
+                  {i < 3 && <div className="h-px flex-1 bg-neutral-700" />}
                 </div>
               ))}
             </div>
@@ -202,62 +183,46 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
             <div>
               <h2 className="text-xl font-semibold sm:text-2xl">Onboarding Checklist</h2>
               <p className="mt-1 max-w-xl text-sm text-neutral-400">
-                Tick each step off as you go. These steps keep your sessions smooth and results
-                focused.
+                Tick each step off as you go. These steps keep your sessions smooth and results focused.
               </p>
             </div>
-            <p className="text-xs text-neutral-500">
-              Progress is saved locally in your browser only.
-            </p>
+            <p className="text-xs text-neutral-500">Progress is saved locally in your browser.</p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {CHECKLIST_ITEMS.map((item) => {
               const checked = completedSteps[item.id];
-
               return (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => handleToggleChecklist(item.id)}
                   className={`group flex flex-col items-start rounded-2xl border p-4 text-left transition bg-neutral-900/60 shadow-sm shadow-black/40 ${
-                    checked
-                      ? "border-[#00C853] bg-[#00C853]/5"
-                      : "border-neutral-800 hover:border-neutral-600"
+                    checked ? "border-green-500 bg-green-500/5" : "border-neutral-800 hover:border-neutral-600"
                   }`}
                 >
                   <div className="mb-3 flex w-full items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span
-                        className={`flex h-5 w-5 items-center justify-center rounded-md border text-[11px] font-semibold ${
-                          checked
-                            ? "border-[#00C853] bg-[#00C853]"
-                            : "border-neutral-600 bg-neutral-900"
-                        }`}
-                      >
-                        {checked ? "✓" : ""}
-                      </span>
-                      <h3 className="text-sm font-semibold text-[#E8D7A8]">
-                        {item.title}
-                      </h3>
+                      <span className={`flex h-5 w-5 items-center justify-center rounded-md border text-[11px] font-semibold ${
+                        checked ? "bg-green-500 border-green-500" : "bg-neutral-900 border-neutral-600"
+                      }`}>{checked ? "✓" : ""}</span>
+                      <h3 className="text-sm font-semibold text-[#E8D7A8]">{item.title}</h3>
                     </div>
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">
-                      Step
-                    </span>
+                    <span className="text-[10px] uppercase tracking-[0.2em] text-neutral-500">Step</span>
                   </div>
 
                   <p className="text-xs text-neutral-300">{item.description}</p>
 
                   {item.actions && (
                     <div className="mt-4 flex flex-wrap gap-2">
-                      {item.actions.map((action) => (
+                      {item.actions.map((a) => (
                         <Link
-                          key={action.label}
-                          href={action.href}
+                          key={a.label}
+                          href={a.href}
                           onClick={(e) => e.stopPropagation()}
-                          className="rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-[11px] text-neutral-200 hover:border-[#00C853] hover:text-[#00C853]"
+                          className="rounded-full border border-neutral-700 bg-neutral-900 px-3 py-1 text-[11px] text-neutral-200 hover:border-green-500 hover:text-green-500"
                         >
-                          {action.label}
+                          {a.label}
                         </Link>
                       ))}
                     </div>
@@ -270,21 +235,15 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
 
         {/* CALENDAR */}
         <section className="mt-10 space-y-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-xl font-semibold sm:text-2xl">Book Your First Session</h2>
-              <p className="mt-1 max-w-xl text-sm text-neutral-400">
-                Choose a time that works for you. You’ll receive an email confirmation once it’s
-                booked.
-              </p>
-            </div>
-          </div>
+          <h2 className="text-xl font-semibold sm:text-2xl">Book Your First Session</h2>
+          <p className="text-sm text-neutral-400 max-w-xl">
+            Choose a time that works for you. You’ll receive an email confirmation once it’s booked.
+          </p>
 
           <div className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4 shadow-sm shadow-black/40">
             <div className="mx-auto max-w-3xl space-y-4">
               <div className="overflow-hidden rounded-xl border border-neutral-800 bg-black">
                 <iframe
-                  // Cal.com Fitness Assessment URL (your onboarding booking link)
                   src="https://cal.com/human-pea-28vrwm/fitness-assessment"
                   title="Book your first session"
                   className="h-[650px] w-full border-0"
@@ -294,14 +253,12 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
 
               <button
                 type="button"
-                onClick={() => setBookingCompleted((prev) => !prev)}
+                onClick={() => setBookingCompleted((x) => !x)}
                 className={`mt-1 text-[11px] underline-offset-4 ${
-                  bookingCompleted ? "text-[#00C853]" : "text-neutral-500 hover:underline"
+                  bookingCompleted ? "text-green-500" : "text-neutral-500 hover:underline"
                 }`}
               >
-                {bookingCompleted
-                  ? "Booking marked as completed (click to undo)"
-                  : "Click here if you’ve completed your booking"}
+                {bookingCompleted ? "Booking marked as completed (undo)" : "Mark booking as completed"}
               </button>
             </div>
           </div>
@@ -309,147 +266,101 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
 
         {/* BASELINE METRICS */}
         <section className="mt-10 space-y-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h2 className="text-xl font-semibold sm:text-2xl">
-                Optional: Share a Few Baseline Details
-              </h2>
-              <p className="mt-1 max-w-xl text-sm text-neutral-400">
-                This is completely optional, but it helps me personalise your plan from day one.
-              </p>
-            </div>
-          </div>
+          <h2 className="text-xl font-semibold sm:text-2xl">Optional: Baseline Details</h2>
+          <p className="text-sm text-neutral-400 max-w-xl">
+            Helps me tailor your plan from day one.
+          </p>
 
-          <div className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4 shadow-sm shadow-black/40">
-            <form
-              onSubmit={handleBaselineSubmit}
-              className="mx-auto flex max-w-xl flex-col gap-4"
-            >
+          <div className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-4 shadow-sm">
+            <form onSubmit={handleBaselineSubmit} className="mx-auto flex max-w-xl flex-col gap-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label
-                    htmlFor="weightKg"
-                    className="text-xs font-medium text-neutral-200"
-                  >
-                    Weight (kg)
-                  </label>
+                  <label htmlFor="weightKg" className="text-xs text-neutral-200">Weight (kg)</label>
                   <input
                     id="weightKg"
                     type="number"
-                    inputMode="decimal"
                     step="0.1"
                     value={weightKg}
                     onChange={(e) => setWeightKg(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-700 bg-black px-3 py-2 text-sm text-neutral-50 outline-none focus:border-[#00C853]"
+                    className="w-full rounded-xl border border-neutral-700 bg-black px-3 py-2 text-sm focus:border-green-500 outline-none"
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <label
-                    htmlFor="avgSleepHours"
-                    className="text-xs font-medium text-neutral-200"
-                  >
-                    Average sleep (hours per night)
-                  </label>
+                  <label htmlFor="avgSleepHours" className="text-xs text-neutral-200">Average sleep (hrs)</label>
                   <input
                     id="avgSleepHours"
                     type="number"
-                    inputMode="decimal"
                     step="0.1"
                     value={avgSleepHours}
                     onChange={(e) => setAvgSleepHours(e.target.value)}
-                    className="w-full rounded-xl border border-neutral-700 bg-black px-3 py-2 text-sm text-neutral-50 outline-none focus:border-[#00C853]"
+                    className="w-full rounded-xl border border-neutral-700 bg-black px-3 py-2 text-sm focus:border-green-500 outline-none"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label
-                  htmlFor="notes"
-                  className="text-xs font-medium text-neutral-200"
-                >
-                  Notes
-                </label>
+                <label htmlFor="notes" className="text-xs text-neutral-200">Notes</label>
                 <textarea
                   id="notes"
                   rows={4}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Anything I should know before we start? Injuries, schedule, goals, etc."
-                  className="w-full rounded-xl border border-neutral-700 bg-black px-3 py-2 text-sm text-neutral-50 outline-none focus:border-[#00C853]"
+                  placeholder="Injuries, goals, schedule…"
+                  className="w-full rounded-xl border border-neutral-700 bg-black px-3 py-2 text-sm focus:border-green-500 outline-none"
                 />
               </div>
 
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <button
-                  type="submit"
-                  disabled={baselineSubmitting}
-                  className="inline-flex items-center justify-center rounded-full bg-[#00C853] px-4 py-2 text-sm font-semibold text-black shadow-sm shadow-black/40 transition hover:bg-[#00b648] disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {baselineSubmitting ? "Submitting..." : "Submit Baseline Details"}
-                </button>
+              <button
+                type="submit"
+                disabled={baselineSubmitting}
+                className="rounded-full bg-green-500 px-4 py-2 text-sm font-semibold text-black shadow hover:bg-green-600 disabled:opacity-60"
+              >
+                {baselineSubmitting ? "Submitting…" : "Submit Baseline Details"}
+              </button>
 
-                <p className="text-[11px] text-neutral-500">
-                  This is stored securely and used only to personalise your training.
-                </p>
-              </div>
-
-              {baselineSuccess && (
-                <p className="text-xs font-medium text-[#00C853]">
-                  {baselineSuccess}
-                </p>
-              )}
-              {baselineError && (
-                <p className="text-xs font-medium text-red-400">{baselineError}</p>
-              )}
+              {baselineSuccess && <p className="text-xs text-green-500">{baselineSuccess}</p>}
+              {baselineError && <p className="text-xs text-red-400">{baselineError}</p>}
             </form>
           </div>
         </section>
 
-        {/* FINAL CONFIRMATION */}
+        {/* CONFIRMATION */}
         <section className="mt-10 space-y-6">
           {!hasConfirmedOnboarding ? (
-            <div className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5 shadow-sm shadow-black/40">
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="space-y-2">
-                  <h2 className="text-lg font-semibold sm:text-xl">
-                    You’re Ready to Start
-                  </h2>
-                  <p className="max-w-xl text-sm text-neutral-400">
-                    Once you’ve completed the checklist and booked your first session, confirm below
-                    so I know you’re fully onboarded.
-                  </p>
-                  {!bookingCompleted && (
-                    <p className="text-xs text-amber-400">
-                      Hint: Please book your first session above before confirming.
-                    </p>
-                  )}
-                </div>
+            <div className="rounded-2xl border border-neutral-800 bg-neutral-900/80 p-5 shadow-sm">
+              <h2 className="text-lg font-semibold sm:text-xl">You're Ready to Start</h2>
+              <p className="text-sm text-neutral-400 max-w-xl">
+                After completing the checklist and booking, confirm your onboarding.
+              </p>
 
-                <button
-                  type="button"
-                  disabled={!bookingCompleted}
-                  onClick={handleConfirmOnboarding}
-                  className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold shadow-sm shadow-black/40 ${
-                    bookingCompleted
-                      ? "bg-[#00C853] text-black hover:bg-[#00b648]"
-                      : "cursor-not-allowed bg-neutral-800 text-neutral-500"
-                  }`}
-                >
-                  I’ve Completed My Onboarding
-                </button>
-              </div>
+              {!bookingCompleted && (
+                <p className="text-xs text-amber-400 mt-2">
+                  Hint: Book your session above before confirming.
+                </p>
+              )}
+
+              <button
+                type="button"
+                disabled={!bookingCompleted}
+                onClick={handleConfirmOnboarding}
+                className={`mt-4 rounded-full px-4 py-2 text-sm font-semibold shadow ${
+                  bookingCompleted
+                    ? "bg-green-500 text-black hover:bg-green-600"
+                    : "bg-neutral-800 text-neutral-600 cursor-not-allowed"
+                }`}
+              >
+                I've Completed My Onboarding
+              </button>
             </div>
           ) : (
-            <div className="rounded-2xl border border-[#00C853]/40 bg-[#00C853]/10 p-5 shadow-sm shadow-black/40">
-              <h2 className="text-lg font-semibold text-[#E8D7A8] sm:text-xl">
-                You’re all set.
-              </h2>
-              <p className="mt-2 max-w-xl text-sm text-neutral-100">
-                You’ll see your program in the app before your first session. If anything changes
-                with your schedule or goals, just message me directly.
+            <div className="rounded-2xl border border-green-500/40 bg-green-500/10 p-5 shadow-sm">
+              <h2 className="text-lg font-semibold text-[#E8D7A8]">You're all set.</h2>
+              <p className="mt-2 text-sm text-neutral-100 max-w-xl">
+                You’ll see your program in the app before your first session.
               </p>
               <p className="mt-3 text-xs text-neutral-400">
-                You can always revisit this page to review the studio info, terms and app links.
+                You can revisit this page anytime for terms, directions or app links.
               </p>
             </div>
           )}
