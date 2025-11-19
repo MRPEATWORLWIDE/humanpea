@@ -3,7 +3,7 @@
 import React, { useMemo, useState, FormEvent } from "react";
 import Link from "next/link";
 
-type ChecklistItemId = "everfit" | "loseit" | "profiles" | "terms" | "book";
+type ChecklistItemId = "everfit" | "loseit" | "profiles" | "book";
 
 type ChecklistItem = {
   id: ChecklistItemId;
@@ -15,41 +15,46 @@ type ChecklistItem = {
 const CHECKLIST_ITEMS: ChecklistItem[] = [
   {
     id: "everfit",
-    title: "Step 1 — Download Everfit",
-    description: "Your training plan, habit tracking and progress photos will live here.",
+    title: "STEP 1 — DOWNLOAD EVERFIT",
+    description:
+      "Your training plan, habit tracking and progress photos will live here.",
     actions: [
-      { label: "Download on iOS", href: "#" }, // TODO: replace with App Store URL
-      { label: "Download on Android", href: "#" }, // TODO: replace with Play Store URL
+      {
+        label: "Download on iOS",
+        href: "https://apps.apple.com/us/app/everfit-client/id1508725411",
+      },
+      {
+        label: "Download on Android",
+        href: "https://play.google.com/store/apps/details?id=com.everfit.client",
+      },
     ],
   },
   {
     id: "loseit",
-    title: "Step 2 — Download Lose It",
+    title: "STEP 2 — DOWNLOAD LOSE IT",
     description: "We’ll use this to loosely track calories and protein.",
     actions: [
-      { label: "Download on iOS", href: "#" },
-      { label: "Download on Android", href: "#" },
+      {
+        label: "Download on iOS",
+        href: "https://apps.apple.com/us/app/lose-it-calorie-counter/id297368629",
+      },
+      {
+        label: "Download on Android",
+        href: "https://play.google.com/store/apps/details?id=com.fitnow.loseit",
+      },
     ],
   },
   {
     id: "profiles",
-    title: "Step 3 — Complete Your App Profiles",
-    description: "Add height, weight and a recent photo so progress can be tracked.",
-  },
-  {
-    id: "terms",
-    title: "Step 4 — Review Terms & Studio Info",
+    title: "STEP 3 — COMPLETE YOUR APP PROFILES",
     description:
-      "Please review the training terms, cancellation policy and studio directions.",
-    actions: [
-      { label: "View Terms", href: "/terms" }, // TODO: confirm route
-      { label: "Studio Info", href: "/studio" }, // TODO: confirm route
-    ],
+      "Add your details such as height, current weight, goal weight and any other important details so you can track progress.",
   },
   {
     id: "book",
-    title: "Step 5 — Book Your First Session",
-    description: "Use the calendar below to choose a time that works for you.",
+    title: "STEP 5 — BOOK YOUR FIRST SESSION",
+    description:
+      "Use the calendar to choose a time that works for you and agree to the Studio terms.",
   },
 ];
 
@@ -67,7 +72,6 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
     everfit: false,
     loseit: false,
     profiles: false,
-    terms: false,
     book: false,
   });
 
@@ -81,6 +85,9 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
   const [baselineSubmitting, setBaselineSubmitting] = useState(false);
   const [baselineSuccess, setBaselineSuccess] = useState<string | null>(null);
   const [baselineError, setBaselineError] = useState<string | null>(null);
+
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [termsMessage, setTermsMessage] = useState<string | null>(null);
 
   const handleToggleChecklist = (id: ChecklistItemId) => {
     setCompletedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -130,6 +137,13 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
     setHasConfirmedOnboarding(true);
   };
 
+  const handleAgreeTerms = () => {
+    setBookingCompleted(true);
+    setTermsMessage(
+      "Thank you for agreeing to the Studio terms and conditions. A member of the team will be in touch with you soon."
+    );
+  };
+
   return (
     <main
       className="min-h-screen bg-white text-black"
@@ -143,13 +157,15 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
         :root {
           --hp-container-max: 1120px;
           --hp-section-pad-x: 1.25rem;
+          --hp-card-min-h: 420px;
+          --hp-card-pad: 1.25rem;
           --hp-footer-h: 72px;
           --hp-accent: #00C853;
           --hp-muted: #666666;
         }
       `}</style>
 
-      {/* HEADER (same structure as /home) */}
+      {/* HEADER (same as /home) */}
       <header
         className="sticky top-0 z-30 border-b border-black/10 backdrop-blur supports-[backdrop-filter]:bg-white/60"
         style={{ height: "64px" }}
@@ -194,8 +210,8 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
 
             <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
               <div className="space-y-4">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-[650] leading-tight">
-                  PT ONBOARDING
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight">
+                  PT <span className="opacity-70">ONBOARDING</span>
                 </h1>
                 <p className="max-w-xl text-sm text-black/70">
                   Complete these steps before your first session at the Private
@@ -266,16 +282,28 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
               {CHECKLIST_ITEMS.map((item) => {
                 const checked = completedSteps[item.id];
 
+                const handleClick = () => {
+                  handleToggleChecklist(item.id);
+                  if (item.id === "book") {
+                    setShowBookingModal(true);
+                    setTermsMessage(null);
+                  }
+                };
+
                 return (
                   <button
                     key={item.id}
                     type="button"
-                    onClick={() => handleToggleChecklist(item.id)}
-                    className={`group flex flex-col items-start rounded-xl border p-4 text-left transition shadow-sm ${
+                    onClick={handleClick}
+                    className={`group flex flex-col items-start rounded-xl border text-left transition shadow-sm ${
                       checked
                         ? "border-[var(--hp-accent)] bg-[var(--hp-accent)]/4"
                         : "border-black/10 bg-black/[0.02] hover:border-black/25"
                     }`}
+                    style={{
+                      minHeight: "var(--hp-card-min-h)",
+                      padding: "var(--hp-card-pad)",
+                    }}
                   >
                     <div className="mb-3 flex w-full items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -288,13 +316,10 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
                         >
                           {checked ? "✓" : ""}
                         </span>
-                        <h3 className="text-sm font-semibold text-black">
+                        <h3 className="text-lg font-semibold tracking-wide text-black">
                           {item.title}
                         </h3>
                       </div>
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-black/45">
-                        STEP
-                      </span>
                     </div>
 
                     <p className="text-xs text-black/70">{item.description}</p>
@@ -319,42 +344,26 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
             </div>
           </section>
 
-          {/* CALENDAR */}
-          <section className="mt-10 space-y-6">
+          {/* BOOKING SECTION (opens modal) */}
+          <section className="mt-10 space-y-4">
             <h2 className="text-xl font-semibold sm:text-2xl">
               Book Your First Session
             </h2>
             <p className="text-sm text-black/65 max-w-xl">
-              Choose a time that works for you. You’ll receive an email
-              confirmation once it’s booked.
+              Use the calendar to pick a time that works for you and agree to
+              the Studio terms. Click STEP 5 above or the button below.
             </p>
 
-            <div className="rounded-xl border border-black/10 bg-black/[0.02] p-4 shadow-sm">
-              <div className="mx-auto max-w-3xl space-y-4">
-                <div className="overflow-hidden rounded-lg border border-black/10 bg-white">
-                  <iframe
-                    src="https://cal.com/human-pea-28vrwm/fitness-assessment"
-                    title="Book your first session"
-                    className="h-[650px] w-full border-0"
-                    allow="camera; microphone; autoplay; clipboard-read; clipboard-write"
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setBookingCompleted((x) => !x)}
-                  className={`mt-1 text-[11px] underline-offset-4 ${
-                    bookingCompleted
-                      ? "text-[var(--hp-accent)]"
-                      : "text-black/55 hover:underline"
-                  }`}
-                >
-                  {bookingCompleted
-                    ? "Booking marked as completed (undo)"
-                    : "Mark booking as completed"}
-                </button>
-              </div>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setShowBookingModal(true);
+                setTermsMessage(null);
+              }}
+              className="inline-flex items-center justify-center rounded-full border border-black/20 bg-white px-4 py-2 text-sm font-medium hover:border-black/40"
+            >
+              Open calendar &amp; terms
+            </button>
           </section>
 
           {/* BASELINE METRICS */}
@@ -460,7 +469,8 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
 
                 {!bookingCompleted && (
                   <p className="text-xs text-amber-600 mt-2">
-                    Hint: Book your session above before confirming.
+                    Hint: Complete your booking and agree to the Studio terms
+                    before confirming.
                   </p>
                 )}
 
@@ -511,6 +521,56 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
           <span className="tracking-[0.18em]">ㅎㅍ</span>
         </div>
       </footer>
+
+      {/* BOOKING MODAL (lightbox) */}
+      {showBookingModal && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4">
+          <div className="relative w-full max-w-3xl rounded-2xl bg-white p-4 shadow-xl">
+            <button
+              type="button"
+              onClick={() => setShowBookingModal(false)}
+              className="absolute right-3 top-3 text-xs text-black/50 hover:text-black"
+            >
+              Close
+            </button>
+
+            <h3 className="text-lg font-semibold mb-2">
+              Book Your First Session
+            </h3>
+            <p className="text-xs text-black/60 mb-3">
+              Select a date and time using the calendar below, then review and
+              agree to the Studio terms.
+            </p>
+
+            <div className="overflow-hidden rounded-lg border border-black/10 bg-white">
+              <iframe
+                src="https://cal.com/human-pea-28vrwm/fitness-assessment"
+                title="Book your first session"
+                className="h-[500px] w-full border-0"
+                allow="camera; microphone; autoplay; clipboard-read; clipboard-write"
+              />
+            </div>
+
+            <div className="mt-4 space-y-2">
+              <p className="text-xs text-black/70">
+                By proceeding you agree to the Studio training terms, including
+                session etiquette, cancellation policy and health &amp; safety
+                guidelines.
+              </p>
+              <button
+                type="button"
+                onClick={handleAgreeTerms}
+                className="rounded-full bg-[var(--hp-accent)] px-4 py-2 text-xs font-semibold text-black shadow hover:bg-[#00b648]"
+              >
+                I agree to the Studio terms
+              </button>
+              {termsMessage && (
+                <p className="mt-2 text-xs text-black/70">{termsMessage}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
