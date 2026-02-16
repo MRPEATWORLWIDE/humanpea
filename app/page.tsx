@@ -1,115 +1,7 @@
-"use client";
-
-import React, { useMemo, useState } from "react";
+import React from "react";
 import Link from "next/link";
 
-type ChecklistItemId = "everfit" | "loseit" | "profiles" | "book";
-
-type ChecklistItem = {
-  id: ChecklistItemId;
-  title: string;
-  description: string;
-  actions?: { label: string; href: string }[];
-};
-
-const CHECKLIST_ITEMS: ChecklistItem[] = [
-  {
-    id: "everfit",
-    title: "STEP 1 — DOWNLOAD EVERFIT",
-    description:
-      "Your training plan, habit tracking and progress photos will live here.",
-    actions: [
-      {
-        label: "Download on iOS",
-        href: "https://apps.apple.com/us/app/everfit-client/id1508725411",
-      },
-      {
-        label: "Download on Android",
-        href: "https://play.google.com/store/apps/details?id=com.everfit.client",
-      },
-    ],
-  },
-  {
-    id: "loseit",
-    title: "STEP 2 — DOWNLOAD LOSE IT",
-    description: "We’ll use this to loosely track calories and protein.",
-    actions: [
-      {
-        label: "Download on iOS",
-        href: "https://apps.apple.com/us/app/lose-it-calorie-counter/id297368629",
-      },
-      {
-        label: "Download on Android",
-        href: "https://play.google.com/store/apps/details?id=com.fitnow.loseit",
-      },
-    ],
-  },
-  {
-    id: "profiles",
-    title: "STEP 3 — COMPLETE YOUR APP PROFILES",
-    description:
-      "Add your details such as height, current weight, goal weight and any other important details so you can track progress.",
-  },
-  {
-    id: "book",
-    title: "STEP 5 — BOOK YOUR FIRST SESSION",
-    description:
-      "Use the calendar to choose a time that works for you and agree to the Studio terms.",
-  },
-];
-
-type OnboardingPageProps = {
-  searchParams?: {
-    plan?: string;
-  };
-};
-
-export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
-  const planFromQuery = searchParams?.plan;
-  const plan = useMemo(() => planFromQuery || "UNSPECIFIED", [planFromQuery]);
-
-  const [completedSteps, setCompletedSteps] = useState<
-    Record<ChecklistItemId, boolean>
-  >({
-    everfit: false,
-    loseit: false,
-    profiles: false,
-    book: false,
-  });
-
-  const [bookingCompleted, setBookingCompleted] = useState(false);
-  const [hasConfirmedOnboarding, setHasConfirmedOnboarding] = useState(false);
-
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [termsMessage, setTermsMessage] = useState<string | null>(null);
-  const [showTerms, setShowTerms] = useState(false);
-  const [showThankYouModal, setShowThankYouModal] = useState(false);
-  const [termsChecked, setTermsChecked] = useState(false);
-
-  const handleToggleChecklist = (id: ChecklistItemId) => {
-    setCompletedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  const handleConfirmOnboarding = () => {
-    console.log({
-      onboardingConfirmed: true,
-      plan,
-      timestamp: Date.now(),
-    });
-    setHasConfirmedOnboarding(true);
-  };
-
-  const handleAgreeTerms = () => {
-    if (!termsChecked) return;
-
-    setBookingCompleted(true);
-    setTermsMessage(
-      "Thank you for agreeing to the Studio terms and conditions. A member of the team will be in touch with you soon."
-    );
-    setShowTerms(false);
-    setShowThankYouModal(true);
-  };
-
+export default function HomePage() {
   return (
     <main
       className="min-h-screen bg-white text-black"
@@ -118,23 +10,28 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
           "Helvetica Neue, Helvetica, Arial, ui-sans-serif, system-ui, -apple-system",
       }}
     >
-      {/* Layout variables to match /home */}
+      {/* Layout variables aligned with your /home page */}
       <style>{`
         :root {
           --hp-container-max: 1120px;
           --hp-section-pad-x: 1.25rem;
-          --hp-card-min-h: 420px;
+          --hp-section-pad-x-lg: 1.5rem;
+          --hp-header-h: 64px;
+          --hp-hero-max-w: 920px;
+          --hp-grid-gap: 1.25rem;
           --hp-card-pad: 1.25rem;
+          --hp-card-radius: 1rem;
           --hp-footer-h: 72px;
           --hp-accent: #00C853;
           --hp-muted: #666666;
+          --hp-beige: #E8D7A8;
         }
       `}</style>
 
-      {/* HEADER (same as /home) */}
+      {/* HEADER */}
       <header
         className="sticky top-0 z-30 border-b border-black/10 backdrop-blur supports-[backdrop-filter]:bg-white/60"
-        style={{ height: "64px" }}
+        style={{ height: "var(--hp-header-h)" }}
       >
         <div
           className="mx-auto flex h-full w-full items-center justify-between"
@@ -146,20 +43,148 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
           <div className="text-sm tracking-[0.14em] font-semibold">
             HUMANPEA® LONDON
           </div>
-          <div className="flex items-center gap-3 text-xs text-black/60">
+
+          <div className="flex items-center gap-4 text-xs text-black/60">
             <span>00C853 / LIMITED SERIES</span>
-            <Link
-              href="/home"
-              className="underline underline-offset-4 text-black/50 hover:text-black"
-            >
-              Back to packages
-            </Link>
+            <nav className="hidden sm:flex items-center gap-4">
+              <Link className="hover:underline underline-offset-4" href="/home">
+                Packages
+              </Link>
+              <Link
+                className="hover:underline underline-offset-4"
+                href="/pt-packages/onboarding"
+              >
+                Onboarding
+              </Link>
+              <Link className="hover:underline underline-offset-4" href="/form">
+                Enquire
+              </Link>
+            </nav>
           </div>
         </div>
       </header>
 
-      {/* MAIN CONTENT */}
+      {/* HERO */}
       <section className="border-b border-black/10">
+        <div
+          className="mx-auto w-full"
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "3rem var(--hp-section-pad-x)",
+          }}
+        >
+          <div className="max-w-[var(--hp-hero-max-w)]">
+            <p className="text-xs uppercase tracking-[0.2em] text-black/50">
+              Private Studio • London
+            </p>
+
+            <h1 className="mt-4 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight">
+              HUMAN PEA LONDON
+              <span className="block mt-2 text-black/60">
+                Strength • Conditioning • Precision Coaching
+              </span>
+            </h1>
+
+            <p className="mt-5 max-w-prose text-sm text-black/70">
+              I’m Josh — a coach focused on building capable bodies: stronger,
+              more athletic, and resilient. HumanPea is a private training studio
+              built around structure, accountability, and measurable progress.
+            </p>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/home"
+                className="inline-flex items-center justify-center rounded-lg border border-black/15 bg-black/[0.02] px-5 py-2.5 text-sm font-medium hover:border-black/30 transition"
+              >
+                View Packages
+              </Link>
+
+              <Link
+                href="/pt-packages/onboarding"
+                className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] bg-[var(--hp-accent)]/10 px-5 py-2.5 text-sm font-medium hover:bg-[var(--hp-accent)]/20 transition"
+              >
+                Start Onboarding
+              </Link>
+
+              <Link
+                href="/form"
+                className="inline-flex items-center justify-center rounded-lg bg-[var(--hp-accent)] px-5 py-2.5 text-sm font-semibold text-black hover:bg-[#00b648] transition"
+              >
+                Enquire
+              </Link>
+            </div>
+
+            {/* TODO: Add a short “studio address” line once you want it public */}
+            <p className="mt-5 text-xs text-black/50">
+              {/* Studio location intentionally minimal for now. */}
+              By appointment only • Private studio training
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ABOUT / WHAT YOU GET */}
+      <section className="border-b border-black/10">
+        <div
+          className="mx-auto w-full"
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "2.5rem var(--hp-section-pad-x)",
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
+            <article
+              className="rounded-xl border border-black/10 bg-black/[0.02]"
+              style={{ padding: "var(--hp-card-pad)" }}
+            >
+              <h3 className="text-lg font-semibold tracking-wide">
+                Private Studio
+              </h3>
+              <p className="mt-2 text-sm text-black/70">
+                Focused sessions. No crowds. Coaching quality stays high.
+              </p>
+            </article>
+
+            <article
+              className="rounded-xl border border-black/10 bg-black/[0.02]"
+              style={{ padding: "var(--hp-card-pad)" }}
+            >
+              <h3 className="text-lg font-semibold tracking-wide">
+                Structure &amp; Accountability
+              </h3>
+              <p className="mt-2 text-sm text-black/70">
+                Clear programming, simple targets, and consistent follow-through.
+              </p>
+            </article>
+
+            <article
+              className="rounded-xl border border-black/10 bg-black/[0.02]"
+              style={{ padding: "var(--hp-card-pad)" }}
+            >
+              <h3 className="text-lg font-semibold tracking-wide">
+                Measurable Progress
+              </h3>
+              <p className="mt-2 text-sm text-black/70">
+                Strength markers, photos, habits, and performance tracked over time.
+              </p>
+            </article>
+          </div>
+
+          {/* Signature strip */}
+          <div className="mt-6 rounded-xl border border-black/10 bg-[var(--hp-beige)]/35 px-5 py-4">
+            <p className="text-xs uppercase tracking-[0.2em] text-black/60">
+              The HumanPea standard
+            </p>
+            <p className="mt-2 text-sm text-black/80 max-w-3xl">
+              Train like an athlete, even if you’re starting from zero: build
+              strength, conditioning, mobility, and confidence — without noise.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* NEXT STEPS */}
+      <section>
         <div
           className="mx-auto w-full"
           style={{
@@ -167,226 +192,86 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
             padding: "2.5rem var(--hp-section-pad-x) 3rem",
           }}
         >
-          {/* HERO + PROGRESS */}
-          <header className="space-y-8">
-            <div className="text-xs uppercase tracking-[0.2em] text-black/50">
-              HUMANPEA / PT PACKAGES
-              {planFromQuery ? ` / ${planFromQuery}` : ""}
-            </div>
+          <h2 className="text-xl sm:text-2xl font-semibold">
+            How to Start
+          </h2>
+          <p className="mt-2 text-sm text-black/70 max-w-prose">
+            If you’re ready, the flow is simple.
+          </p>
 
-            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
-              <div className="space-y-4">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight">
-                  PT <span className="opacity-70">ONBOARDING</span>
-                </h1>
-                <p className="max-w-xl text-sm text-black/70">
-                  Complete these steps before your first session at the Private
-                  Studio.
-                </p>
-                <p className="max-w-xl text-xs text-black/55 sm:text-sm">
-                  This onboarding flow currently supports the Functional Hybrid
-                  Training System and all future PT packages.
-                </p>
-              </div>
-
-              <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/[0.03] px-4 py-2 text-[10px] uppercase tracking-[0.18em] text-black/60">
-                <span className="h-2 w-2 rounded-full bg-[var(--hp-accent)]" />
-                <span>PLAN</span>
-                <span className="font-semibold text-[var(--hp-accent)]">
-                  {planFromQuery ?? "UNIVERSAL PT"}
-                </span>
-              </div>
-            </div>
-
-            {/* Progress bar */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-black/60">
-                <span>Onboarding Steps</span>
-                <span className="text-black/45">
-                  Apps · Checklist · Book Session · Confirm
-                </span>
-              </div>
-              <div className="flex items-center gap-4">
-                {["Apps", "Checklist", "Book Session", "Confirm"].map(
-                  (label, i) => (
-                    <div
-                      key={label}
-                      className="flex flex-1 items-center gap-2"
-                    >
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full border border-black/15 bg-white text-[11px] font-semibold">
-                        {i + 1}
-                      </div>
-                      <span className="text-xs text-black/70">{label}</span>
-                      {i < 3 && (
-                        <div className="h-px flex-1 bg-black/10" />
-                      )}
-                    </div>
-                  )
-                )}
-              </div>
-            </div>
-          </header>
-
-          {/* CHECKLIST */}
-          <section className="mt-10 space-y-6">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <h2 className="text-xl font-semibold sm:text-2xl">
-                  Onboarding Checklist
-                </h2>
-                <p className="mt-1 max-w-xl text-sm text-black/65">
-                  Tick each step off as you go. These steps keep your sessions
-                  smooth and results focused.
-                </p>
-              </div>
-              <p className="text-xs text-black/45">
-                Progress is saved locally in your browser.
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {CHECKLIST_ITEMS.map((item) => {
-                const checked = completedSteps[item.id];
-
-                const handleClick = () => {
-                  handleToggleChecklist(item.id);
-                  if (item.id === "book") {
-                    setShowBookingModal(true);
-                    setTermsMessage(null);
-                    setShowTerms(false);
-                    setTermsChecked(false);
-                  }
-                };
-
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={handleClick}
-                    className={`group flex flex-col items-start rounded-xl border text-left transition shadow-sm ${
-                      checked
-                        ? "border-[var(--hp-accent)] bg-[var(--hp-accent)]/4"
-                        : "border-black/10 bg-black/[0.02] hover:border-black/25"
-                    }`}
-                    style={{
-                      minHeight: "var(--hp-card-min-h)",
-                      padding: "var(--hp-card-pad)",
-                    }}
-                  >
-                    <div className="mb-3 flex w-full items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className={`flex h-5 w-5 items-center justify-center rounded-md border text-[11px] font-semibold ${
-                            checked
-                              ? "border-[var(--hp-accent)] bg-[var(--hp-accent)] text-white"
-                              : "border-black/25 bg-white text-black/70"
-                          }`}
-                        >
-                          {checked ? "✓" : ""}
-                        </span>
-                        <h3 className="text-lg font-semibold tracking-wide text-black">
-                          {item.title}
-                        </h3>
-                      </div>
-                    </div>
-
-                    <p className="text-xs text-black/70">{item.description}</p>
-
-                    {item.actions && (
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {item.actions.map((a) => (
-                          <Link
-                            key={a.label}
-                            href={a.href}
-                            onClick={(e) => e.stopPropagation()}
-                            className="rounded-full border border-black/15 bg-white px-3 py-1 text-[11px] text-black/80 hover:border-[var(--hp-accent)] hover:text-[var(--hp-accent)]"
-                          >
-                            {a.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* BOOKING SECTION (opens modal) */}
-          <section className="mt-10 space-y-4">
-            <h2 className="text-xl font-semibold sm:text-2xl">
-              Book Your First Session
-            </h2>
-            <p className="text-sm text-black/65 max-w-xl">
-              Use the calendar to pick a time that works for you and agree to
-              the Studio terms. Click STEP 5 above or the button below.
-            </p>
-
-            <button
-              type="button"
-              onClick={() => {
-                setShowBookingModal(true);
-                setTermsMessage(null);
-                setShowTerms(false);
-                setTermsChecked(false);
-              }}
-              className="inline-flex items-center justify-center rounded-full border border-black/20 bg-white px-4 py-2 text-sm font-medium hover:border-black/40"
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
+            <article
+              className="rounded-xl border border-black/10 bg-black/[0.02]"
+              style={{ padding: "var(--hp-card-pad)" }}
             >
-              Open calendar &amp; terms
-            </button>
-          </section>
+              <p className="text-xs uppercase tracking-[0.2em] text-black/50">
+                Step 01
+              </p>
+              <h3 className="mt-2 text-lg font-semibold tracking-wide">
+                Choose a Package
+              </h3>
+              <p className="mt-2 text-sm text-black/70">
+                Pick the tier that matches your schedule and target.
+              </p>
+              <Link
+                href="/home"
+                className="mt-4 inline-flex text-sm font-medium underline underline-offset-4 text-black/70 hover:text-black"
+              >
+                View packages
+              </Link>
+            </article>
 
-          {/* CONFIRMATION */}
-          <section className="mt-10 space-y-6 pb-8">
-            {!hasConfirmedOnboarding ? (
-              <div className="rounded-xl border border-black/10 bg-black/[0.02] p-5 shadow-sm">
-                <h2 className="text-lg font-semibold sm:text-xl">
-                  You’re Ready to Start
-                </h2>
-                <p className="text-sm text-black/65 max-w-xl mt-1">
-                  After completing the checklist and booking, confirm your
-                  onboarding.
-                </p>
+            <article
+              className="rounded-xl border border-black/10 bg-black/[0.02]"
+              style={{ padding: "var(--hp-card-pad)" }}
+            >
+              <p className="text-xs uppercase tracking-[0.2em] text-black/50">
+                Step 02
+              </p>
+              <h3 className="mt-2 text-lg font-semibold tracking-wide">
+                Complete Onboarding
+              </h3>
+              <p className="mt-2 text-sm text-black/70">
+                Apps, setup, and booking. Keeps your first session smooth.
+              </p>
+              <Link
+                href="/pt-packages/onboarding"
+                className="mt-4 inline-flex text-sm font-medium underline underline-offset-4 text-black/70 hover:text-black"
+              >
+                Start onboarding
+              </Link>
+            </article>
 
-                {!bookingCompleted && (
-                  <p className="text-xs text-amber-600 mt-2">
-                    Hint: Complete your booking and agree to the Studio terms
-                    before confirming.
-                  </p>
-                )}
+            <article
+              className="rounded-xl border border-black/10 bg-black/[0.02]"
+              style={{ padding: "var(--hp-card-pad)" }}
+            >
+              <p className="text-xs uppercase tracking-[0.2em] text-black/50">
+                Step 03
+              </p>
+              <h3 className="mt-2 text-lg font-semibold tracking-wide">
+                Enquire / Confirm
+              </h3>
+              <p className="mt-2 text-sm text-black/70">
+                Send your details and we’ll lock in your start point.
+              </p>
+              <Link
+                href="/form"
+                className="mt-4 inline-flex text-sm font-semibold text-black bg-[var(--hp-accent)] px-4 py-2 rounded-lg hover:bg-[#00b648] transition"
+              >
+                Enquire
+              </Link>
+            </article>
+          </div>
 
-                <button
-                  type="button"
-                  disabled={!bookingCompleted}
-                  onClick={handleConfirmOnboarding}
-                  className={`mt-4 rounded-full px-4 py-2 text-sm font-semibold shadow ${
-                    bookingCompleted
-                      ? "bg-[var(--hp-accent)] text-black hover:bg-[#00b648]"
-                      : "bg-black/5 text-black/40 cursor-not-allowed"
-                  }`}
-                >
-                  I’ve Completed My Onboarding
-                </button>
-              </div>
-            ) : (
-              <div className="rounded-xl border border-[var(--hp-accent)]/40 bg-[var(--hp-accent)]/10 p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-black sm:text-xl">
-                  You’re all set.
-                </h2>
-                <p className="mt-2 text-sm text-black/75 max-w-xl">
-                  You’ll see your program in the app before your first session.
-                </p>
-                <p className="mt-3 text-xs text-black/60">
-                  You can revisit this page anytime for terms, directions or app
-                  links.
-                </p>
-              </div>
-            )}
-          </section>
+          <p className="mt-8 text-xs text-black/50">
+            {/* TODO: If you want, add social proof here (client quote, before/after policy, etc.) */}
+            Built in London • Private sessions • Limited capacity
+          </p>
         </div>
       </section>
 
-      {/* FOOTER (same as /home) */}
+      {/* FOOTER */}
       <footer
         className="flex items-center border-t border-black/10"
         style={{ height: "var(--hp-footer-h)" }}
@@ -402,157 +287,6 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
           <span className="tracking-[0.18em]">ㅎㅍ</span>
         </div>
       </footer>
-
-      {/* BOOKING MODAL (lightbox) */}
-      {showBookingModal && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4">
-          <div className="relative w-full max-w-3xl rounded-2xl bg-white p-4 shadow-xl">
-            <button
-              type="button"
-              onClick={() => {
-                setShowBookingModal(false);
-                setShowTerms(false);
-              }}
-              className="absolute right-3 top-3 text-xs text-black/50 hover:text-black"
-            >
-              Close
-            </button>
-
-            <h3 className="text-lg font-semibold mb-2">
-              Book Your First Session
-            </h3>
-            <p className="text-xs text-black/60 mb-3">
-              Select a date and time using the calendar below, then review and
-              agree to the Studio terms.
-            </p>
-
-            <div className="overflow-hidden rounded-lg border border-black/10 bg-white">
-              <iframe
-                src="https://cal.com/human-pea-28vrwm/fitness-assessment"
-                title="Book your first session"
-                className="h-[500px] w-full border-0"
-                allow="camera; microphone; autoplay; clipboard-read; clipboard-write"
-              />
-            </div>
-
-            {/* Button to open separate Terms modal */}
-            <button
-              type="button"
-              onClick={() => {
-                setShowTerms(true);
-                setTermsMessage(null);
-                setTermsChecked(false);
-              }}
-              className="mt-4 text-xs font-semibold text-[#00C853] underline underline-offset-4"
-            >
-              Click here to review Studio terms
-            </button>
-
-            {termsMessage && (
-              <p className="mt-2 text-xs text-black/70">{termsMessage}</p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* TERMS MODAL */}
-      {showTerms && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="relative w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl max-h-[80vh] flex flex-col">
-            <button
-              type="button"
-              onClick={() => setShowTerms(false)}
-              className="absolute right-3 top-3 text-xs text-black/50 hover:text-black"
-            >
-              Close
-            </button>
-
-            <h3 className="text-lg font-semibold mb-2 text-center">
-              Studio Terms &amp; Conditions
-            </h3>
-
-            <div className="mt-2 flex-1 overflow-y-auto rounded-lg border border-black/10 bg-black/[0.02] p-3 space-y-2">
-              <ul className="list-disc pl-5 text-xs text-black/70 space-y-1">
-                <li>
-                  All sessions are by appointment only at the Private Studio in
-                  Walworth, SE17.
-                </li>
-                <li>
-                  24 hours’ notice is required to cancel or reschedule a
-                  session. Late cancellations or no-shows may be charged in
-                  full.
-                </li>
-                <li>
-                  You must inform your coach of any injuries, medical
-                  conditions, medication or changes in your health before each
-                  session.
-                </li>
-                <li>
-                  If you have any ongoing illnesses, recent surgery, chest pain,
-                  shortness of breath, or other health concerns, you should
-                  consult your GP or healthcare professional before starting
-                  personal training.
-                </li>
-                <li>
-                  You agree to follow studio safety instructions at all times
-                  and to use equipment as demonstrated.
-                </li>
-                <li>
-                  Packages and sessions are non-transferable and should be used
-                  within the agreed time frame unless otherwise discussed.
-                </li>
-              </ul>
-            </div>
-
-            <div className="mt-3 flex items-center gap-2 text-xs text-black/80">
-              <input
-                id="termsCheckbox"
-                type="checkbox"
-                checked={termsChecked}
-                onChange={(e) => setTermsChecked(e.target.checked)}
-                className="h-4 w-4 rounded border-black/30"
-              />
-              <label htmlFor="termsCheckbox">
-                I have read and agree to all Studio Terms.
-              </label>
-            </div>
-
-            <button
-              type="button"
-              onClick={handleAgreeTerms}
-              disabled={!termsChecked}
-              className={`mt-3 inline-flex items-center justify-center rounded-full px-4 py-2 text-xs font-semibold text-black shadow ${
-                termsChecked
-                  ? "bg-[#00C853] hover:bg-[#00b648]"
-                  : "bg-black/5 text-black/40 cursor-not-allowed"
-              }`}
-            >
-              Submit agreement
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* CENTRE THANK-YOU MODAL */}
-      {showThankYouModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="w-full max-w-sm rounded-2xl bg-white p-6 text-center shadow-xl">
-            <h3 className="text-lg font-semibold mb-2">
-              Thank you for agreeing to terms
-            </h3>
-            <p className="text-sm text-black/70">
-              A member of staff will be in contact with you within 24 hours.
-            </p>
-            <button
-              type="button"
-              onClick={() => setShowThankYouModal(false)}
-              className="mt-4 inline-flex items-center justify-center rounded-full bg-[#00C853] px-4 py-2 text-sm font-semibold text-black shadow hover:bg-[#00b648]"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </main>
   );
 }
