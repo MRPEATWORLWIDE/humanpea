@@ -1,6 +1,7 @@
+// app/pt-packages/onboarding/page.tsx
 "use client";
 
-import React, { useMemo, useState, FormEvent } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 
 type ChecklistItemId = "everfit" | "loseit" | "profiles" | "book";
@@ -59,9 +60,7 @@ const CHECKLIST_ITEMS: ChecklistItem[] = [
 ];
 
 type OnboardingPageProps = {
-  searchParams?: {
-    plan?: string;
-  };
+  searchParams?: { plan?: string };
 };
 
 export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
@@ -75,107 +74,39 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
     book: false,
   });
 
-  const [bookingCompleted, setBookingCompleted] = useState(false);
-  const [hasConfirmedOnboarding, setHasConfirmedOnboarding] = useState(false);
-
   const [showBookingModal, setShowBookingModal] = useState(false);
-  const [termsMessage, setTermsMessage] = useState<string | null>(null);
-  const [showTerms, setShowTerms] = useState(false);
+  const [hasConfirmedOnboarding, setHasConfirmedOnboarding] = useState(false);
 
   const handleToggleChecklist = (id: ChecklistItemId) => {
     setCompletedSteps((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const handleConfirmOnboarding = () => {
-    setHasConfirmedOnboarding(true);
-  };
-
-  const handleAgreeTerms = () => {
-    setBookingCompleted(true);
-    setTermsMessage(
-      "Thank you for agreeing to the Studio terms and conditions. A member of the team will be in touch with you soon."
-    );
-  };
-
   return (
-    <main
-      className="min-h-screen bg-white text-black"
-      style={{
-        fontFamily:
-          "Helvetica Neue, Helvetica, Arial, ui-sans-serif, system-ui, -apple-system",
-      }}
-    >
-      {/* Layout variables */}
-      <style>{`
-        :root {
-          --hp-container-max: 1120px;
-          --hp-section-pad-x: 1.25rem;
-          --hp-card-min-h: 420px;
-          --hp-card-pad: 1.25rem;
-          --hp-footer-h: 72px;
-          --hp-accent: #00C853;
-        }
-      `}</style>
+    <>
+      <section className="bg-white text-black py-16">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 
-      {/* HEADER */}
-      <header
-        className="sticky top-0 z-30 border-b border-black/10 backdrop-blur supports-[backdrop-filter]:bg-white/60"
-        style={{ height: "64px" }}
-      >
-        <div
-          className="mx-auto flex h-full w-full items-center justify-between"
-          style={{
-            maxWidth: "var(--hp-container-max)",
-            padding: "0 var(--hp-section-pad-x)",
-          }}
-        >
-          <div className="text-sm tracking-[0.14em] font-semibold">
-            HUMANPEA® LONDON
-          </div>
-          <div className="flex items-center gap-3 text-xs text-black/60">
-            <span>00C853 / LIMITED SERIES</span>
-            <Link
-              href="/home"
-              className="underline underline-offset-4 text-black/50 hover:text-black"
-            >
-              Back to packages
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* MAIN CONTENT */}
-      <section className="border-b border-black/10">
-        <div
-          className="mx-auto w-full"
-          style={{
-            maxWidth: "var(--hp-container-max)",
-            padding: "2.5rem var(--hp-section-pad-x) 3rem",
-          }}
-        >
           {/* HERO */}
-          <header className="space-y-8">
+          <header className="space-y-6">
             <div className="text-xs uppercase tracking-[0.2em] text-black/50">
               HUMANPEA / PT PACKAGES
               {planFromQuery ? ` / ${planFromQuery}` : ""}
             </div>
 
-            <div className="flex flex-col justify-between gap-6 md:flex-row md:items-start">
-              <div className="space-y-4">
-                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight">
-                  PT <span className="opacity-70">ONBOARDING</span>
-                </h1>
-                <p className="max-w-xl text-sm text-black/70">
-                  Complete these steps before your first session at the Private
-                  Studio.
-                </p>
-              </div>
-            </div>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-[650] leading-tight">
+              PT <span className="opacity-70">ONBOARDING</span>
+            </h1>
+
+            <p className="max-w-xl text-sm text-black/70">
+              Complete these steps before your first session at the Private Studio.
+            </p>
           </header>
 
           {/* CHECKLIST */}
-          <section className="mt-10 space-y-6">
-            <h2 className="text-xl font-semibold sm:text-2xl">Onboarding Checklist</h2>
+          <section className="mt-12 space-y-6">
+            <h2 className="text-xl font-semibold sm:text-2xl">
+              Onboarding Checklist
+            </h2>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {CHECKLIST_ITEMS.map((item) => {
@@ -185,8 +116,6 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
                   handleToggleChecklist(item.id);
                   if (item.id === "book") {
                     setShowBookingModal(true);
-                    setTermsMessage(null);
-                    setShowTerms(false);
                   }
                 };
 
@@ -195,27 +124,23 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
                     key={item.id}
                     type="button"
                     onClick={handleClick}
-                    className={`group flex flex-col items-start rounded-xl border text-left transition shadow-sm ${
+                    className={`flex flex-col items-start rounded-xl border p-6 text-left transition ${
                       checked
-                        ? "border-[var(--hp-accent)] bg-[var(--hp-accent)]/4"
+                        ? "border-[#00C853] bg-[#00C853]/5"
                         : "border-black/10 bg-black/[0.02] hover:border-black/25"
                     }`}
-                    style={{
-                      minHeight: "var(--hp-card-min-h)",
-                      padding: "var(--hp-card-pad)",
-                    }}
                   >
-                    <div className="mb-3 flex w-full items-center gap-2">
+                    <div className="mb-3 flex items-center gap-2">
                       <span
                         className={`flex h-5 w-5 items-center justify-center rounded-md border text-[11px] font-semibold ${
                           checked
-                            ? "border-[var(--hp-accent)] bg-[var(--hp-accent)] text-white"
+                            ? "border-[#00C853] bg-[#00C853] text-white"
                             : "border-black/25 bg-white text-black/70"
                         }`}
                       >
                         {checked ? "✓" : ""}
                       </span>
-                      <h3 className="text-lg font-semibold tracking-wide text-black">
+                      <h3 className="text-lg font-semibold tracking-wide">
                         {item.title}
                       </h3>
                     </div>
@@ -229,7 +154,7 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
                             key={a.label}
                             href={a.href}
                             onClick={(e) => e.stopPropagation()}
-                            className="rounded-full border border-black/15 bg-white px-3 py-1 text-[11px] text-black/80 hover:border-[var(--hp-accent)] hover:text-[var(--hp-accent)]"
+                            className="rounded-full border border-black/15 bg-white px-3 py-1 text-[11px] text-black/80 hover:border-[#00C853] hover:text-[#00C853]"
                           >
                             {a.label}
                           </Link>
@@ -243,23 +168,20 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
           </section>
 
           {/* CONFIRMATION */}
-          <section className="mt-10 pb-10">
+          <section className="mt-12">
             {!hasConfirmedOnboarding ? (
-              <div className="rounded-xl border border-black/10 bg-black/[0.02] p-5 shadow-sm">
+              <div className="rounded-xl border border-black/10 bg-black/[0.02] p-6">
                 <h2 className="text-lg font-semibold sm:text-xl">
                   You’re Ready to Start
                 </h2>
-                <p className="text-sm text-black/65 max-w-xl mt-1">
-                  After completing the checklist and booking, confirm your onboarding.
-                </p>
 
                 <button
                   type="button"
                   disabled={!completedSteps.book}
-                  onClick={handleConfirmOnboarding}
-                  className={`mt-4 rounded-full px-4 py-2 text-sm font-semibold shadow ${
+                  onClick={() => setHasConfirmedOnboarding(true)}
+                  className={`mt-4 rounded-full px-5 py-2 text-sm font-semibold ${
                     completedSteps.book
-                      ? "bg-[var(--hp-accent)] text-black hover:bg-[#00b648]"
+                      ? "bg-[#00C853] text-black hover:bg-[#00b648]"
                       : "bg-black/5 text-black/40 cursor-not-allowed"
                   }`}
                 >
@@ -267,61 +189,46 @@ export default function OnboardingPage({ searchParams }: OnboardingPageProps) {
                 </button>
               </div>
             ) : (
-              <div className="rounded-xl border border-[var(--hp-accent)]/40 bg-[var(--hp-accent)]/10 p-5 shadow-sm">
-                <h2 className="text-lg font-semibold text-black sm:text-xl">
+              <div className="rounded-xl border border-[#00C853]/40 bg-[#00C853]/10 p-6">
+                <h2 className="text-lg font-semibold">
                   You’re all set.
                 </h2>
-                <p className="mt-2 text-sm text-black/75 max-w-xl">
+                <p className="mt-2 text-sm text-black/75">
                   You’ll see your program in the app before your first session.
                 </p>
               </div>
             )}
           </section>
+
         </div>
       </section>
-
-      {/* FOOTER */}
-      <footer
-        className="flex items-center border-t border-black/10"
-        style={{ height: "var(--hp-footer-h)" }}
-      >
-        <div
-          className="mx-auto flex w-full items-center justify-between text-xs text-black/60"
-          style={{
-            maxWidth: "var(--hp-container-max)",
-            padding: "0 var(--hp-section-pad-x)",
-          }}
-        >
-          <span>©2025 HUMANPEA FUNCTIONAL SYSTEMS</span>
-          <span className="tracking-[0.18em]">ㅎㅍ</span>
-        </div>
-      </footer>
 
       {/* BOOKING MODAL */}
       {showBookingModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 px-4">
-          <div className="relative w-full max-w-3xl rounded-2xl bg-white p-4 shadow-xl">
+          <div className="relative w-full max-w-3xl rounded-2xl bg-white p-6 shadow-xl">
             <button
               type="button"
               onClick={() => setShowBookingModal(false)}
-              className="absolute right-3 top-3 text-xs text-black/50 hover:text-black"
+              className="absolute right-4 top-4 text-xs text-black/50 hover:text-black"
             >
               Close
             </button>
 
-            <h3 className="text-lg font-semibold mb-2">Book Your First Session</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              Book Your First Session
+            </h3>
 
             <div className="overflow-hidden rounded-lg border border-black/10 bg-white">
               <iframe
                 src="https://cal.com/human-pea-28vrwm/fitness-assessment"
                 title="Book your first session"
                 className="h-[500px] w-full border-0"
-                allow="camera; microphone; autoplay; clipboard-read; clipboard-write"
               />
             </div>
           </div>
         </div>
       )}
-    </main>
+    </>
   );
 }
