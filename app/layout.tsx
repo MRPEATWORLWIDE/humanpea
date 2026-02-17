@@ -20,7 +20,7 @@ export default function RootLayout({
               <Link href="/">Home</Link>
               <Link href="/online-coaching">Online Coaching</Link>
               <Link href="/vista-gym">Vista Gym</Link>
-              <Link href="/pt-packages/onboarding">Onboarding</Link>
+              <Link href="/onboarding">Onboarding</Link>
               <Link href="https://form.jotform.com/252973068946371" target="_blank"> Enquire </Link>
             </nav>
           </div>
