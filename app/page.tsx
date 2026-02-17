@@ -1,91 +1,46 @@
-import React from "react";
-import Link from "next/link";
+import Image from "next/image";
 
 export default function HomePage() {
   return (
-    <>
-      <section className="border-b border-black/10">
-        <div className="mx-auto max-w-[1120px] px-5 py-12">
-          <div className="max-w-[920px]">
+    <section
+      className="flex items-center border-b border-black/10"
+      style={{ height: "calc(100vh - 128px)" }}
+    >
+      <div className="mx-auto max-w-[1120px] px-5 w-full">
+        <div className="grid md:grid-cols-2 gap-10 items-center">
+
+          {/* LEFT TEXT */}
+          <div className="max-w-[520px]">
             <p className="text-xs uppercase tracking-[0.2em] text-black/50">
-              Private Studio • London
+              HumanPea® London
             </p>
 
-            <h1 className="mt-4 text-3xl md:text-5xl font-semibold leading-tight">
-              HUMAN PEA LONDON
-              <span className="block mt-2 text-black/60">
-                Strength • Conditioning • Precision Coaching
+            <h1 className="mt-4 text-4xl md:text-6xl font-semibold leading-tight">
+              Joshua Peat
+              <span className="block mt-3 text-black/60 text-xl md:text-2xl">
+                Performance • Systems • Culture
               </span>
             </h1>
 
-            <p className="mt-5 max-w-prose text-sm text-black/70">
-              I’m Josh — a coach focused on building capable bodies: stronger,
-              more athletic, and resilient. HumanPea is a private training studio
-              built around structure, accountability, and measurable progress.
-            </p>
-
-            <div className="mt-8 flex flex-col sm:flex-row gap-3">
-              <Link
-                href="/hybrid-pt"
-                className="inline-flex items-center justify-center rounded-lg border border-black/15 bg-black/[0.02] px-5 py-2.5 text-sm font-medium hover:border-black/30 transition"
-              >
-                View Packages
-              </Link>
-
-              <Link
-                href="/pt-packages/onboarding"
-                className="inline-flex items-center justify-center rounded-lg border border-[#00C853] bg-[#00C853]/10 px-5 py-2.5 text-sm font-medium hover:bg-[#00C853]/20 transition"
-              >
-                Start Onboarding
-              </Link>
-
-              <Link
-                href="/form"
-                className="inline-flex items-center justify-center rounded-lg bg-[#00C853] px-5 py-2.5 text-sm font-semibold text-black hover:bg-[#00b648] transition"
-              >
-                Enquire
-              </Link>
-            </div>
-
-            <p className="mt-5 text-xs text-black/50">
-              By appointment only • Private studio training
+            <p className="mt-6 text-sm text-black/70">
+              HumanPea is the personal operating system behind my work —
+              performance coaching, digital systems, and structured growth.
             </p>
           </div>
-        </div>
-      </section>
 
-      <section className="border-b border-black/10">
-        <div className="mx-auto max-w-[1120px] px-5 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <article className="rounded-xl border border-black/10 bg-black/[0.02] p-5">
-              <h3 className="text-lg font-semibold tracking-wide">
-                Private Studio
-              </h3>
-              <p className="mt-2 text-sm text-black/70">
-                Focused sessions. No crowds. Coaching quality stays high.
-              </p>
-            </article>
-
-            <article className="rounded-xl border border-black/10 bg-black/[0.02] p-5">
-              <h3 className="text-lg font-semibold tracking-wide">
-                Structure & Accountability
-              </h3>
-              <p className="mt-2 text-sm text-black/70">
-                Clear programming, simple targets, and consistent follow-through.
-              </p>
-            </article>
-
-            <article className="rounded-xl border border-black/10 bg-black/[0.02] p-5">
-              <h3 className="text-lg font-semibold tracking-wide">
-                Measurable Progress
-              </h3>
-              <p className="mt-2 text-sm text-black/70">
-                Strength markers, photos, habits, and performance tracked over time.
-              </p>
-            </article>
+          {/* RIGHT IMAGE */}
+          <div className="relative w-full max-w-[420px] aspect-[3/4] mx-auto float-slow group">
+            <Image
+              src="/josh.jpg" // replace with your image
+              alt="Joshua Peat"
+              fill
+              className="object-cover transition duration-700 group-hover:grayscale"
+              priority
+            />
           </div>
+
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
