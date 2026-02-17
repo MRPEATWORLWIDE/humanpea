@@ -31,8 +31,8 @@ export default function HomePage() {
           {/* RIGHT IMAGE */}
           <div className="relative w-full max-w-[420px] aspect-[3/4] mx-auto float-slow group">
             <Image
-              src="/josh.jpg" // replace with your image
-              alt="Joshua Peat"
+              src="/images/humanpea-hero.jpg"
+              alt="Human Coach"
               fill
               className="object-cover transition duration-700 group-hover:grayscale"
               priority
