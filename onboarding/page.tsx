@@ -1,4 +1,4 @@
-// app/pt-packages/onboarding/page.tsx
+// app/onboarding/page.tsx
 "use client";
 
 import React, { useMemo, useState } from "react";
