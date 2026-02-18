@@ -36,10 +36,10 @@ export default function VistaGymTestPage() {
           }}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
-            <span className="opacity-70">&apos;FUNCTIONAL&apos;</span> HYBRID TRAINING SYSTEM
+            <span className="opacity-70">&apos;FUNCTIONAL&apos;</span> IN-PERSON TRAINING SYSTEM
           </h1>
           <p className="mt-4 max-w-prose text-sm text-black/70">
-            Private Studio • Precision Coaching • Adaptive Programming
+            1-1 PT Sessions for Vista Residents only. For sessions away from Vista please click here.
           </p>
         </div>
       </section>
@@ -60,14 +60,16 @@ export default function VistaGymTestPage() {
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">VISTA_01</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  1 Session | 60 minute Training System
+                  1 Session | Vista Gym | 60 Minute Training System
                 </p>
               </div>
               <div className="mt-6">
                 <div className="text-2xl font-bold">£60</div>
                 <div className="mt-3">
                   <Link
-                    href="/form"
+                    href="https://buy.stripe.com/14A6oH26Gf1c45L87h67S04"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
@@ -81,7 +83,7 @@ export default function VistaGymTestPage() {
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">VISTA_02</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  10 Sessions | 60 minutes | Transformation | Precision Coaching | Adaptive Programming | Mesocycle
+                  10 Sessions | Vista Gym | Transformation | Precision Coaching | Adaptive Programming | Mesocycle
                 </p>
                 <p className="mt-3 text-sm text-black/65">
                   Designed for transformation. Feedback, accountability, measurable output.
@@ -91,7 +93,9 @@ export default function VistaGymTestPage() {
                 <div className="text-2xl font-bold">£540</div>
                 <div className="mt-3">
                   <Link
-                    href="/form"
+                    href="https://buy.stripe.com/3cIfZhdPog5gdGl87h67S03"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
@@ -105,14 +109,16 @@ export default function VistaGymTestPage() {
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">VISTA_03</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  1 Session | 30 minute Training System
+                  1 Session | Vista Gym | 30 Minute Training System
                 </p>
               </div>
               <div className="mt-6">
                 <div className="text-2xl font-bold">£40</div>
                 <div className="mt-3">
                   <Link
-                    href="/form"
+                    href="https://buy.stripe.com/9B6eVdeTs6uGfOtevF67S02"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
@@ -126,7 +132,7 @@ export default function VistaGymTestPage() {
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">VISTA_04</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  10 Sessions | 30 minutes | Balanced Progression | Rehabilitation | Mobility
+                  10 Sessions | Vista Gym | Balanced Progression | Rehabilitation | Mobility
                 </p>
                 <p className="mt-3 text-sm text-black/65">
                   Designed for light mobility exercises, injury rehabilitation,
@@ -137,7 +143,9 @@ export default function VistaGymTestPage() {
                 <div className="text-2xl font-bold">£350</div>
                 <div className="mt-3">
                   <Link
-                    href="/form"
+                    href="https://buy.stripe.com/3cI5kDfXw9GS45LdrB67S01"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
@@ -154,7 +162,7 @@ export default function VistaGymTestPage() {
                   12-Week Transformation Programme
                 </p>
                 <p className="mt-2 text-sm text-black/75">
-                  24 Sessions | Structured progression | Nutrition guidance [7 days] | Priority scheduling
+                  24 Sessions (2x per week) | Structured progression | Nutrition guidance (7 days) | Priority scheduling
                 </p>
                 <p className="mt-3 text-sm text-black/65">
                   Designed for body recomposition, measurable progress on structured fat loss,
@@ -165,7 +173,9 @@ export default function VistaGymTestPage() {
                 <div className="text-2xl font-bold">£1550</div>
                 <div className="mt-3">
                   <Link
-                    href="/form"
+                    href="https://buy.stripe.com/14A8wP8v48CO7hX5Z967S00"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
