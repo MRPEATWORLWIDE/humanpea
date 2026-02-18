@@ -36,10 +36,10 @@ export default function VistaGymTestPage() {
           }}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
-            <span className="opacity-70">'FUNCTIONAL'</span> IN-PERSON TRAINING SYSTEM
+            <span className="opacity-70">&apos;FUNCTIONAL&apos;</span> HYBRID TRAINING SYSTEM
           </h1>
           <p className="mt-4 max-w-prose text-sm text-black/70">
-            1-1 PT Sessions for Vista Residents only. For sessions away from Vista please click here.
+            Private Studio • Precision Coaching • Adaptive Programming
           </p>
         </div>
       </section>
