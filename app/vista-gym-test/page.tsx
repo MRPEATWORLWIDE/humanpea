@@ -12,7 +12,7 @@ export default function VistaGymTestPage() {
     >
       <style>{`
         :root {
-          --hp-container-max: 1120px;
+          --hp-container-max: 1320px;
           --hp-section-pad-x: 1.25rem;
           --hp-hero-min-h: 36vh;
           --hp-hero-max-w: 920px;
@@ -63,13 +63,12 @@ export default function VistaGymTestPage() {
                   1 Session | Vista Gym | 60 Minute Training System
                 </p>
               </div>
-
               <div className="mt-6">
-                <div className="text-2xl font-bold text-[var(--hp-accent)]">£60</div>
+                <div className="text-2xl font-bold">£60</div>
                 <div className="mt-3">
                   <Link
                     href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] px-4 py-2 text-sm font-medium text-[var(--hp-accent)] hover:bg-[var(--hp-accent)]/10 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
@@ -88,13 +87,12 @@ export default function VistaGymTestPage() {
                   Designed for transformation. Feedback, accountability, measurable output.
                 </p>
               </div>
-
               <div className="mt-6">
-                <div className="text-2xl font-bold text-[var(--hp-accent)]">£540</div>
+                <div className="text-2xl font-bold">£540</div>
                 <div className="mt-3">
                   <Link
                     href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] px-4 py-2 text-sm font-medium text-[var(--hp-accent)] hover:bg-[var(--hp-accent)]/10 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
@@ -117,13 +115,12 @@ export default function VistaGymTestPage() {
                   strength development and SMART goals over 12 focused weeks.
                 </p>
               </div>
-
               <div className="mt-6">
-                <div className="text-2xl font-bold text-[var(--hp-accent)]">£1550</div>
+                <div className="text-2xl font-bold">£1550</div>
                 <div className="mt-3">
                   <Link
                     href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] px-4 py-2 text-sm font-medium text-[var(--hp-accent)] hover:bg-[var(--hp-accent)]/10 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
@@ -139,13 +136,12 @@ export default function VistaGymTestPage() {
                   1 Session | Vista Gym | 30 Minute Training System
                 </p>
               </div>
-
               <div className="mt-6">
-                <div className="text-2xl font-bold text-[var(--hp-accent)]">£40</div>
+                <div className="text-2xl font-bold">£40</div>
                 <div className="mt-3">
                   <Link
                     href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] px-4 py-2 text-sm font-medium text-[var(--hp-accent)] hover:bg-[var(--hp-accent)]/10 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
@@ -165,13 +161,12 @@ export default function VistaGymTestPage() {
                   familiarity with gym environment and equipment.
                 </p>
               </div>
-
               <div className="mt-6">
-                <div className="text-2xl font-bold text-[var(--hp-accent)]">£350</div>
+                <div className="text-2xl font-bold">£350</div>
                 <div className="mt-3">
                   <Link
                     href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] px-4 py-2 text-sm font-medium text-[var(--hp-accent)] hover:bg-[var(--hp-accent)]/10 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
