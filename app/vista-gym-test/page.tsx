@@ -12,7 +12,7 @@ export default function VistaGymTestPage() {
     >
       <style>{`
         :root {
-          --hp-container-max: 1320px;
+          --hp-container-max: 1120px;
           --hp-section-pad-x: 1.25rem;
           --hp-hero-min-h: 36vh;
           --hp-hero-max-w: 920px;
