@@ -12,19 +12,34 @@ export default function RootLayout({
 
         {/* GLOBAL HEADER */}
         <header className="border-b border-black/10">
-          <div className="mx-auto max-w-[1120px] px-5 h-16 flex items-center justify-between">
-            <div className="font-semibold tracking-wide">
-              HUMANPEA® LONDON
-            </div>
-            <nav className="flex gap-6 text-sm">
-              <Link href="/">Home</Link>
-              <Link href="/online-coaching">Online Coaching</Link>
-              <Link href="/vista-gym">Vista Gym</Link>
-              <Link href="/onboarding">Onboarding</Link>
-              <Link href="https://form.jotform.com/252973068946371" target="_blank"> Enquire </Link>
-            </nav>
-          </div>
-        </header>
+  <div className="mx-auto max-w-[1120px] px-5 h-16 flex items-center justify-between">
+
+    {/* Logo */}
+    <div className="font-semibold tracking-wide whitespace-nowrap">
+      HUMANPEA® LONDON
+    </div>
+
+    {/* Desktop Nav */}
+    <nav className="hidden md:flex gap-6 text-sm">
+      <Link href="/">Home</Link>
+      <Link href="/online-coaching">Online Coaching</Link>
+      <Link href="/vista-gym">Vista Gym</Link>
+      <Link href="/onboarding">Onboarding</Link>
+      <Link
+        href="https://form.jotform.com/252973068946371"
+        target="_blank"
+      >
+        Enquire
+      </Link>
+    </nav>
+
+    {/* Mobile Placeholder (we can upgrade later) */}
+    <div className="md:hidden text-sm">
+      Menu
+    </div>
+
+  </div>
+</header>
 
         {/* PAGE CONTENT */}
         <main>{children}</main>
