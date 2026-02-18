@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import Header from "../components/Header"; // we’ll create this
+import Header from "../components/header"; // we’ll create this
 import Link from "next/link";
 
 export default function RootLayout({
