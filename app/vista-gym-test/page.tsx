@@ -2,7 +2,8 @@ import React from "react";
 import Link from "next/link";
 
 // Legacy HumanPea Hybrid Landing Page
-// Sandbox version – no structural edits
+// Updated Pricing Grid Layout (5 Cards)
+// No changes to Header, Hero, CSS system or Footer
 
 export default function VistaGymTestPage() {
   return (
@@ -99,111 +100,114 @@ export default function VistaGymTestPage() {
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
-            {/* CARD 1 */}
-            <article
-              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
-              style={{
-                minHeight: "var(--hp-card-min-h)",
-                padding: "var(--hp-card-pad)",
-              }}
-            >
-              <div className="absolute right-3 top-3">
-                <span className="rounded-full border border-black/15 bg-[var(--hp-accent)]/10 px-3 py-1 text-xs font-medium tracking-wide text-[var(--hp-accent)]">
-                  Promo
-                </span>
-              </div>
 
-              <div>
-                <h3 className="text-lg font-semibold tracking-wide">HYBRID_01</h3>
-                <p className="mt-2 text-sm text-black/75">
-                  8 Sessions / 2x Per Week / Private Studio
-                </p>
-                <p className="mt-3 text-sm text-black/65 max-w-prose">
-                  Entry-level structure to rebuild consistency. Foundation, discipline, routine.
-                </p>
-              </div>
+            {/* LEFT GRID (4 CARDS) */}
+            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-[var(--hp-grid-gap)]">
 
-              <div>
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-2xl line-through opacity-60">£450.00</span>
-                  <span className="text-2xl font-bold text-[var(--hp-accent)]">£0.00</span>
+              {/* VISTA_01 */}
+              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[var(--hp-card-min-h)]">
+                <div>
+                  <h3 className="text-lg font-semibold tracking-wide">VISTA_01</h3>
+                  <p className="mt-2 text-sm text-black/75">
+                    1 Session | Vista Gym | 60 Minute Training System
+                  </p>
                 </div>
+                <div>
+                  <div className="mt-6 text-2xl font-bold">£60</div>
+                  <div className="mt-4">
+                    <Link href="/form" className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition">
+                      Buy now
+                    </Link>
+                  </div>
+                </div>
+              </article>
+
+              {/* VISTA_02 */}
+              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[var(--hp-card-min-h)]">
+                <div>
+                  <h3 className="text-lg font-semibold tracking-wide">VISTA_02</h3>
+                  <p className="mt-2 text-sm text-black/75">
+                    10 Sessions | Vista Gym | Transformation | Precision Coaching | Adaptive Programming | Mesocycle
+                  </p>
+                  <p className="mt-3 text-sm text-black/65">
+                    Designed for transformation. Feedback, accountability, measurable output.
+                  </p>
+                </div>
+                <div>
+                  <div className="mt-6 text-2xl font-bold">£540</div>
+                  <div className="mt-4">
+                    <Link href="/form" className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition">
+                      Buy now
+                    </Link>
+                  </div>
+                </div>
+              </article>
+
+              {/* VISTA_03 */}
+              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[var(--hp-card-min-h)]">
+                <div>
+                  <h3 className="text-lg font-semibold tracking-wide">VISTA_03</h3>
+                  <p className="mt-2 text-sm text-black/75">
+                    1 Session | Vista Gym | 30 Minute Training System
+                  </p>
+                </div>
+                <div>
+                  <div className="mt-6 text-2xl font-bold">£40</div>
+                  <div className="mt-4">
+                    <Link href="/form" className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition">
+                      Buy now
+                    </Link>
+                  </div>
+                </div>
+              </article>
+
+              {/* VISTA_04 */}
+              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[var(--hp-card-min-h)]">
+                <div>
+                  <h3 className="text-lg font-semibold tracking-wide">VISTA_04</h3>
+                  <p className="mt-2 text-sm text-black/75">
+                    10 Sessions | Vista Gym | Balanced Progression | Rehabilitation | Mobility
+                  </p>
+                  <p className="mt-3 text-sm text-black/65">
+                    Designed for light mobility exercises, injury rehabilitation, familiarity with gym environment and equipment.
+                  </p>
+                </div>
+                <div>
+                  <div className="mt-6 text-2xl font-bold">£350</div>
+                  <div className="mt-4">
+                    <Link href="/form" className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition">
+                      Buy now
+                    </Link>
+                  </div>
+                </div>
+              </article>
+
+            </div>
+
+            {/* RIGHT TALL CARD */}
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[calc(var(--hp-card-min-h)*2+var(--hp-grid-gap))]">
+              <div>
+                <h3 className="text-lg font-semibold tracking-wide">VISTA_05</h3>
+                <p className="mt-2 text-sm text-black/75">
+                  12-Week Transformation Programme
+                </p>
+                <p className="mt-3 text-sm text-black/65">
+                  24 Sessions (2x per week) | Structured progression | Nutrition guidance (7 days) | Priority scheduling
+                </p>
+                <p className="mt-3 text-sm text-black/65">
+                  Designed for body recomposition, measurable progress on areas such as structured fat loss, strength development and SMART goals over 12 focused weeks.
+                </p>
+              </div>
+              <div>
+                <div className="mt-6 text-2xl font-bold">£1550</div>
                 <div className="mt-4">
-                  <Link
-                    href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] bg-[var(--hp-accent)]/10 px-4 py-2 text-sm font-medium hover:bg-[var(--hp-accent)]/20 transition"
-                  >
-                    Claim
+                  <Link href="/form" className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition">
+                    Buy now
                   </Link>
                 </div>
               </div>
             </article>
 
-            {/* CARD 2 */}
-            <article
-              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
-              style={{
-                minHeight: "var(--hp-card-min-h)",
-                padding: "var(--hp-card-pad)",
-              }}
-            >
-              <div>
-                <h3 className="text-lg font-semibold tracking-wide">HYBRID_02</h3>
-                <p className="mt-2 text-sm text-black/75">
-                  12 Sessions / 3x Per Week / Private Studio / Balanced Progression
-                </p>
-                <p className="mt-3 text-sm text-black/65 max-w-prose">
-                  Designed for transformation. Feedback, accountability, measurable output.
-                </p>
-              </div>
-
-              <div>
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-2xl font-bold">£600.00</span>
-                </div>
-                <div className="mt-4">
-                  <Link
-                    href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
-                  >
-                    Enquire
-                  </Link>
-                </div>
-              </div>
-            </article>
-
-            {/* CARD 3 */}
-            <article
-              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
-              style={{
-                minHeight: "var(--hp-card-min-h)",
-                padding: "var(--hp-card-pad)",
-              }}
-            >
-              <div>
-                <h3 className="text-lg font-semibold tracking-wide">HYBRID_03</h3>
-                <p className="mt-2 text-sm text-black/75">
-                  16 Sessions / 4x Per Week / Private Studio / Performance Tier
-                </p>
-                <p className="mt-3 text-sm text-black/65 max-w-prose">
-                  Precision coaching. Adaptive programming. Maximum accountability.
-                </p>
-              </div>
-
-              <div>
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-2xl font-bold">£750.00</span>
-                </div>
-                <div className="mt-4">
-                  <Link
-                    href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
-                  >
-                    Enquire
-                  </Link>
-                </div>
-              </div>
-            </article>
           </div>
         </div>
       </section>
