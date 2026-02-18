@@ -1,10 +1,6 @@
 import React from "react";
 import Link from "next/link";
 
-// Legacy HumanPea Hybrid Landing Page
-// Updated Pricing Grid Layout (5 Cards)
-// No changes to Header, Hero, CSS system or Footer
-
 export default function VistaGymTestPage() {
   return (
     <main
@@ -23,9 +19,7 @@ export default function VistaGymTestPage() {
           --hp-hero-min-h: 36vh;
           --hp-hero-max-w: 920px;
           --hp-grid-gap: 1.25rem;
-          --hp-card-min-h: 420px;
           --hp-card-pad: 1.25rem;
-          --hp-card-radius: 1rem;
           --hp-footer-h: 72px;
           --hp-accent: #00C853;
           --hp-muted: #666666;
@@ -101,11 +95,11 @@ export default function VistaGymTestPage() {
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
 
-            {/* LEFT GRID (4 CARDS) */}
+            {/* LEFT GRID */}
             <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-[var(--hp-grid-gap)]">
 
               {/* VISTA_01 */}
-              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[var(--hp-card-min-h)]">
+              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
                 <div>
                   <h3 className="text-lg font-semibold tracking-wide">VISTA_01</h3>
                   <p className="mt-2 text-sm text-black/75">
@@ -123,7 +117,7 @@ export default function VistaGymTestPage() {
               </article>
 
               {/* VISTA_02 */}
-              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[var(--hp-card-min-h)]">
+              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
                 <div>
                   <h3 className="text-lg font-semibold tracking-wide">VISTA_02</h3>
                   <p className="mt-2 text-sm text-black/75">
@@ -144,7 +138,7 @@ export default function VistaGymTestPage() {
               </article>
 
               {/* VISTA_03 */}
-              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[var(--hp-card-min-h)]">
+              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
                 <div>
                   <h3 className="text-lg font-semibold tracking-wide">VISTA_03</h3>
                   <p className="mt-2 text-sm text-black/75">
@@ -162,7 +156,7 @@ export default function VistaGymTestPage() {
               </article>
 
               {/* VISTA_04 */}
-              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[var(--hp-card-min-h)]">
+              <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
                 <div>
                   <h3 className="text-lg font-semibold tracking-wide">VISTA_04</h3>
                   <p className="mt-2 text-sm text-black/75">
@@ -184,8 +178,8 @@ export default function VistaGymTestPage() {
 
             </div>
 
-            {/* RIGHT TALL CARD */}
-            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)] min-h-[calc(var(--hp-card-min-h)*2+var(--hp-grid-gap))]">
+            {/* RIGHT CARD */}
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">VISTA_05</h3>
                 <p className="mt-2 text-sm text-black/75">
