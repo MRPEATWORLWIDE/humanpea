@@ -1,9 +1,6 @@
 import React from "react";
 import Link from "next/link";
 
-// Legacy HumanPea Hybrid Landing Page
-// Sandbox version – no structural edits
-
 export default function VistaGymTestPage() {
   return (
     <main
@@ -13,6 +10,7 @@ export default function VistaGymTestPage() {
           "Helvetica Neue, Helvetica, Arial, ui-sans-serif, system-ui, -apple-system",
       }}
     >
+      {/* Layout Variables */}
       <style>{`
         :root {
           --hp-container-max: 1120px;
@@ -48,12 +46,12 @@ export default function VistaGymTestPage() {
           </div>
 
           <div className="flex items-center gap-4 text-xs text-black/60">
-            <span>00C853 / LIMITED SERIES</span>
+            <span>VISTA SERIES</span>
             <Link
-              href="/pt-packages/onboarding"
+              href="/form"
               className="text-[11px] underline-offset-2 hover:underline hover:text-black"
             >
-              Onboard now
+              Buy now
             </Link>
           </div>
         </div>
@@ -72,18 +70,18 @@ export default function VistaGymTestPage() {
           }}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
-            <span className="opacity-70">&apos;FUNCTIONAL&apos;</span> HYBRID TRAINING SYSTEM
+            VISTA GYM TRAINING SYSTEM
           </h1>
           <p className="mt-4 max-w-prose text-sm text-black/70">
-            Private Studio • Precision Coaching • Adaptive Programming
+            Structured • Progressive • Performance Focused
           </p>
 
           <div className="mt-5">
             <Link
-              href="/pt-packages/onboarding"
+              href="/form"
               className="inline-flex items-center justify-center rounded-md border border-black/15 px-4 py-2 text-sm font-medium text-black hover:bg-black/[0.03] transition"
             >
-              Onboard now
+              Buy now
             </Link>
           </div>
         </div>
@@ -99,7 +97,8 @@ export default function VistaGymTestPage() {
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
-            {/* CARD 1 */}
+
+            {/* CARD 1 — VISTA_01 + VISTA_02 */}
             <article
               className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
               style={{
@@ -107,103 +106,128 @@ export default function VistaGymTestPage() {
                 padding: "var(--hp-card-pad)",
               }}
             >
-              <div className="absolute right-3 top-3">
-                <span className="rounded-full border border-black/15 bg-[var(--hp-accent)]/10 px-3 py-1 text-xs font-medium tracking-wide text-[var(--hp-accent)]">
-                  Promo
-                </span>
-              </div>
+              <div className="space-y-6">
 
+                <div>
+                  <h3 className="text-lg font-semibold tracking-wide">VISTA_01</h3>
+                  <p className="mt-2 text-sm text-black/75">
+                    1 Session | Vista Gym | 60 Minute Training Systems
+                  </p>
+                  <div className="mt-3 text-2xl font-bold">£60.00</div>
+                  <Link
+                    href="/form"
+                    className="mt-3 inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
+                  >
+                    Buy Now
+                  </Link>
+                </div>
+
+                <hr className="border-black/10" />
+
+                <div>
+                  <h3 className="text-lg font-semibold tracking-wide">VISTA_02</h3>
+                  <p className="mt-2 text-sm text-black/75">
+                    10 Sessions | Vista Gym | Transformation | Precision Coaching | Adaptive Programming | Mesocycle
+                  </p>
+                  <p className="mt-2 text-sm text-black/65">
+                    Designed for transformation. Feedback, accountability, measurable output.
+                  </p>
+                  <div className="mt-3 text-2xl font-bold text-[var(--hp-accent)]">
+                    £540.00
+                  </div>
+                  <Link
+                    href="/form"
+                    className="mt-3 inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] bg-[var(--hp-accent)]/10 px-4 py-2 text-sm font-medium hover:bg-[var(--hp-accent)]/20 transition"
+                  >
+                    Buy Now
+                  </Link>
+                </div>
+
+              </div>
+            </article>
+
+            {/* CARD 2 — VISTA_03 + VISTA_04 */}
+            <article
+              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
+              style={{
+                minHeight: "var(--hp-card-min-h)",
+                padding: "var(--hp-card-pad)",
+              }}
+            >
+              <div className="space-y-6">
+
+                <div>
+                  <h3 className="text-lg font-semibold tracking-wide">VISTA_03</h3>
+                  <p className="mt-2 text-sm text-black/75">
+                    1 Session | Vista Gym | 30 Minute Training Systems
+                  </p>
+                  <div className="mt-3 text-2xl font-bold">£40.00</div>
+                  <Link
+                    href="/form"
+                    className="mt-3 inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
+                  >
+                    Buy Now
+                  </Link>
+                </div>
+
+                <hr className="border-black/10" />
+
+                <div>
+                  <h3 className="text-lg font-semibold tracking-wide">VISTA_04</h3>
+                  <p className="mt-2 text-sm text-black/75">
+                    10 Sessions | Vista Gym | Balanced Progression | Rehabilitation | Mobility
+                  </p>
+                  <p className="mt-2 text-sm text-black/65">
+                    Designed for light mobility exercises, injury rehabilitation, familiarity with gym environment and equipment.
+                  </p>
+                  <div className="mt-3 text-2xl font-bold">£350.00</div>
+                  <Link
+                    href="/form"
+                    className="mt-3 inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
+                  >
+                    Buy Now
+                  </Link>
+                </div>
+
+              </div>
+            </article>
+
+            {/* CARD 3 — VISTA_05 */}
+            <article
+              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
+              style={{
+                minHeight: "var(--hp-card-min-h)",
+                padding: "var(--hp-card-pad)",
+              }}
+            >
               <div>
-                <h3 className="text-lg font-semibold tracking-wide">HYBRID_01</h3>
+                <h3 className="text-lg font-semibold tracking-wide">VISTA_05</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  8 Sessions / 2x Per Week / Private Studio
+                  12-Week Transformation Programme
                 </p>
-                <p className="mt-3 text-sm text-black/65 max-w-prose">
-                  Entry-level structure to rebuild consistency. Foundation, discipline, routine.
+                <p className="mt-2 text-sm text-black/75">
+                  24 Sessions (2x per week) | Structured Progression | Nutrition Guidance (7 Days) | Priority Scheduling
+                </p>
+                <p className="mt-3 text-sm text-black/65">
+                  Designed for body recomposition, measurable progress on structured fat loss, strength development and SMART goals over 12 focused weeks.
                 </p>
               </div>
 
               <div>
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-2xl line-through opacity-60">£450.00</span>
-                  <span className="text-2xl font-bold text-[var(--hp-accent)]">£0.00</span>
+                <div className="mt-6 text-2xl font-bold text-[var(--hp-accent)]">
+                  £1550.00
                 </div>
                 <div className="mt-4">
                   <Link
                     href="/form"
                     className="inline-flex items-center justify-center rounded-lg border border-[var(--hp-accent)] bg-[var(--hp-accent)]/10 px-4 py-2 text-sm font-medium hover:bg-[var(--hp-accent)]/20 transition"
                   >
-                    Claim
+                    Buy Now
                   </Link>
                 </div>
               </div>
             </article>
 
-            {/* CARD 2 */}
-            <article
-              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
-              style={{
-                minHeight: "var(--hp-card-min-h)",
-                padding: "var(--hp-card-pad)",
-              }}
-            >
-              <div>
-                <h3 className="text-lg font-semibold tracking-wide">HYBRID_02</h3>
-                <p className="mt-2 text-sm text-black/75">
-                  12 Sessions / 3x Per Week / Private Studio / Balanced Progression
-                </p>
-                <p className="mt-3 text-sm text-black/65 max-w-prose">
-                  Designed for transformation. Feedback, accountability, measurable output.
-                </p>
-              </div>
-
-              <div>
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-2xl font-bold">£600.00</span>
-                </div>
-                <div className="mt-4">
-                  <Link
-                    href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
-                  >
-                    Enquire
-                  </Link>
-                </div>
-              </div>
-            </article>
-
-            {/* CARD 3 */}
-            <article
-              className="relative flex flex-col justify-between rounded-xl border border-black/10 bg-black/5"
-              style={{
-                minHeight: "var(--hp-card-min-h)",
-                padding: "var(--hp-card-pad)",
-              }}
-            >
-              <div>
-                <h3 className="text-lg font-semibold tracking-wide">HYBRID_03</h3>
-                <p className="mt-2 text-sm text-black/75">
-                  16 Sessions / 4x Per Week / Private Studio / Performance Tier
-                </p>
-                <p className="mt-3 text-sm text-black/65 max-w-prose">
-                  Precision coaching. Adaptive programming. Maximum accountability.
-                </p>
-              </div>
-
-              <div>
-                <div className="mt-6 flex items-baseline gap-2">
-                  <span className="text-2xl font-bold">£750.00</span>
-                </div>
-                <div className="mt-4">
-                  <Link
-                    href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-black/20 px-4 py-2 text-sm font-medium hover:border-black/40 transition"
-                  >
-                    Enquire
-                  </Link>
-                </div>
-              </div>
-            </article>
           </div>
         </div>
       </section>
