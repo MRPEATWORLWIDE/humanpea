@@ -53,7 +53,7 @@ export default function VistaGymTestPage() {
             padding: "0 var(--hp-section-pad-x)",
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
+          <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-[var(--hp-grid-gap)]">
 
             {/* VISTA_01 */}
             <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
