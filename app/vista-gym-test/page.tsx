@@ -100,34 +100,6 @@ export default function VistaGymTestPage() {
               </div>
             </article>
 
-            {/* VISTA_05 */}
-            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
-              <div>
-                <h3 className="text-lg font-semibold tracking-wide">VISTA_05</h3>
-                <p className="mt-2 text-sm text-black/75">
-                  12-Week Transformation Programme
-                </p>
-                <p className="mt-2 text-sm text-black/75">
-                  24 Sessions (2x per week) | Structured progression | Nutrition guidance (7 days) | Priority scheduling
-                </p>
-                <p className="mt-3 text-sm text-black/65">
-                  Designed for body recomposition, measurable progress on structured fat loss,
-                  strength development and SMART goals over 12 focused weeks.
-                </p>
-              </div>
-              <div className="mt-6">
-                <div className="text-2xl font-bold">£1550</div>
-                <div className="mt-3">
-                  <Link
-                    href="/form"
-                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
-                  >
-                    Buy now
-                  </Link>
-                </div>
-              </div>
-            </article>
-
             {/* VISTA_03 */}
             <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <div>
@@ -163,6 +135,34 @@ export default function VistaGymTestPage() {
               </div>
               <div className="mt-6">
                 <div className="text-2xl font-bold">£350</div>
+                <div className="mt-3">
+                  <Link
+                    href="/form"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
+                  >
+                    Buy now
+                  </Link>
+                </div>
+              </div>
+            </article>
+
+            {/* VISTA_05 */}
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
+              <div>
+                <h3 className="text-lg font-semibold tracking-wide">VISTA_05</h3>
+                <p className="mt-2 text-sm text-black/75">
+                  12-Week Transformation Programme
+                </p>
+                <p className="mt-2 text-sm text-black/75">
+                  24 Sessions (2x per week) | Structured progression | Nutrition guidance (7 days) | Priority scheduling
+                </p>
+                <p className="mt-3 text-sm text-black/65">
+                  Designed for body recomposition, measurable progress on structured fat loss,
+                  strength development and SMART goals over 12 focused weeks.
+                </p>
+              </div>
+              <div className="mt-6">
+                <div className="text-2xl font-bold">£1550</div>
                 <div className="mt-3">
                   <Link
                     href="/form"
