@@ -81,7 +81,7 @@ export default function VistaGymTestPage() {
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">VISTA_02</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  10 Sessions | Vista Gym | Transformation | Precision Coaching | Adaptive Programming | Mesocycle
+                  10 Sessions | 60 minutes | Vista Gym | Transformation | Precision Coaching | Adaptive Programming | Mesocycle
                 </p>
                 <p className="mt-3 text-sm text-black/65">
                   Designed for transformation. Feedback, accountability, measurable output.
@@ -105,7 +105,7 @@ export default function VistaGymTestPage() {
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">VISTA_03</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  1 Session | Vista Gym | 30 Minute Training System
+                  1 Session | 30 minutes | Vista Gym | Training System
                 </p>
               </div>
               <div className="mt-6">
@@ -126,7 +126,7 @@ export default function VistaGymTestPage() {
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">VISTA_04</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  10 Sessions | Vista Gym | Balanced Progression | Rehabilitation | Mobility
+                  10 Sessions | 30 minutes | Vista Gym | Balanced Progression | Rehabilitation | Mobility
                 </p>
                 <p className="mt-3 text-sm text-black/65">
                   Designed for light mobility exercises, injury rehabilitation,
@@ -154,7 +154,7 @@ export default function VistaGymTestPage() {
                   12-Week Transformation Programme
                 </p>
                 <p className="mt-2 text-sm text-black/75">
-                  24 Sessions (2x per week) | Structured progression | Nutrition guidance (7 days) | Priority scheduling
+                  24 Sessions | 60 minutes | Structured progression | Nutrition guidance [7 days] | Priority scheduling
                 </p>
                 <p className="mt-3 text-sm text-black/65">
                   Designed for body recomposition, measurable progress on structured fat loss,
