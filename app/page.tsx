@@ -5,8 +5,8 @@ export default function HomePage() {
     <section className="border-b border-black/10">
       <div className="mx-auto max-w-[1120px] px-5 min-h-[calc(100vh-128px)] flex items-center py-12 md:py-0">
         
-        <div className="grid md:grid-cols-[auto,1fr] gap-8 md:gap-12 items-center w-full">
-
+        <div className="grid md:grid-cols-[420px,1fr] gap-8 md:gap-12 items-center w-full">
+          
           {/* LEFT IMAGE */}
           <div className="relative w-full max-w-[420px] aspect-[3/4] mx-auto md:mx-0 float-slow group">
             <Image
