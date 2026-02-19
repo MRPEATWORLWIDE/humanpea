@@ -44,29 +44,32 @@ export default function HomePage() {
             </ol>
 
             {/* CTA */}
-            <div className="mt-10 group cursor-pointer w-fit mx-auto md:mx-0">
-              <div className="flex items-center gap-3 justify-center md:justify-start">
-                <h2 className="text-xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110 origin-left">
-                  Lets work
-                </h2>
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="transition-all duration-300 group-hover:translate-x-2 group-hover:-translate-y-2"
-                >
-                  <line x1="7" y1="17" x2="17" y2="7" />
-                  <polyline points="7 7 17 7 17 17" />
-                </svg>
-              </div>
+<Link
+  href="/vista-gym"
+  className="mt-10 group cursor-pointer w-fit mx-auto md:mx-0 block"
+>
+  <div className="flex items-center gap-3 justify-center md:justify-start">
+    <h2 className="text-xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110 origin-left">
+      Lets work
+    </h2>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="transition-all duration-300 group-hover:translate-x-2 group-hover:-translate-y-2"
+    >
+      <line x1="7" y1="17" x2="17" y2="7" />
+      <polyline points="7 7 17 7 17 17" />
+    </svg>
+  </div>
 
-              <div className="h-[2px] w-20 bg-black mt-2 transition-all duration-500 group-hover:w-36 mx-auto md:mx-0"></div>
-            </div>
+  <div className="h-[2px] w-20 bg-black mt-2 transition-all duration-500 group-hover:w-36 mx-auto md:mx-0"></div>
+</Link>
 
           </div>
 
