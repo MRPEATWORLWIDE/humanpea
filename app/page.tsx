@@ -5,13 +5,13 @@ export default function HomePage() {
     <section className="border-b border-black/10">
       <div className="mx-auto max-w-[1120px] px-5 min-h-[calc(100vh-128px)] flex items-center py-12 md:py-0">
         
-        <div className="grid md:grid-cols-2 gap-12 items-center w-full">
+        <div className="grid md:grid-cols-[auto,1fr] gap-8 md:gap-12 items-center w-full">
 
           {/* LEFT IMAGE */}
           <div className="relative w-full max-w-[420px] aspect-[3/4] mx-auto md:mx-0 float-slow group">
             <Image
               src="/images/humanpea-hero.jpg"
-              alt="Joshua 'Human' P"
+              alt="Joshua 'Human' PT"
               fill
               className="object-cover transition duration-700 group-hover:grayscale"
               priority
@@ -19,35 +19,36 @@ export default function HomePage() {
           </div>
 
           {/* RIGHT TEXT */}
-          <div className="max-w-[520px] mx-auto md:mx-0 text-center md:text-left">
+          <div className="mx-auto md:mx-0 text-center md:text-left">
 
-<h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-semibold leading-[1.1] md:whitespace-nowrap">
-  Joshua 'Human' PT
-</h1>
+            <h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-semibold leading-[1.1] md:whitespace-nowrap">
+              Joshua 'Human' PT
+            </h1>
 
-<p className="mt-3 text-sm text-black/50 tracking-wide">
-  Performance • Systems • Culture
-</p>
+            <p className="mt-3 text-sm text-black/50 tracking-wide">
+              Performance • Systems • Culture
+            </p>
+
             <p className="mt-6 text-sm text-black/70">
-  HUMANPEA® is the natural, efficient, human method to Personal Training and lifestyle coaching.
-</p>
+              HUMANPEA® is the natural, efficient, human method to Personal Training and lifestyle coaching.
+            </p>
 
-<p className="mt-4 text-sm text-black/70">
-  Built on three core principles:
-</p>
+            <p className="mt-4 text-sm text-black/70">
+              Built on three core principles:
+            </p>
 
-<ol className="mt-2 ml-5 list-decimal text-sm text-black/70 space-y-1">
-  <li><strong>Fuel with natural foods</strong></li>
-  <li><strong>Commit to longevity over aesthetics</strong></li>
-  <li><strong>Prioritise function and mobility to prevent injury</strong></li>
-</ol>
+            <ol className="mt-2 ml-5 list-decimal text-sm text-black/70 space-y-1">
+              <li><strong>Fuel with natural foods</strong></li>
+              <li><strong>Commit to longevity over aesthetics</strong></li>
+              <li><strong>Prioritise function and mobility to prevent injury</strong></li>
+            </ol>
 
-{/* CTA */}
-<div className="mt-10 group cursor-pointer w-fit mx-auto md:mx-0">
-  <div className="flex items-center gap-3 justify-center md:justify-start">
-    <h2 className="text-xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110 origin-left">
-      Lets work
-    </h2>
+            {/* CTA */}
+            <div className="mt-10 group cursor-pointer w-fit mx-auto md:mx-0">
+              <div className="flex items-center gap-3 justify-center md:justify-start">
+                <h2 className="text-xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110 origin-left">
+                  Lets work
+                </h2>
                 <svg
                   width="20"
                   height="20"
