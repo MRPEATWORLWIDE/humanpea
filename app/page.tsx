@@ -20,13 +20,10 @@ export default function HomePage() {
 
           {/* RIGHT TEXT */}
           <div className="max-w-[520px] mx-auto md:mx-0 text-center md:text-left">
-            <p className="text-xs uppercase tracking-[0.2em] text-black/50">
-              HumanPea® London
-            </p>
 
-            <h1 className="mt-4 text-3xl sm:text-4xl md:text-6xl font-semibold leading-tight">
-              Joshua Peat
-              <span className="block mt-3 text-black/60 text-lg sm:text-xl md:text-2xl">
+            <h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-semibold leading-tight">
+              Joshua 'Human' PT
+              <span className="block mt-4 text-black/60 text-base sm:text-lg md:text-xl font-normal tracking-wide">
                 Performance • Systems • Culture
               </span>
             </h1>
@@ -45,15 +42,11 @@ export default function HomePage() {
   <li><strong>Prioritise function and mobility to prevent injury</strong></li>
 </ol>
 
-<p className="mt-4 text-sm text-black/70">
-  The systems behind my work go far beyond standard performance coaching.
-</p>
-
 {/* CTA */}
 <div className="mt-10 group cursor-pointer w-fit mx-auto md:mx-0">
   <div className="flex items-center gap-3 justify-center md:justify-start">
     <h2 className="text-xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110 origin-left">
-      Enter
+      Lets work
     </h2>
                 <svg
                   width="20"
