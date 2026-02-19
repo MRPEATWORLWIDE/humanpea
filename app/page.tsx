@@ -11,7 +11,7 @@ export default function HomePage() {
           <div className="relative w-full max-w-[420px] aspect-[3/4] mx-auto md:mx-0 float-slow group">
             <Image
               src="/images/humanpea-hero.jpg"
-              alt="Joshua Peat"
+              alt="Joshua 'Human' P"
               fill
               className="object-cover transition duration-700 group-hover:grayscale"
               priority
@@ -32,17 +32,29 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-6 text-sm text-black/70">
-              HumanPea is the personal operating system behind my work —
-              performance coaching, digital systems, and structured growth.
-            </p>
+  HUMANPEA® is the natural, efficient, human method to Personal Training and lifestyle coaching.
+</p>
 
-            {/* CTA */}
-            <div className="mt-10 group cursor-pointer w-fit mx-auto md:mx-0">
-              <div className="flex items-center gap-3 justify-center md:justify-start">
-                <h2 className="text-xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110 origin-left">
-                  Enter
-                </h2>
+<p className="mt-4 text-sm text-black/70">
+  Built on three core principles:
+</p>
 
+<ol className="mt-2 ml-5 list-decimal text-sm text-black/70 space-y-1">
+  <li><strong>Fuel with natural foods</strong></li>
+  <li><strong>Commit to longevity over aesthetics</strong></li>
+  <li><strong>Prioritise function and mobility to prevent injury</strong></li>
+</ol>
+
+<p className="mt-4 text-sm text-black/70">
+  The systems behind my work go far beyond standard performance coaching.
+</p>
+
+{/* CTA */}
+<div className="mt-10 group cursor-pointer w-fit mx-auto md:mx-0">
+  <div className="flex items-center gap-3 justify-center md:justify-start">
+    <h2 className="text-xl md:text-3xl font-semibold transition-transform duration-300 group-hover:scale-110 origin-left">
+      Enter
+    </h2>
                 <svg
                   width="20"
                   height="20"
