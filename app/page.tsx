@@ -21,11 +21,11 @@ export default function HomePage() {
           {/* RIGHT TEXT */}
           <div className="max-w-[520px] mx-auto md:mx-0 text-center md:text-left">
 
-<h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-semibold leading-[1.1]">
+<h1 className="mt-4 text-4xl sm:text-5xl md:text-6xl font-semibold leading-[1.1] md:whitespace-nowrap">
   Joshua 'Human' PT
 </h1>
 
-<p className="mt-3 text-sm sm:text-base md:text-lg text-black/50 font-normal tracking-wide">
+<p className="mt-3 text-sm text-black/50 tracking-wide">
   Performance • Systems • Culture
 </p>
             <p className="mt-6 text-sm text-black/70">
