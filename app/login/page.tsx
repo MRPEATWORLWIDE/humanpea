@@ -15,35 +15,38 @@ export default function LoginPage() {
     setLoading(true);
 
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: email.trim(),
       password,
     });
 
     if (error || !data.user) {
-      alert("Invalid login credentials");
-      setLoading(false);
+      // if they can't login, send them to create account
+      router.push("/register");
       return;
     }
 
-    // Use user ID, not email
+    const userId = data.user.id;
+
+    // ✅ Fetch profile by AUTH USER ID (not email)
     const { data: profile, error: profileError } = await supabase
       .from("pt_profiles")
-      .select("role")
-      .eq("id", data.user.id)
-      .single();
+      .select("role, email, full_name")
+      .eq("id", userId)
+      .maybeSingle();
 
-    if (profileError || !profile) {
-      alert("Profile not found");
-      setLoading(false);
-      return;
+    // If profile missing, auto-create a minimal one (client by default)
+    if (!profile && !profileError) {
+      await supabase.from("pt_profiles").insert({
+        id: userId,
+        email: data.user.email,
+        full_name: null,
+        role: "client",
+      });
     }
 
-    if (profile.role === "admin") {
-      router.push("/admin");
-    } else {
-      router.push("/my-sessions");
-    }
+    const role = profile?.role || "client";
 
+    router.push(role === "admin" ? "/admin" : "/my-sessions");
     setLoading(false);
   };
 
