@@ -30,6 +30,10 @@ export default function AdminPage() {
 
   useEffect(() => {
     const init = async () => {
+      // 🔎 DEBUG JWT
+      const { data: sessionData } = await supabase.auth.getSession();
+      console.log("SESSION USER:", sessionData.session?.user);
+
       const { data: userData } = await supabase.auth.getUser();
 
       if (!userData?.user) {
@@ -116,8 +120,6 @@ export default function AdminPage() {
 
   return (
     <div className="max-w-xl mx-auto p-8 space-y-8">
-
-      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-semibold">Admin Panel</h1>
@@ -134,7 +136,6 @@ export default function AdminPage() {
         </button>
       </div>
 
-      {/* CLIENT SELECT */}
       <select
         className="w-full border p-2 rounded"
         value={selectedClient}
@@ -148,7 +149,6 @@ export default function AdminPage() {
         ))}
       </select>
 
-      {/* ADD PACK SECTION */}
       <form onSubmit={handleAddPack} className="space-y-4 border p-6 rounded-xl">
         <h2 className="font-semibold">Add Pack</h2>
 
@@ -180,7 +180,6 @@ export default function AdminPage() {
         </button>
       </form>
 
-      {/* DEDUCT SESSION SECTION */}
       <form onSubmit={handleDeduct} className="space-y-4 border p-6 rounded-xl">
         <h2 className="font-semibold">Deduct Single Session</h2>
 
