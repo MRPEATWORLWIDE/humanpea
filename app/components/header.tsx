@@ -15,17 +15,27 @@ export default function Header() {
         </div>
 
         {/* Desktop */}
-        <nav className="hidden md:flex gap-6 text-sm">
+        <nav className="hidden md:flex items-center gap-6 text-sm">
+
           <Link href="/">Home</Link>
           <Link href="/online-coaching">Online Coaching</Link>
           <Link href="/vista-gym">Vista Gym</Link>
-          <Link href="/onboarding">Onboarding</Link>
+
           <Link
             href="https://form.jotform.com/252973068946371"
             target="_blank"
           >
             Enquire
           </Link>
+
+          {/* Login Pill Button */}
+          <Link
+            href="/login"
+            className="ml-2 px-5 py-2 rounded-full bg-black text-white text-sm font-medium hover:opacity-90 transition"
+          >
+            Login
+          </Link>
+
         </nav>
 
         {/* Mobile Hamburger */}
@@ -44,10 +54,11 @@ export default function Header() {
       {open && (
         <div className="md:hidden border-t border-black/10 bg-white">
           <div className="flex flex-col px-5 py-4 gap-4 text-sm">
+
             <Link href="/" onClick={() => setOpen(false)}>Home</Link>
             <Link href="/online-coaching" onClick={() => setOpen(false)}>Online Coaching</Link>
             <Link href="/vista-gym" onClick={() => setOpen(false)}>Vista Gym</Link>
-            <Link href="/onboarding" onClick={() => setOpen(false)}>Onboarding</Link>
+
             <Link
               href="https://form.jotform.com/252973068946371"
               target="_blank"
@@ -55,6 +66,16 @@ export default function Header() {
             >
               Enquire
             </Link>
+
+            {/* Mobile Login */}
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="mt-2 px-5 py-2 rounded-full bg-black text-white text-center"
+            >
+              Login
+            </Link>
+
           </div>
         </div>
       )}
