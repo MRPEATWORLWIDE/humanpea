@@ -20,20 +20,16 @@ export default function LoginPage() {
     });
 
     if (error || !data.user) {
-      alert("Login failed");
+      alert("Invalid email or password.");
       setLoading(false);
       return;
     }
 
-    console.log("Logged in user:", data.user);
-
-    const { data: profile, error: profileError } = await supabase
+    const { data: profile } = await supabase
       .from("pt_profiles")
       .select("role")
       .eq("id", data.user.id)
       .single();
-
-    console.log("Profile lookup:", profile, profileError);
 
     if (profile?.role === "admin") {
       router.push("/admin");
@@ -42,6 +38,24 @@ export default function LoginPage() {
     }
 
     setLoading(false);
+  };
+
+  const handleResetPassword = async () => {
+    if (!email) {
+      alert("Enter your email address first.");
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: "https://humanpea.com/reset-password",
+    });
+
+    if (error) {
+      alert("Error sending reset email.");
+      return;
+    }
+
+    alert("Password reset email sent.");
   };
 
   return (
@@ -76,6 +90,14 @@ export default function LoginPage() {
           disabled={loading}
         >
           {loading ? "Logging in..." : "Login"}
+        </button>
+
+        <button
+          type="button"
+          onClick={handleResetPassword}
+          className="w-full text-sm text-gray-500 underline"
+        >
+          Forgot password?
         </button>
       </form>
     </div>
