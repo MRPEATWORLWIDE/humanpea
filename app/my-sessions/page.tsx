@@ -37,7 +37,8 @@ export default function MySessionsPage() {
         .from("pt_session_transactions")
         .select("*")
         .eq("client_id", userId)
-        .order("paid_at", { ascending: false });
+        .order("paid_at", { ascending: false })
+        .order("created_at", { ascending: false });
 
       if (error) {
         console.error(error);
