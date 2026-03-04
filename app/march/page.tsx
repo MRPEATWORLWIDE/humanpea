@@ -30,6 +30,11 @@ export default function MarchPromoPage() {
         }
       `}</style>
 
+      {/* PROMO BANNER */}
+      <section className="bg-[#00C853] text-black text-center py-2 text-sm font-medium">
+        LIMITED MARCH OFFER — VISTA RESIDENTS ONLY
+      </section>
+
       {/* HERO */}
       <section
         className="border-b border-black/10"
@@ -43,8 +48,9 @@ export default function MarchPromoPage() {
           }}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
-            MARCH TRAINING PROMOTION
+            MARCH TRAINING PROMOTION (VISTA RESIDENTS)
           </h1>
+
           <p className="mt-4 max-w-prose text-sm text-black/70">
             Limited March promotion for Vista residents. Structured training
             with exclusive introductory offers.
@@ -81,18 +87,20 @@ export default function MarchPromoPage() {
               </div>
 
               <div className="mt-6">
-                <div className="text-2xl font-bold">£TBC</div>
+                <div className="text-2xl font-bold">£270</div>
 
                 <div className="mt-3 flex gap-3 flex-wrap">
 
                   <Link
-                    href="#"
+                    href="https://buy.stripe.com/5kQaEXfXwcT459P0EP67S06"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
 
-                  <span className="inline-flex items-center rounded-lg border border-black/20 px-4 py-2 text-xs">
+                  <span className="inline-flex items-center rounded-lg border border-red-500 text-red-500 px-4 py-2 text-xs">
                     Ends March 31st 2026
                   </span>
 
@@ -118,18 +126,20 @@ export default function MarchPromoPage() {
               </div>
 
               <div className="mt-6">
-                <div className="text-2xl font-bold">£TBC</div>
+                <div className="text-2xl font-bold">£459</div>
 
                 <div className="mt-3 flex gap-3 flex-wrap">
 
                   <Link
-                    href="#"
+                    href="https://buy.stripe.com/9B67sL3aK2eq59P3R167S07"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
 
-                  <span className="inline-flex items-center rounded-lg border border-black/20 px-4 py-2 text-xs">
+                  <span className="inline-flex items-center rounded-lg border border-red-500 text-red-500 px-4 py-2 text-xs">
                     Ends March 31st 2026
                   </span>
 
