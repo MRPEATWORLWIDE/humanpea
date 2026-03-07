@@ -10,19 +10,17 @@ type Client = {
   email: string;
 };
 
-const PACKS = [
-  { name: "VISTA_01 - 60 min x1 (£60)", sessions: 1 },
-  { name: "VISTA_02 - 60 min x10 (£540)", sessions: 10 },
-  { name: "VISTA_03 - 30 min x1 (£40)", sessions: 1 },
-  { name: "VISTA_04 - 30 min x10 (£350)", sessions: 10 },
-  { name: "VISTA_05 - 60 min x24 (£1550)", sessions: 24 },
-];
+type Pack = {
+  name: string;
+  sessions: number;
+};
 
 export default function AdminPage() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [clients, setClients] = useState<Client[]>([]);
+  const [packs, setPacks] = useState<Pack[]>([]);
   const [selectedClient, setSelectedClient] = useState("");
   const [paidDate, setPaidDate] = useState("");
   const [selectedPack, setSelectedPack] = useState("");
@@ -60,6 +58,15 @@ export default function AdminPage() {
         .order("full_name", { ascending: true });
 
       if (data) setClients(data);
+
+      // LOAD PACKS FROM DATABASE
+      const { data: packData } = await supabase
+        .from("pt_packages")
+        .select("name, sessions")
+        .eq("active", true)
+        .order("created_at", { ascending: true });
+
+      if (packData) setPacks(packData);
     };
 
     init();
@@ -74,7 +81,7 @@ export default function AdminPage() {
     e.preventDefault();
     if (!selectedClient || !selectedPack) return;
 
-    const pack = PACKS.find((p) => p.name === selectedPack);
+    const pack = packs.find((p) => p.name === selectedPack);
     if (!pack) return;
 
     const { error } = await supabase
@@ -158,7 +165,7 @@ export default function AdminPage() {
           onChange={(e) => setSelectedPack(e.target.value)}
         >
           <option value="">Select Pack</option>
-          {PACKS.map((pack) => (
+          {packs.map((pack) => (
             <option key={pack.name} value={pack.name}>
               {pack.name}
             </option>
