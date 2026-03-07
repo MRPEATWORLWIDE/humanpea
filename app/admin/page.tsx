@@ -15,6 +15,8 @@ type Pack = {
   sessions: number;
 };
 
+const ADMIN_EMAILS = ["hello@humanpea.com", "humanpeauk@gmail.com"];
+
 export default function AdminPage() {
   const router = useRouter();
 
@@ -28,28 +30,18 @@ export default function AdminPage() {
 
   useEffect(() => {
     const init = async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
-      console.log("SESSION USER:", sessionData.session?.user);
-
       const { data: userData } = await supabase.auth.getUser();
 
       if (!userData?.user) {
-        router.push("/login");
+        window.location.href = "/login";
         return;
       }
 
-      setEmail(userData.user.email || "");
+      const userEmail = (userData.user.email || "").toLowerCase();
+      setEmail(userEmail);
 
-      // FIXED ROLE CHECK
-      const { data: profile } = await supabase
-        .from("pt_profiles")
-        .select("role")
-        .eq("id", userData.user.id)
-        .limit(1)
-        .maybeSingle();
-
-      if (!profile || profile.role !== "admin") {
-        router.push("/login");
+      if (!ADMIN_EMAILS.includes(userEmail)) {
+        window.location.href = "/login";
         return;
       }
 
@@ -60,7 +52,6 @@ export default function AdminPage() {
 
       if (data) setClients(data);
 
-      // LOAD PACKS FROM DATABASE
       const { data: packData } = await supabase
         .from("pt_packages")
         .select("name, sessions")
@@ -75,7 +66,7 @@ export default function AdminPage() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push("/login");
+    window.location.href = "/login";
   };
 
   const handleAddPack = async (e: React.FormEvent) => {
@@ -131,9 +122,7 @@ export default function AdminPage() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-semibold">Admin Panel</h1>
-          <p className="text-sm text-gray-500">
-            Logged in as: {email}
-          </p>
+          <p className="text-sm text-gray-500">Logged in as: {email}</p>
         </div>
 
         <button

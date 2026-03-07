@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 
+const ADMIN_EMAILS = ["hello@humanpea.com", "humanpeauk@gmail.com"];
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,27 +25,13 @@ export default function LoginPage() {
       return;
     }
 
-    const { data: profile, error: profileError } = await supabase
-      .from("pt_profiles")
-      .select("role")
-      .eq("id", data.user.id)
-      .limit(1)
-      .maybeSingle();
+    const userEmail = (data.user.email || "").toLowerCase();
 
-    if (profileError) {
-      console.error(profileError);
-      alert("Error loading profile.");
-      setLoading(false);
-      return;
-    }
-
-    if (profile && profile.role === "admin") {
+    if (ADMIN_EMAILS.includes(userEmail)) {
       window.location.href = "/admin";
     } else {
       window.location.href = "/my-sessions";
     }
-
-    setLoading(false);
   };
 
   const handleResetPassword = async () => {
