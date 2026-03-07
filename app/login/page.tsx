@@ -29,6 +29,7 @@ export default function LoginPage() {
       .from("pt_profiles")
       .select("role")
       .eq("id", data.user.id)
+      .limit(1)
       .single();
 
     if (profile?.role === "admin") {
