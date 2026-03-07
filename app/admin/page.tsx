@@ -28,7 +28,6 @@ export default function AdminPage() {
 
   useEffect(() => {
     const init = async () => {
-      // 🔎 DEBUG JWT
       const { data: sessionData } = await supabase.auth.getSession();
       console.log("SESSION USER:", sessionData.session?.user);
 
@@ -41,11 +40,13 @@ export default function AdminPage() {
 
       setEmail(userData.user.email || "");
 
+      // FIXED ROLE CHECK
       const { data: profile } = await supabase
         .from("pt_profiles")
         .select("role")
         .eq("id", userData.user.id)
-        .single();
+        .limit(1)
+        .maybeSingle();
 
       if (!profile || profile.role !== "admin") {
         router.push("/login");
