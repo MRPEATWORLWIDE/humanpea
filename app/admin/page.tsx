@@ -30,9 +30,18 @@ export default function AdminPage() {
 
   useEffect(() => {
     const init = async () => {
-      const { data: userData } = await supabase.auth.getUser();
+      console.log("---- ADMIN INIT START ----");
+
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      console.log("getUser result:", userData);
+      console.log("getUser error:", userError);
+
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      console.log("getSession result:", sessionData);
+      console.log("getSession error:", sessionError);
 
       if (!userData?.user) {
+        console.log("No logged in user → redirecting to /login");
         window.location.href = "/login";
         return;
       }
@@ -40,25 +49,40 @@ export default function AdminPage() {
       const userEmail = (userData.user.email || "").toLowerCase();
       setEmail(userEmail);
 
+      console.log("Logged in email:", userEmail);
+
       if (!ADMIN_EMAILS.includes(userEmail)) {
+        console.log("User not admin → redirecting to /login");
         window.location.href = "/login";
         return;
       }
 
-      const { data } = await supabase
+      console.log("Querying pt_profiles...");
+
+      const { data: clientData, error: clientError } = await supabase
         .from("pt_profiles")
         .select("id, full_name, email")
         .order("full_name", { ascending: true });
 
-      if (data) setClients(data);
+      console.log("pt_profiles data:", clientData);
+      console.log("pt_profiles error:", clientError);
 
-      const { data: packData } = await supabase
+      if (clientData) setClients(clientData);
+
+      console.log("Querying pt_packages...");
+
+      const { data: packData, error: packError } = await supabase
         .from("pt_packages")
         .select("name, sessions")
         .eq("active", true)
         .order("created_at", { ascending: true });
 
+      console.log("pt_packages data:", packData);
+      console.log("pt_packages error:", packError);
+
       if (packData) setPacks(packData);
+
+      console.log("---- ADMIN INIT END ----");
     };
 
     init();
@@ -88,7 +112,10 @@ export default function AdminPage() {
           : new Date().toISOString(),
       });
 
-    if (error) return alert(error.message);
+    if (error) {
+      console.error("Add pack error:", error);
+      return alert(error.message);
+    }
 
     alert("Pack added");
     setSelectedPack("");
@@ -111,7 +138,10 @@ export default function AdminPage() {
           : new Date().toISOString(),
       });
 
-    if (error) return alert(error.message);
+    if (error) {
+      console.error("Deduct session error:", error);
+      return alert(error.message);
+    }
 
     alert("Session deducted");
     setDeductDate("");
