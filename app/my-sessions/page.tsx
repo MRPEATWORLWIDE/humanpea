@@ -94,26 +94,61 @@ export default function MySessionsPage() {
       <h2 className="text-xl font-semibold mb-4">Session History</h2>
 
       <div className="space-y-4">
-        {transactions.map((tx) => (
-          <div
-            key={tx.id}
-            className="p-4 border rounded-lg flex justify-between"
-          >
-            <div>
-              <p className="font-medium">{tx.note}</p>
-              <p className="text-sm text-gray-500">
-                {new Date(tx.paid_at || tx.created_at).toLocaleDateString()}
-              </p>
-            </div>
+        {transactions.map((tx) => {
+
+          const isPurchase = tx.amount > 0;
+
+          const title = isPurchase
+            ? tx.note || "Pack Added"
+            : "Session Used";
+
+          const note =
+            !isPurchase && tx.note && tx.note !== "Session Used"
+              ? tx.note
+              : null;
+
+          const packNote =
+            isPurchase && tx.note && !tx.note.includes("VISTA")
+              ? tx.note
+              : null;
+
+          return (
             <div
-              className={
-                tx.amount > 0 ? "text-green-600" : "text-red-600"
-              }
+              key={tx.id}
+              className="p-4 border rounded-lg flex justify-between"
             >
-              {tx.amount > 0 ? `+${tx.amount}` : tx.amount}
+              <div>
+
+                <p className="font-medium">{title}</p>
+
+                {note && (
+                  <p className="text-sm text-gray-600">
+                    Session notes: {note}
+                  </p>
+                )}
+
+                {packNote && (
+                  <p className="text-sm text-gray-600">
+                    Pack notes: {packNote}
+                  </p>
+                )}
+
+                <p className="text-sm text-gray-500">
+                  {new Date(tx.paid_at || tx.created_at).toLocaleDateString()}
+                </p>
+
+              </div>
+
+              <div
+                className={
+                  tx.amount > 0 ? "text-green-600" : "text-red-600"
+                }
+              >
+                {tx.amount > 0 ? `+${tx.amount}` : tx.amount}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
