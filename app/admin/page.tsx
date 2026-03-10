@@ -28,6 +28,9 @@ export default function AdminPage() {
   const [selectedPack, setSelectedPack] = useState("");
   const [deductDate, setDeductDate] = useState("");
 
+  // NEW
+  const [note, setNote] = useState("");
+
   useEffect(() => {
     const init = async () => {
       console.log("---- ADMIN INIT START ----");
@@ -106,7 +109,7 @@ export default function AdminPage() {
         client_id: selectedClient,
         amount: pack.sessions,
         type: "purchase",
-        note: pack.name,
+        note: note || pack.name, // UPDATED
         paid_at: paidDate
           ? new Date(paidDate).toISOString()
           : new Date().toISOString(),
@@ -120,6 +123,7 @@ export default function AdminPage() {
     alert("Pack added");
     setSelectedPack("");
     setPaidDate("");
+    setNote(""); // NEW
   };
 
   const handleDeduct = async (e: React.FormEvent) => {
@@ -132,7 +136,7 @@ export default function AdminPage() {
         client_id: selectedClient,
         amount: -1,
         type: "usage",
-        note: "Session Used",
+        note: note || "Session Used", // UPDATED
         paid_at: deductDate
           ? new Date(deductDate).toISOString()
           : new Date().toISOString(),
@@ -145,6 +149,7 @@ export default function AdminPage() {
 
     alert("Session deducted");
     setDeductDate("");
+    setNote(""); // NEW
   };
 
   return (
@@ -199,6 +204,15 @@ export default function AdminPage() {
           onChange={(e) => setPaidDate(e.target.value)}
         />
 
+        {/* NEW NOTE FIELD */}
+        <input
+          type="text"
+          placeholder="Optional note (e.g. Shared pack with Dmitry)"
+          className="w-full border p-2 rounded"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+        />
+
         <button
           type="submit"
           className="w-full bg-black text-white p-2 rounded"
@@ -215,6 +229,15 @@ export default function AdminPage() {
           className="w-full border p-2 rounded"
           value={deductDate}
           onChange={(e) => setDeductDate(e.target.value)}
+        />
+
+        {/* NEW NOTE FIELD */}
+        <input
+          type="text"
+          placeholder="Optional note (e.g. Dmitry session)"
+          className="w-full border p-2 rounded"
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
         />
 
         <button
