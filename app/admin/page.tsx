@@ -31,20 +31,14 @@ export default function AdminPage() {
   const [packNote, setPackNote] = useState("");
   const [sessionNote, setSessionNote] = useState("");
 
+  // NEW EVENT NOTE
+  const [eventNote, setEventNote] = useState("");
+
   useEffect(() => {
     const init = async () => {
-      console.log("---- ADMIN INIT START ----");
-
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      console.log("getUser result:", userData);
-      console.log("getUser error:", userError);
-
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      console.log("getSession result:", sessionData);
-      console.log("getSession error:", sessionError);
+      const { data: userData } = await supabase.auth.getUser();
 
       if (!userData?.user) {
-        console.log("No logged in user → redirecting to /login");
         window.location.href = "/login";
         return;
       }
@@ -52,40 +46,25 @@ export default function AdminPage() {
       const userEmail = (userData.user.email || "").toLowerCase();
       setEmail(userEmail);
 
-      console.log("Logged in email:", userEmail);
-
       if (!ADMIN_EMAILS.includes(userEmail)) {
-        console.log("User not admin → redirecting to /login");
         window.location.href = "/login";
         return;
       }
 
-      console.log("Querying pt_profiles...");
-
-      const { data: clientData, error: clientError } = await supabase
+      const { data: clientData } = await supabase
         .from("pt_profiles")
         .select("id, full_name, email")
         .order("full_name", { ascending: true });
 
-      console.log("pt_profiles data:", clientData);
-      console.log("pt_profiles error:", clientError);
-
       if (clientData) setClients(clientData);
 
-      console.log("Querying pt_packages...");
-
-      const { data: packData, error: packError } = await supabase
+      const { data: packData } = await supabase
         .from("pt_packages")
         .select("name, sessions")
         .eq("active", true)
         .order("created_at", { ascending: true });
 
-      console.log("pt_packages data:", packData);
-      console.log("pt_packages error:", packError);
-
       if (packData) setPacks(packData);
-
-      console.log("---- ADMIN INIT END ----");
     };
 
     init();
@@ -115,10 +94,7 @@ export default function AdminPage() {
           : new Date().toISOString(),
       });
 
-    if (error) {
-      console.error("Add pack error:", error);
-      return alert(error.message);
-    }
+    if (error) return alert(error.message);
 
     alert("Pack added");
     setSelectedPack("");
@@ -142,28 +118,44 @@ export default function AdminPage() {
           : new Date().toISOString(),
       });
 
-    if (error) {
-      console.error("Deduct session error:", error);
-      return alert(error.message);
-    }
+    if (error) return alert(error.message);
 
     alert("Session deducted");
     setDeductDate("");
     setSessionNote("");
   };
 
+  // NEW EVENT HANDLER
+  const handleEvent = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedClient || !eventNote) return;
+
+    const { error } = await supabase
+      .from("pt_session_transactions")
+      .insert({
+        client_id: selectedClient,
+        amount: 0,
+        type: "event",
+        note: eventNote,
+        paid_at: new Date().toISOString(),
+      });
+
+    if (error) return alert(error.message);
+
+    alert("Event recorded");
+    setEventNote("");
+  };
+
   return (
     <div className="max-w-xl mx-auto p-8 space-y-8">
+
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-semibold">Admin Panel</h1>
           <p className="text-sm text-gray-500">Logged in as: {email}</p>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="border px-4 py-2 rounded"
-        >
+        <button onClick={handleLogout} className="border px-4 py-2 rounded">
           Logout
         </button>
       </div>
@@ -180,6 +172,8 @@ export default function AdminPage() {
           </option>
         ))}
       </select>
+
+      {/* ADD PACK */}
 
       <form onSubmit={handleAddPack} className="space-y-4 border p-6 rounded-xl">
         <h2 className="font-semibold">Add Pack</h2>
@@ -212,13 +206,12 @@ export default function AdminPage() {
           onChange={(e) => setPackNote(e.target.value)}
         />
 
-        <button
-          type="submit"
-          className="w-full bg-black text-white p-2 rounded"
-        >
+        <button type="submit" className="w-full bg-black text-white p-2 rounded">
           Add Pack
         </button>
       </form>
+
+      {/* DEDUCT SESSION */}
 
       <form onSubmit={handleDeduct} className="space-y-4 border p-6 rounded-xl">
         <h2 className="font-semibold">Deduct Single Session</h2>
@@ -245,6 +238,28 @@ export default function AdminPage() {
           Deduct 1 Session
         </button>
       </form>
+
+      {/* RECORD EVENT */}
+
+      <form onSubmit={handleEvent} className="space-y-4 border p-6 rounded-xl">
+        <h2 className="font-semibold">Record Event</h2>
+
+        <input
+          type="text"
+          placeholder="Example: Back pain – skipped session"
+          className="w-full border p-2 rounded"
+          value={eventNote}
+          onChange={(e) => setEventNote(e.target.value)}
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-gray-700 text-white p-2 rounded"
+        >
+          Record Event
+        </button>
+      </form>
+
     </div>
   );
 }
