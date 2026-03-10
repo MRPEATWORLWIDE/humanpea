@@ -31,8 +31,8 @@ export default function AdminPage() {
   const [packNote, setPackNote] = useState("");
   const [sessionNote, setSessionNote] = useState("");
 
-  // NEW EVENT NOTE
   const [eventNote, setEventNote] = useState("");
+  const [eventDate, setEventDate] = useState("");
 
   useEffect(() => {
     const init = async () => {
@@ -125,7 +125,6 @@ export default function AdminPage() {
     setSessionNote("");
   };
 
-  // NEW EVENT HANDLER
   const handleEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedClient || !eventNote) return;
@@ -137,13 +136,16 @@ export default function AdminPage() {
         amount: 0,
         type: "event",
         note: eventNote,
-        paid_at: new Date().toISOString(),
+        paid_at: eventDate
+          ? new Date(eventDate).toISOString()
+          : new Date().toISOString(),
       });
 
     if (error) return alert(error.message);
 
     alert("Event recorded");
     setEventNote("");
+    setEventDate("");
   };
 
   return (
@@ -245,8 +247,15 @@ export default function AdminPage() {
         <h2 className="font-semibold">Record Event</h2>
 
         <input
+          type="date"
+          className="w-full border p-2 rounded"
+          value={eventDate}
+          onChange={(e) => setEventDate(e.target.value)}
+        />
+
+        <input
           type="text"
-          placeholder="Example: Back pain – skipped session"
+          placeholder="Event note"
           className="w-full border p-2 rounded"
           value={eventNote}
           onChange={(e) => setEventNote(e.target.value)}
