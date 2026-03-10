@@ -96,21 +96,24 @@ export default function MySessionsPage() {
       <div className="space-y-4">
         {transactions.map((tx) => {
 
-          const isPurchase = tx.amount > 0;
+          let title = "";
+          let note = "";
 
-          const title = isPurchase
-            ? tx.note || "Pack Added"
-            : "Session Used";
+          if (tx.type === "purchase") {
+            title = tx.note || "Pack Added";
+          }
 
-          const note =
-            !isPurchase && tx.note && tx.note !== "Session Used"
-              ? tx.note
-              : null;
+          if (tx.type === "usage") {
+            title = "Session Used";
+            if (tx.note && tx.note !== "Session Used") {
+              note = tx.note;
+            }
+          }
 
-          const packNote =
-            isPurchase && tx.note && !tx.note.includes("VISTA")
-              ? tx.note
-              : null;
+          if (tx.type === "event") {
+            title = "Trainer Notes";
+            note = tx.note;
+          }
 
           return (
             <div
@@ -123,13 +126,7 @@ export default function MySessionsPage() {
 
                 {note && (
                   <p className="text-sm text-gray-600">
-                    Session notes: {note}
-                  </p>
-                )}
-
-                {packNote && (
-                  <p className="text-sm text-gray-600">
-                    Pack notes: {packNote}
+                    {note}
                   </p>
                 )}
 
@@ -141,7 +138,11 @@ export default function MySessionsPage() {
 
               <div
                 className={
-                  tx.amount > 0 ? "text-green-600" : "text-red-600"
+                  tx.amount > 0
+                    ? "text-green-600"
+                    : tx.amount < 0
+                    ? "text-red-600"
+                    : "text-gray-500"
                 }
               >
                 {tx.amount > 0 ? `+${tx.amount}` : tx.amount}
