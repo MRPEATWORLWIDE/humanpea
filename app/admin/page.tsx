@@ -24,15 +24,15 @@ export default function AdminPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [packs, setPacks] = useState<Pack[]>([]);
   const [selectedClient, setSelectedClient] = useState("");
+
   const [paidDate, setPaidDate] = useState("");
   const [selectedPack, setSelectedPack] = useState("");
   const [deductDate, setDeductDate] = useState("");
+  const [eventDate, setEventDate] = useState("");
 
   const [packNote, setPackNote] = useState("");
   const [sessionNote, setSessionNote] = useState("");
-
   const [eventNote, setEventNote] = useState("");
-  const [eventDate, setEventDate] = useState("");
 
   useEffect(() => {
     const init = async () => {
@@ -75,26 +75,47 @@ export default function AdminPage() {
     window.location.href = "/login";
   };
 
+  // CLEAN TRANSACTION CREATOR
+  const createTransaction = async (
+    amount: number,
+    type: string,
+    note: string,
+    date?: string
+  ) => {
+    if (!selectedClient) return alert("Select a client first");
+
+    const { error } = await supabase.from("pt_session_transactions").insert({
+      client_id: selectedClient,
+      amount,
+      type,
+      note,
+      paid_at: date ? new Date(date).toISOString() : new Date().toISOString(),
+    });
+
+    if (error) {
+      alert(error.message);
+      return false;
+    }
+
+    return true;
+  };
+
   const handleAddPack = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedClient || !selectedPack) return;
+
+    if (!selectedPack) return;
 
     const pack = packs.find((p) => p.name === selectedPack);
     if (!pack) return;
 
-    const { error } = await supabase
-      .from("pt_session_transactions")
-      .insert({
-        client_id: selectedClient,
-        amount: pack.sessions,
-        type: "purchase",
-        note: packNote || pack.name,
-        paid_at: paidDate
-          ? new Date(paidDate).toISOString()
-          : new Date().toISOString(),
-      });
+    const success = await createTransaction(
+      pack.sessions,
+      "purchase",
+      packNote || pack.name,
+      paidDate
+    );
 
-    if (error) return alert(error.message);
+    if (!success) return;
 
     alert("Pack added");
     setSelectedPack("");
@@ -104,21 +125,15 @@ export default function AdminPage() {
 
   const handleDeduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedClient) return;
 
-    const { error } = await supabase
-      .from("pt_session_transactions")
-      .insert({
-        client_id: selectedClient,
-        amount: -1,
-        type: "usage",
-        note: sessionNote || "Session Used",
-        paid_at: deductDate
-          ? new Date(deductDate).toISOString()
-          : new Date().toISOString(),
-      });
+    const success = await createTransaction(
+      -1,
+      "usage",
+      sessionNote || "Session Used",
+      deductDate
+    );
 
-    if (error) return alert(error.message);
+    if (!success) return;
 
     alert("Session deducted");
     setDeductDate("");
@@ -127,21 +142,15 @@ export default function AdminPage() {
 
   const handleEvent = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedClient || !eventNote) return;
 
-    const { error } = await supabase
-      .from("pt_session_transactions")
-      .insert({
-        client_id: selectedClient,
-        amount: 0,
-        type: "event",
-        note: eventNote,
-        paid_at: eventDate
-          ? new Date(eventDate).toISOString()
-          : new Date().toISOString(),
-      });
+    const success = await createTransaction(
+      0,
+      "event",
+      eventNote || "Event",
+      eventDate
+    );
 
-    if (error) return alert(error.message);
+    if (!success) return;
 
     alert("Event recorded");
     setEventNote("");
