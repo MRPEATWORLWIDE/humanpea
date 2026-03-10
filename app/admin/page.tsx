@@ -28,7 +28,6 @@ export default function AdminPage() {
   const [selectedPack, setSelectedPack] = useState("");
   const [deductDate, setDeductDate] = useState("");
 
-  // separate notes
   const [packNote, setPackNote] = useState("");
   const [sessionNote, setSessionNote] = useState("");
 
@@ -45,6 +44,7 @@ export default function AdminPage() {
       console.log("getSession error:", sessionError);
 
       if (!userData?.user) {
+        console.log("No logged in user → redirecting to /login");
         window.location.href = "/login";
         return;
       }
@@ -52,23 +52,36 @@ export default function AdminPage() {
       const userEmail = (userData.user.email || "").toLowerCase();
       setEmail(userEmail);
 
+      console.log("Logged in email:", userEmail);
+
       if (!ADMIN_EMAILS.includes(userEmail)) {
+        console.log("User not admin → redirecting to /login");
         window.location.href = "/login";
         return;
       }
 
-      const { data: clientData } = await supabase
+      console.log("Querying pt_profiles...");
+
+      const { data: clientData, error: clientError } = await supabase
         .from("pt_profiles")
         .select("id, full_name, email")
         .order("full_name", { ascending: true });
 
+      console.log("pt_profiles data:", clientData);
+      console.log("pt_profiles error:", clientError);
+
       if (clientData) setClients(clientData);
 
-      const { data: packData } = await supabase
+      console.log("Querying pt_packages...");
+
+      const { data: packData, error: packError } = await supabase
         .from("pt_packages")
         .select("name, sessions")
         .eq("active", true)
         .order("created_at", { ascending: true });
+
+      console.log("pt_packages data:", packData);
+      console.log("pt_packages error:", packError);
 
       if (packData) setPacks(packData);
 
@@ -103,7 +116,7 @@ export default function AdminPage() {
       });
 
     if (error) {
-      console.error(error);
+      console.error("Add pack error:", error);
       return alert(error.message);
     }
 
@@ -130,7 +143,7 @@ export default function AdminPage() {
       });
 
     if (error) {
-      console.error(error);
+      console.error("Deduct session error:", error);
       return alert(error.message);
     }
 
