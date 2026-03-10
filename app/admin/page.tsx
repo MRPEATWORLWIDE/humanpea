@@ -28,8 +28,9 @@ export default function AdminPage() {
   const [selectedPack, setSelectedPack] = useState("");
   const [deductDate, setDeductDate] = useState("");
 
-  // NEW
-  const [note, setNote] = useState("");
+  // separate notes
+  const [packNote, setPackNote] = useState("");
+  const [sessionNote, setSessionNote] = useState("");
 
   useEffect(() => {
     const init = async () => {
@@ -44,7 +45,6 @@ export default function AdminPage() {
       console.log("getSession error:", sessionError);
 
       if (!userData?.user) {
-        console.log("No logged in user → redirecting to /login");
         window.location.href = "/login";
         return;
       }
@@ -52,36 +52,23 @@ export default function AdminPage() {
       const userEmail = (userData.user.email || "").toLowerCase();
       setEmail(userEmail);
 
-      console.log("Logged in email:", userEmail);
-
       if (!ADMIN_EMAILS.includes(userEmail)) {
-        console.log("User not admin → redirecting to /login");
         window.location.href = "/login";
         return;
       }
 
-      console.log("Querying pt_profiles...");
-
-      const { data: clientData, error: clientError } = await supabase
+      const { data: clientData } = await supabase
         .from("pt_profiles")
         .select("id, full_name, email")
         .order("full_name", { ascending: true });
 
-      console.log("pt_profiles data:", clientData);
-      console.log("pt_profiles error:", clientError);
-
       if (clientData) setClients(clientData);
 
-      console.log("Querying pt_packages...");
-
-      const { data: packData, error: packError } = await supabase
+      const { data: packData } = await supabase
         .from("pt_packages")
         .select("name, sessions")
         .eq("active", true)
         .order("created_at", { ascending: true });
-
-      console.log("pt_packages data:", packData);
-      console.log("pt_packages error:", packError);
 
       if (packData) setPacks(packData);
 
@@ -109,21 +96,21 @@ export default function AdminPage() {
         client_id: selectedClient,
         amount: pack.sessions,
         type: "purchase",
-        note: note || pack.name, // UPDATED
+        note: packNote || pack.name,
         paid_at: paidDate
           ? new Date(paidDate).toISOString()
           : new Date().toISOString(),
       });
 
     if (error) {
-      console.error("Add pack error:", error);
+      console.error(error);
       return alert(error.message);
     }
 
     alert("Pack added");
     setSelectedPack("");
     setPaidDate("");
-    setNote(""); // NEW
+    setPackNote("");
   };
 
   const handleDeduct = async (e: React.FormEvent) => {
@@ -136,20 +123,20 @@ export default function AdminPage() {
         client_id: selectedClient,
         amount: -1,
         type: "usage",
-        note: note || "Session Used", // UPDATED
+        note: sessionNote || "Session Used",
         paid_at: deductDate
           ? new Date(deductDate).toISOString()
           : new Date().toISOString(),
       });
 
     if (error) {
-      console.error("Deduct session error:", error);
+      console.error(error);
       return alert(error.message);
     }
 
     alert("Session deducted");
     setDeductDate("");
-    setNote(""); // NEW
+    setSessionNote("");
   };
 
   return (
@@ -204,13 +191,12 @@ export default function AdminPage() {
           onChange={(e) => setPaidDate(e.target.value)}
         />
 
-        {/* NEW NOTE FIELD */}
         <input
           type="text"
-          placeholder="Optional note (e.g. Shared pack with Dmitry)"
+          placeholder="Pack note"
           className="w-full border p-2 rounded"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
+          value={packNote}
+          onChange={(e) => setPackNote(e.target.value)}
         />
 
         <button
@@ -231,13 +217,12 @@ export default function AdminPage() {
           onChange={(e) => setDeductDate(e.target.value)}
         />
 
-        {/* NEW NOTE FIELD */}
         <input
           type="text"
-          placeholder="Optional note (e.g. Dmitry session)"
+          placeholder="Session note"
           className="w-full border p-2 rounded"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
+          value={sessionNote}
+          onChange={(e) => setSessionNote(e.target.value)}
         />
 
         <button
