@@ -69,13 +69,11 @@ export default function PayPage() {
                 </h3>
 
                 <p className="mt-2 text-sm text-black/75">
-                  20 Sessions | Vista Gym | Couple Accountability Training
+                  20 Sessions | Vista Gym | Transformation | Precision Coaching | Adaptive Programming | Mesocycle
                 </p>
 
                 <p className="mt-3 text-sm text-black/65">
-                  Designed for couples training together. Shared accountability,
-                  structured progression and flexible scheduling across 20
-                  sessions.
+                  A shared training block designed for couples or family members, allowing sessions to be used individually while following a structured training progression.
                 </p>
               </div>
 
@@ -96,8 +94,7 @@ export default function PayPage() {
                 </h3>
 
                 <p className="mt-2 text-sm text-black/75">
-                  Please include the reference below when making your transfer
-                  so your session block can be allocated correctly.
+                  Please include the reference below when making your transfer so your session block can be allocated correctly.
                 </p>
 
                 <div className="mt-6 space-y-3 text-sm">
