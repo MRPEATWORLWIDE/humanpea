@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 export default function PayPage() {
@@ -83,7 +85,7 @@ export default function PayPage() {
 
             </article>
 
-            {/* BANK DETAILS */}
+            {/* BANK TRANSFER CARD */}
 
             <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
 
@@ -94,8 +96,8 @@ export default function PayPage() {
                 </h3>
 
                 <p className="mt-2 text-sm text-black/75">
-                  Please include the reference below when making your transfer so
-                  your session block can be allocated correctly.
+                  Please include the reference below when making your transfer
+                  so your session block can be allocated correctly.
                 </p>
 
                 <div className="mt-6 space-y-3 text-sm">
