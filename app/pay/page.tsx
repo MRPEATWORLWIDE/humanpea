@@ -1,183 +1,148 @@
-"use client";
-
-import { useState } from "react";
+import React from "react";
 
 export default function PayPage() {
-  const [name, setName] = useState("");
-
-  const reference = name
-    ? `VISTA_FAMILY-${name.replace(/\s+/g, "").toUpperCase()}`
-    : "VISTA_FAMILY-YOURNAME";
-
-  const copyBankDetails = () => {
-    const details = `
-Account Name: Joshua Peat
-Sort Code: XX-XX-XX
-Account Number: XXXXXXXX
-Reference: ${reference}
-    `;
-    navigator.clipboard.writeText(details);
-    alert("Bank details copied");
-  };
-
-  const copyReference = () => {
-    navigator.clipboard.writeText(reference);
-    alert("Reference copied");
-  };
-
   return (
-    <main className="min-h-screen bg-white text-black px-6 py-16">
-      <div className="max-w-xl mx-auto space-y-12">
+    <div
+      className="min-h-screen bg-white text-black"
+      style={{
+        fontFamily:
+          "Helvetica Neue, Helvetica, Arial, ui-sans-serif, system-ui, -apple-system",
+      }}
+    >
+      <style>{`
+        :root {
+          --hp-container-max: 1120px;
+          --hp-section-pad-x: 1.25rem;
+          --hp-hero-min-h: 36vh;
+          --hp-hero-max-w: 920px;
+          --hp-grid-gap: 1.25rem;
+          --hp-card-pad: 1.25rem;
+          --hp-card-radius: 1rem;
+          --hp-accent: #00C853;
+        }
+      `}</style>
 
-        {/* HEADER */}
+      {/* HERO */}
 
-        <header className="text-center space-y-4">
-          <h1 className="text-3xl font-semibold tracking-tight">
-            HumanPea Payment
+      <section
+        className="border-b border-black/10"
+        style={{ minHeight: "var(--hp-hero-min-h)" }}
+      >
+        <div
+          className="mx-auto flex h-full w-full flex-col justify-center"
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "3rem var(--hp-section-pad-x)",
+          }}
+        >
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
+            VISTA_FAMILY
           </h1>
 
-          <p className="text-neutral-600 text-sm max-w-md mx-auto">
-            Secure payment page for HumanPea London training session blocks.
+          <p className="mt-4 max-w-prose text-sm text-black/70">
+            20 Session Family Block for Vista residents.
           </p>
-        </header>
+        </div>
+      </section>
 
-        {/* SESSION BLOCK */}
+      {/* PAYMENT GRID */}
 
-        <section className="space-y-4">
+      <section className="py-10 border-b border-black/10">
+        <div
+          className="mx-auto"
+          style={{
+            maxWidth: "var(--hp-container-max)",
+            padding: "0 var(--hp-section-pad-x)",
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hp-grid-gap)]">
 
-          <h2 className="text-xl font-medium">
-            Session Block
-          </h2>
+            {/* PRODUCT CARD */}
 
-          <div className="border border-neutral-200 rounded-xl p-6 bg-neutral-50 space-y-3">
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
 
-            <div className="flex justify-between text-sm">
-              <span className="text-neutral-500">Product</span>
-              <span className="font-medium">VISTA_FAMILY</span>
-            </div>
+              <div>
+                <h3 className="text-lg font-semibold tracking-wide">
+                  VISTA_FAMILY
+                </h3>
 
-            <div className="flex justify-between text-sm">
-              <span className="text-neutral-500">Sessions</span>
-              <span className="font-medium">20 Sessions</span>
-            </div>
+                <p className="mt-2 text-sm text-black/75">
+                  20 Sessions | Vista Gym | Couple Accountability Training
+                </p>
 
-            <div className="flex justify-between text-sm">
-              <span className="text-neutral-500">Price</span>
-              <span className="font-medium">£810</span>
-            </div>
+                <p className="mt-3 text-sm text-black/65">
+                  Designed for couples training together. Shared accountability,
+                  structured progression and flexible scheduling across 20
+                  sessions.
+                </p>
+              </div>
+
+              <div className="mt-6">
+                <div className="text-2xl font-bold">£810</div>
+              </div>
+
+            </article>
+
+            {/* BANK DETAILS */}
+
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
+
+              <div>
+
+                <h3 className="text-lg font-semibold tracking-wide">
+                  Bank Transfer
+                </h3>
+
+                <p className="mt-2 text-sm text-black/75">
+                  Please include the reference below when making your transfer so
+                  your session block can be allocated correctly.
+                </p>
+
+                <div className="mt-6 space-y-3 text-sm">
+
+                  <div className="flex justify-between">
+                    <span className="text-black/60">Account Name</span>
+                    <span className="font-medium">Joshua Peat</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-black/60">Sort Code</span>
+                    <span className="font-medium">04-00-03</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-black/60">Account Number</span>
+                    <span className="font-medium">68509836</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-black/60">Reference</span>
+                    <span className="font-medium">FAMILY BLOCK</span>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div className="mt-6">
+
+                <button
+                  onClick={() =>
+                    navigator.clipboard.writeText("FAMILY BLOCK")
+                  }
+                  className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
+                >
+                  Copy Payment Reference
+                </button>
+
+              </div>
+
+            </article>
 
           </div>
+        </div>
+      </section>
 
-        </section>
-
-        {/* CLIENT NAME */}
-
-        <section className="space-y-3">
-
-          <h2 className="text-xl font-medium">
-            Payment Reference
-          </h2>
-
-          <p className="text-sm text-neutral-600">
-            Enter your name to generate your payment reference.
-          </p>
-
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border border-neutral-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-black"
-          />
-
-          <div className="border border-neutral-200 rounded-lg p-4 bg-neutral-50 flex justify-between items-center text-sm">
-
-            <span className="font-medium">{reference}</span>
-
-            <button
-              onClick={copyReference}
-              className="text-xs px-3 py-1 border border-neutral-300 rounded hover:bg-neutral-100"
-            >
-              Copy
-            </button>
-
-          </div>
-
-        </section>
-
-        {/* BANK TRANSFER */}
-
-        <section className="space-y-4">
-
-          <h2 className="text-xl font-medium">
-            Bank Transfer
-          </h2>
-
-          <p className="text-neutral-600 text-sm">
-            Please include the reference above when making your transfer so your
-            session block can be allocated correctly.
-          </p>
-
-          <div className="border border-neutral-200 rounded-xl p-6 bg-neutral-50 space-y-3 text-sm">
-
-            <div className="flex justify-between">
-              <span className="text-neutral-500">Account Name</span>
-              <span className="font-medium">Joshua Peat</span>
-            </div>
-
-            <div className="flex justify-between">
-              <span className="text-neutral-500">Sort Code</span>
-              <span className="font-medium">XX-XX-XX</span>
-            </div>
-
-            <div className="flex justify-between">
-              <span className="text-neutral-500">Account Number</span>
-              <span className="font-medium">XXXXXXXX</span>
-            </div>
-
-          </div>
-
-          <button
-            onClick={copyBankDetails}
-            className="w-full bg-black text-white rounded-lg py-3 text-sm font-medium hover:bg-neutral-800 transition"
-          >
-            Copy Bank Details
-          </button>
-
-          <p className="text-xs text-neutral-500">
-            Once payment is received, your session block will be added to your account.
-          </p>
-
-        </section>
-
-        {/* CONTACT */}
-
-        <section className="space-y-2 text-sm text-center">
-
-          <p className="text-neutral-600">
-            Questions regarding payment or session blocks?
-          </p>
-
-          <a
-            href="mailto:hello@humanpea.com"
-            className="font-medium underline underline-offset-4"
-          >
-            hello@humanpea.com
-          </a>
-
-        </section>
-
-        {/* FOOTER */}
-
-        <footer className="pt-8 border-t border-neutral-200 text-center text-xs text-neutral-500">
-
-          <p>HumanPea London</p>
-
-          <p>Strength • Conditioning • Structured Coaching</p>
-
-        </footer>
-
-      </div>
-    </main>
+    </div>
   );
 }
