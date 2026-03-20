@@ -40,6 +40,7 @@ export default function NutritionPage() {
   const handleSubmit = async () => {
     if (!userId) return;
 
+    // 1. Create assessment
     const { data: assessment, error: assessmentError } = await supabase
       .from("assessments")
       .insert({
@@ -56,6 +57,7 @@ export default function NutritionPage() {
 
     const assessmentId = assessment.id;
 
+    // 2. Save responses
     const responses = [
       {
         assessment_id: assessmentId,
@@ -85,12 +87,24 @@ export default function NutritionPage() {
       .insert(responses);
 
     if (responseError) {
-      console.error("Response error:", responseError);
+      console.error(responseError);
       return;
     }
 
-    console.log("Responses saved");
+    // ✅ 3. CALL SCORING FUNCTION
+    const { error: scoreError } = await supabase.rpc(
+      "calculate_user_scores",
+      { p_assessment_id: assessmentId }
+    );
 
+    if (scoreError) {
+      console.error("Score error:", scoreError);
+      return;
+    }
+
+    console.log("Scores calculated");
+
+    // TEMP legacy flow (ignore later)
     await supabase.from("nutrition_profiles").upsert({
       user_id: userId,
       carb_sensitivity: carb,
