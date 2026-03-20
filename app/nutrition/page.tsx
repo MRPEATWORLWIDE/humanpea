@@ -6,18 +6,26 @@ import { supabase } from "../../lib/supabaseClient";
 const questions = [
   { id: "q1", text: "My energy levels remain steady throughout the day", variable: "ES" },
   { id: "q2", text: "I experience energy crashes during the day", variable: "ES", reverse: true },
-
   { id: "q3", text: "I feel energised after eating carbs", variable: "CH" },
   { id: "q4", text: "Carbs make me feel sluggish", variable: "CH", reverse: true },
-
   { id: "q5", text: "I feel in control of my eating", variable: "AR" },
   { id: "q6", text: "I struggle with cravings", variable: "AR", reverse: true },
 ];
 
+const archetypeDescriptions = {
+  RFU: "Your system struggles with carbohydrate regulation, leading to energy crashes and reactive hunger.",
+  AE: "You are metabolically flexible and can handle a wide range of foods with stable energy output.",
+  EP: "Your body stores energy efficiently, meaning fat loss requires tighter structure and consistency.",
+  CR: "Your nutrition is heavily influenced by stress, requiring structure and stability.",
+  MF: "You tend to under-eat relative to your needs, which impacts recovery and performance.",
+  OD: "You have high output demands and require consistent fuelling to maintain performance.",
+};
+
 export default function NutritionPage() {
   const [userId, setUserId] = useState(null);
   const [answers, setAnswers] = useState({});
-  const [result, setResult] = useState(null);
+  const [output, setOutput] = useState(null);
+  const [identity, setIdentity] = useState(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -26,14 +34,13 @@ export default function NutritionPage() {
   }, []);
 
   const mapLikert = (value, reverse = false) => {
-    let score = value - 4; // converts 1–7 → -3 to +3
+    let score = value - 4;
     return reverse ? -score : score;
   };
 
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // 1. Create assessment
     const { data: assessment } = await supabase
       .from("assessments")
       .insert({ user_id: userId, version: "beta_v1" })
@@ -42,7 +49,6 @@ export default function NutritionPage() {
 
     const assessmentId = assessment.id;
 
-    // 2. Build responses
     const responseRows = questions.map((q) => ({
       assessment_id: assessmentId,
       user_id: userId,
@@ -53,19 +59,26 @@ export default function NutritionPage() {
 
     await supabase.from("nutrition_responses").insert(responseRows);
 
-    // 3–5 pipeline
     await supabase.rpc("calculate_user_scores", { p_assessment_id: assessmentId });
     await supabase.rpc("assign_archetype_v2", { p_assessment_id: assessmentId });
     await supabase.rpc("generate_nutrition_output", { p_assessment_id: assessmentId });
 
-    // 6. fetch output
-    const { data } = await supabase
+    // Fetch identity
+    const { data: identityData } = await supabase
+      .from("user_archetype")
+      .select("*")
+      .eq("assessment_id", assessmentId)
+      .single();
+
+    // Fetch plan
+    const { data: outputData } = await supabase
       .from("nutrition_outputs")
       .select("*")
       .eq("assessment_id", assessmentId)
       .single();
 
-    setResult(data);
+    setIdentity(identityData);
+    setOutput(outputData);
   };
 
   return (
@@ -100,14 +113,34 @@ export default function NutritionPage() {
         Generate Plan
       </button>
 
-      {result && (
+      {identity && (
+        <div className="border p-4 mt-4 space-y-2">
+          <h2 className="font-semibold text-lg">Your Profile</h2>
+
+          <p>Type: {identity.type}</p>
+          <p>Archetype: {identity.archetype}</p>
+          <p>Variant: {identity.variant}</p>
+          <p>
+            Code: {identity.archetype}-{identity.variant}
+          </p>
+
+          <p className="mt-2 text-sm text-gray-600">
+            {archetypeDescriptions[identity.archetype]}
+          </p>
+        </div>
+      )}
+
+      {output && (
         <div className="border p-4 mt-4">
           <h2 className="font-semibold">Your Plan</h2>
-          <p>Calories: {result.calories}</p>
-          <p>Protein: {result.protein}</p>
-          <p>Carbs: {result.carbs}</p>
-          <p>Fats: {result.fats}</p>
-          <p>{result.diet_route}</p>
+
+          <p>Calories: {output.calories}</p>
+          <p>Protein: {output.protein}</p>
+          <p>Carbs: {output.carbs}</p>
+          <p>Fats: {output.fats}</p>
+
+          <p className="mt-2">{output.diet_route}</p>
+          <p>{output.meal_structure}</p>
         </div>
       )}
     </div>
