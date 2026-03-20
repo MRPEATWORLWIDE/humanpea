@@ -39,7 +39,6 @@ export default function NutritionPage() {
     });
   }, []);
 
-  // ✅ UPDATED (stronger scoring)
   const mapLikert = (value, reverse = false) => {
     let score = (value - 4) * 2;
     return reverse ? -score : score;
@@ -67,10 +66,17 @@ export default function NutritionPage() {
       user_id: userId,
       question_key: q.id,
       variable: q.variable,
-      value: mapLikert(answers[q.id], q.reverse),
+      value: mapLikert(answers[q.id] ?? 4, q.reverse), // ✅ FIXED
     }));
 
-    await supabase.from("nutrition_responses").insert(responseRows);
+    const { error } = await supabase
+      .from("nutrition_responses")
+      .insert(responseRows);
+
+    if (error) {
+      console.error("Insert error:", error);
+      return;
+    }
 
     await supabase.rpc("calculate_user_scores", { p_assessment_id: assessmentId });
     await supabase.rpc("assign_archetype_v2", { p_assessment_id: assessmentId });
