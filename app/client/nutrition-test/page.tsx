@@ -40,29 +40,53 @@ export default function NutritionPage() {
     fetchData();
   }, [userId]);
 
-  // submit form
+  // submit form (FIXED)
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // insert or update
-    await supabase.from("nutrition_profiles").upsert({
-      user_id: userId,
-      carb_sensitivity: carb,
-      sugar_risk: sugar,
-      lactose_tolerance: lactose,
-    });
+    console.log("START");
 
-    // assign archetype
-    await supabase.rpc("assign_archetype", {
+    const { error: upsertError } = await supabase
+      .from("nutrition_profiles")
+      .upsert({
+        user_id: userId,
+        carb_sensitivity: carb,
+        sugar_risk: sugar,
+        lactose_tolerance: lactose,
+      });
+
+    if (upsertError) {
+      console.error(upsertError);
+      alert("Save failed");
+      return;
+    }
+
+    console.log("SAVED");
+
+    const { error: rpcError } = await supabase.rpc("assign_archetype", {
       p_user_id: userId,
     });
 
-    // refetch
-    const { data } = await supabase
+    if (rpcError) {
+      console.error(rpcError);
+      alert("Archetype failed");
+      return;
+    }
+
+    console.log("RPC DONE");
+
+    const { data, error } = await supabase
       .from("nutrition_profiles")
       .select("*")
       .eq("user_id", userId)
       .single();
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    console.log("FINAL:", data);
 
     setNutrition(data);
   };
@@ -74,7 +98,6 @@ export default function NutritionPage() {
       <h1 className="text-2xl font-bold">Nutrition</h1>
 
       {!nutrition ? (
-        // ================= FORM =================
         <div className="space-y-4 border p-4 rounded">
           <h2 className="font-semibold">Add Nutrition</h2>
 
@@ -116,7 +139,6 @@ export default function NutritionPage() {
           </button>
         </div>
       ) : (
-        // ================= RESULTS =================
         <div className="border p-4 rounded">
           <h2 className="font-semibold mb-2">Your Results</h2>
 
@@ -125,7 +147,7 @@ export default function NutritionPage() {
           <p>Lactose: {nutrition.lactose_tolerance}</p>
 
           <p className="mt-3 font-bold">
-            Archetype: {nutrition.archetype}
+            Archetype: {nutrition.archetype || "NOT SET"}
           </p>
         </div>
       )}
