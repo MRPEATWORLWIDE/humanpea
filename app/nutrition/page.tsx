@@ -40,7 +40,6 @@ export default function NutritionPage() {
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // CREATE ASSESSMENT
     const { data: assessment, error: assessmentError } = await supabase
       .from("assessments")
       .insert({
@@ -51,46 +50,47 @@ export default function NutritionPage() {
       .single();
 
     if (assessmentError) {
-      console.error("Assessment error:", assessmentError);
+      console.error(assessmentError);
       return;
     }
 
     const assessmentId = assessment.id;
-    console.log("Assessment ID:", assessmentId);
 
-    // BUILD RESPONSES
     const responses = [
       {
         assessment_id: assessmentId,
         user_id: userId,
         question_key: "carb_response",
+        variable: "CH",
         value: mapValue(carb),
       },
       {
         assessment_id: assessmentId,
         user_id: userId,
         question_key: "sugar_craving",
+        variable: "AR",
         value: mapValue(sugar),
       },
       {
         assessment_id: assessmentId,
         user_id: userId,
         question_key: "lactose_tolerance",
+        variable: "DR",
         value: mapValue(lactose),
       },
     ];
 
-    console.log("Responses to insert:", responses);
-
-    // INSERT RESPONSES
-    const { data: responseData, error: responseError } = await supabase
+    const { error: responseError } = await supabase
       .from("nutrition_responses")
       .insert(responses);
 
-    console.log("Response insert result:", responseData);
-    console.log("Response insert error:", responseError);
+    if (responseError) {
+      console.error("Response error:", responseError);
+      return;
+    }
 
-    // KEEP LEGACY FLOW
+    console.log("Responses saved");
+
     await supabase.from("nutrition_profiles").upsert({
       user_id: userId,
       carb_sensitivity: carb,
@@ -129,7 +129,6 @@ export default function NutritionPage() {
 
         <div>
           <h2 className="font-semibold mb-2">Profile</h2>
-
           <div className="grid grid-cols-2 gap-4">
             <input placeholder="Height (cm)" onChange={(e) => setHeight(e.target.value)} className="border p-2" />
             <input placeholder="Weight (kg)" onChange={(e) => setWeight(e.target.value)} className="border p-2" />
@@ -139,7 +138,6 @@ export default function NutritionPage() {
 
         <div>
           <h2 className="font-semibold mb-2">Goals</h2>
-
           <select onChange={(e) => setGoal(e.target.value)}>
             <option value="">Select Goal</option>
             <option value="fat_loss">Fat Loss</option>
