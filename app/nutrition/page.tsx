@@ -4,12 +4,30 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 
 const questions = [
-  { id: "q1", text: "My energy levels remain steady throughout the day", variable: "ES" },
-  { id: "q2", text: "I experience energy crashes during the day", variable: "ES", reverse: true },
-  { id: "q3", text: "I feel energised after eating carbs", variable: "CH" },
-  { id: "q4", text: "Carbs make me feel sluggish", variable: "CH", reverse: true },
-  { id: "q5", text: "I feel in control of my eating", variable: "AR" },
-  { id: "q6", text: "I struggle with cravings", variable: "AR", reverse: true },
+  
+  // ENERGY STABILITY (ES)
+  { id: "q1", text: "My energy levels remain stable throughout the day", variable: "ES" },
+  { id: "q2", text: "I experience noticeable energy crashes", variable: "ES", reverse: true },
+  { id: "q3", text: "I can stay focused without needing frequent snacks", variable: "ES" },
+  { id: "q4", text: "I feel fatigued even after eating", variable: "ES", reverse: true },
+
+  // CARB HANDLING (CH)
+  { id: "q5", text: "I feel energised after eating carbohydrates", variable: "CH" },
+  { id: "q6", text: "Carbohydrates make me feel sluggish or bloated", variable: "CH", reverse: true },
+  { id: "q7", text: "I perform well when my meals include carbs", variable: "CH" },
+  { id: "q8", text: "I feel better on lower-carb meals", variable: "CH", reverse: true },
+
+  // APPETITE REGULATION (AR)
+  { id: "q9", text: "I feel in control of my hunger", variable: "AR" },
+  { id: "q10", text: "I struggle with cravings for sugar or snacks", variable: "AR", reverse: true },
+  { id: "q11", text: "I can go several hours without thinking about food", variable: "AR" },
+  { id: "q12", text: "I often feel hungry even after eating", variable: "AR", reverse: true },
+
+  // STRESS SENSITIVITY (SS)
+  { id: "q13", text: "Stress does not affect my eating habits", variable: "SS" },
+  { id: "q14", text: "I eat more when I am stressed", variable: "SS", reverse: true },
+  { id: "q15", text: "I can maintain structure even under pressure", variable: "SS" },
+  { id: "q16", text: "My eating habits become inconsistent when stressed", variable: "SS", reverse: true },
 ];
 
 const archetypeDescriptions = {
