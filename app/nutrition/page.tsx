@@ -78,7 +78,7 @@ export default function NutritionPage() {
     }
 
     await supabase.rpc("calculate_user_scores", { p_assessment_id: assessmentId });
-    await supabase.rpc("assign_archetype_v2", { p_assessment_id: assessmentId });
+    await supabase.rpc("assign_archetype_v3", { p_assessment_id: assessmentId });
     await supabase.rpc("generate_nutrition_output", { p_assessment_id: assessmentId });
 
     const { data: identityData } = await supabase
