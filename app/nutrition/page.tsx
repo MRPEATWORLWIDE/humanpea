@@ -75,11 +75,15 @@ export default function NutritionPage() {
     });
 
     // fetch result (TEMP ONLY)
-    const { data } = await supabase
-      .from("nutrition_profiles")
-      .select("*")
-      .eq("user_id", userId)
-      .single();
+    const { data, error } = await supabase
+  .from("nutrition_profiles")
+  .select("*")
+  .eq("user_id", userId);
+
+if (error) {
+  console.error(error);
+} else {
+  setResult(data?.[0] || null);
 
     setResult(data);
   };
