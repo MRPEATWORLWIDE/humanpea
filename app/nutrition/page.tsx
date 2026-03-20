@@ -7,7 +7,7 @@ const questions = [
   { id: "q1", text: "My energy levels remain stable throughout the day", variable: "ES" },
   { id: "q2", text: "I experience noticeable energy crashes", variable: "ES", reverse: true },
   { id: "q3", text: "I feel energised after eating carbs", variable: "CH" },
-  { id: "q4", text: "Carbs make me feel sluggish or bloated", variable: "CH", reverse: true },
+  { id: "q4", text: "Carbohydrates make me feel sluggish or bloated", variable: "CH", reverse: true },
   { id: "q5", text: "I feel in control of my hunger", variable: "AR" },
   { id: "q6", text: "I struggle with cravings for sugar or snacks", variable: "AR", reverse: true },
   { id: "q7", text: "I can go several hours without thinking about food", variable: "AR" },
@@ -39,15 +39,16 @@ export default function NutritionPage() {
     });
   }, []);
 
+  // ✅ UPDATED (stronger scoring)
   const mapLikert = (value, reverse = false) => {
-    let score = value - 4;
+    let score = (value - 4) * 2;
     return reverse ? -score : score;
   };
 
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // ✅ VALIDATION
+    // validation
     if (Object.keys(answers).length !== questions.length) {
       alert("Please answer all questions");
       return;
