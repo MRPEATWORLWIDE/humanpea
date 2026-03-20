@@ -94,11 +94,21 @@ export default function NutritionTestPage() {
       </div>
 
       {/* ACTION */}
-{!nutrition?.archetype ? (
-  <button className="bg-black text-white px-4 py-2 rounded">
-    Complete Assessment
-  </button>
-) : (
-  <div className="mt-4">
-    <h2 className="font-bold">Your Results</h2>
-  </div>
+<div>
+  {!nutrition?.archetype ? (
+    <button
+      onClick={assignArchetype}
+      className="bg-black text-white px-4 py-2 rounded"
+    >
+      Complete Assessment
+    </button>
+  ) : (
+    <div className="mt-4">
+      <h2 className="font-bold">Your Results</h2>
+    </div>
+  )}
+</div>
+
+    </div>
+  );
+}
