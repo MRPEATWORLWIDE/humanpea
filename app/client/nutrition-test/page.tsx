@@ -8,12 +8,18 @@ export default function NutritionPage() {
   const [nutrition, setNutrition] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // form state
+  // NEW: profile inputs
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [age, setAge] = useState("");
+  const [goal, setGoal] = useState("");
+  const [activity, setActivity] = useState("");
+
+  // existing nutrition inputs
   const [carb, setCarb] = useState("");
   const [sugar, setSugar] = useState("");
   const [lactose, setLactose] = useState("");
 
-  // get user
   useEffect(() => {
     const getUser = async () => {
       const { data } = await supabase.auth.getUser();
@@ -22,7 +28,6 @@ export default function NutritionPage() {
     getUser();
   }, []);
 
-  // fetch nutrition
   useEffect(() => {
     if (!userId) return;
 
@@ -40,12 +45,10 @@ export default function NutritionPage() {
     fetchData();
   }, [userId]);
 
-  // submit form (FIXED)
   const handleSubmit = async () => {
     if (!userId) return;
 
-    console.log("START");
-
+    // save nutrition inputs
     const { error: upsertError } = await supabase
       .from("nutrition_profiles")
       .upsert({
@@ -61,32 +64,34 @@ export default function NutritionPage() {
       return;
     }
 
-    console.log("SAVED");
+    // save profile inputs
+    const { error: profileError } = await supabase
+      .from("client_profiles_extended")
+      .upsert({
+        user_id: userId,
+        height_cm: Number(height),
+        weight_kg: Number(weight),
+        age: Number(age),
+        goal: goal,
+        activity_level: activity,
+      });
 
-    const { error: rpcError } = await supabase.rpc("assign_archetype", {
-      p_user_id: userId,
-    });
-
-    if (rpcError) {
-      console.error(rpcError);
-      alert("Archetype failed");
+    if (profileError) {
+      console.error(profileError);
+      alert("Profile save failed");
       return;
     }
 
-    console.log("RPC DONE");
+    // run archetype
+    await supabase.rpc("assign_archetype", {
+      p_user_id: userId,
+    });
 
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("nutrition_profiles")
       .select("*")
       .eq("user_id", userId)
       .single();
-
-    if (error) {
-      console.error(error);
-      return;
-    }
-
-    console.log("FINAL:", data);
 
     setNutrition(data);
   };
@@ -98,10 +103,54 @@ export default function NutritionPage() {
       <h1 className="text-2xl font-bold">Nutrition</h1>
 
       {!nutrition ? (
-        <div className="space-y-4 border p-4 rounded">
-          <h2 className="font-semibold">Add Nutrition</h2>
+        <div className="space-y-6 border p-4 rounded">
 
+          {/* PROFILE */}
           <div>
+            <h2 className="font-semibold mb-2">Profile</h2>
+
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                placeholder="Height (cm)"
+                onChange={(e) => setHeight(e.target.value)}
+                className="border p-2"
+              />
+              <input
+                placeholder="Weight (kg)"
+                onChange={(e) => setWeight(e.target.value)}
+                className="border p-2"
+              />
+              <input
+                placeholder="Age"
+                onChange={(e) => setAge(e.target.value)}
+                className="border p-2"
+              />
+            </div>
+          </div>
+
+          {/* GOALS */}
+          <div>
+            <h2 className="font-semibold mb-2">Goals</h2>
+
+            <select onChange={(e) => setGoal(e.target.value)}>
+              <option value="">Select Goal</option>
+              <option value="fat_loss">Fat Loss</option>
+              <option value="muscle_gain">Muscle Gain</option>
+              <option value="recomp">Recomposition</option>
+            </select>
+
+            <select onChange={(e) => setActivity(e.target.value)}>
+              <option value="">Activity Level</option>
+              <option value="low">Low</option>
+              <option value="moderate">Moderate</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+
+          {/* NUTRITION */}
+          <div>
+            <h2 className="font-semibold mb-2">Nutrition Behaviour</h2>
+
             <p>How do you feel after carbs?</p>
             <select onChange={(e) => setCarb(e.target.value)}>
               <option value="">Select</option>
@@ -109,9 +158,7 @@ export default function NutritionPage() {
               <option value="moderate">Normal</option>
               <option value="high">Sluggish</option>
             </select>
-          </div>
 
-          <div>
             <p>Do you crave sugar?</p>
             <select onChange={(e) => setSugar(e.target.value)}>
               <option value="">Select</option>
@@ -119,9 +166,7 @@ export default function NutritionPage() {
               <option value="moderate">Sometimes</option>
               <option value="high">Often</option>
             </select>
-          </div>
 
-          <div>
             <p>Dairy tolerance?</p>
             <select onChange={(e) => setLactose(e.target.value)}>
               <option value="">Select</option>
@@ -147,7 +192,7 @@ export default function NutritionPage() {
           <p>Lactose: {nutrition.lactose_tolerance}</p>
 
           <p className="mt-3 font-bold">
-            Archetype: {nutrition.archetype || "NOT SET"}
+            Archetype: {nutrition.archetype}
           </p>
         </div>
       )}
