@@ -4,30 +4,18 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 
 const questions = [
-  
-  // ENERGY STABILITY (ES)
   { id: "q1", text: "My energy levels remain stable throughout the day", variable: "ES" },
   { id: "q2", text: "I experience noticeable energy crashes", variable: "ES", reverse: true },
-  { id: "q3", text: "I can stay focused without needing frequent snacks", variable: "ES" },
-  { id: "q4", text: "I feel fatigued even after eating", variable: "ES", reverse: true },
-
-  // CARB HANDLING (CH)
-  { id: "q5", text: "I feel energised after eating carbohydrates", variable: "CH" },
-  { id: "q6", text: "Carbohydrates make me feel sluggish or bloated", variable: "CH", reverse: true },
-  { id: "q7", text: "I perform well when my meals include carbs", variable: "CH" },
-  { id: "q8", text: "I feel better on lower-carb meals", variable: "CH", reverse: true },
-
-  // APPETITE REGULATION (AR)
-  { id: "q9", text: "I feel in control of my hunger", variable: "AR" },
-  { id: "q10", text: "I struggle with cravings for sugar or snacks", variable: "AR", reverse: true },
-  { id: "q11", text: "I can go several hours without thinking about food", variable: "AR" },
-  { id: "q12", text: "I often feel hungry even after eating", variable: "AR", reverse: true },
-
-  // STRESS SENSITIVITY (SS)
-  { id: "q13", text: "Stress does not affect my eating habits", variable: "SS" },
-  { id: "q14", text: "I eat more when I am stressed", variable: "SS", reverse: true },
-  { id: "q15", text: "I can maintain structure even under pressure", variable: "SS" },
-  { id: "q16", text: "My eating habits become inconsistent when stressed", variable: "SS", reverse: true },
+  { id: "q3", text: "I feel energised after eating carbs", variable: "CH" },
+  { id: "q4", text: "Carbs make me feel sluggish or bloated", variable: "CH", reverse: true },
+  { id: "q5", text: "I feel in control of my hunger", variable: "AR" },
+  { id: "q6", text: "I struggle with cravings for sugar or snacks", variable: "AR", reverse: true },
+  { id: "q7", text: "I can go several hours without thinking about food", variable: "AR" },
+  { id: "q8", text: "I often feel hungry even after eating", variable: "AR", reverse: true },
+  { id: "q9", text: "Stress does not affect my eating habits", variable: "SS" },
+  { id: "q10", text: "I eat more when I am stressed", variable: "SS", reverse: true },
+  { id: "q11", text: "I can maintain structure even under pressure", variable: "SS" },
+  { id: "q12", text: "My eating habits become inconsistent when stressed", variable: "SS", reverse: true },
 ];
 
 const archetypeDescriptions = {
@@ -59,6 +47,12 @@ export default function NutritionPage() {
   const handleSubmit = async () => {
     if (!userId) return;
 
+    // ✅ VALIDATION
+    if (Object.keys(answers).length !== questions.length) {
+      alert("Please answer all questions");
+      return;
+    }
+
     const { data: assessment } = await supabase
       .from("assessments")
       .insert({ user_id: userId, version: "beta_v1" })
@@ -72,7 +66,7 @@ export default function NutritionPage() {
       user_id: userId,
       question_key: q.id,
       variable: q.variable,
-      value: mapLikert(answers[q.id] || 4, q.reverse),
+      value: mapLikert(answers[q.id], q.reverse),
     }));
 
     await supabase.from("nutrition_responses").insert(responseRows);
@@ -81,14 +75,12 @@ export default function NutritionPage() {
     await supabase.rpc("assign_archetype_v2", { p_assessment_id: assessmentId });
     await supabase.rpc("generate_nutrition_output", { p_assessment_id: assessmentId });
 
-    // Fetch identity
     const { data: identityData } = await supabase
       .from("user_archetype")
       .select("*")
       .eq("assessment_id", assessmentId)
       .single();
 
-    // Fetch plan
     const { data: outputData } = await supabase
       .from("nutrition_outputs")
       .select("*")
@@ -138,9 +130,7 @@ export default function NutritionPage() {
           <p>Type: {identity.type}</p>
           <p>Archetype: {identity.archetype}</p>
           <p>Variant: {identity.variant}</p>
-          <p>
-            Code: {identity.archetype}-{identity.variant}
-          </p>
+          <p>Code: {identity.archetype}-{identity.variant}</p>
 
           <p className="mt-2 text-sm text-gray-600">
             {archetypeDescriptions[identity.archetype]}
