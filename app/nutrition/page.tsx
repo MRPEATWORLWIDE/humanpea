@@ -34,7 +34,7 @@ export default function NutritionPage() {
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // ✅ NEW: Create assessment
+    // ✅ Create assessment
     const { data: assessment, error: assessmentError } = await supabase
       .from("assessments")
       .insert({
@@ -52,7 +52,7 @@ export default function NutritionPage() {
     const assessmentId = assessment.id;
     console.log("Assessment ID:", assessmentId);
 
-    // save temp to DB (still needed for RPC to work)
+    // TEMP saves (legacy - will be removed later)
     await supabase.from("nutrition_profiles").upsert({
       user_id: userId,
       carb_sensitivity: carb,
@@ -69,23 +69,22 @@ export default function NutritionPage() {
       activity_level: activity,
     });
 
-    // run archetype
+    // TEMP RPC
     await supabase.rpc("assign_archetype", {
       p_user_id: userId,
     });
 
-    // fetch result (TEMP ONLY)
+    // ✅ FIXED: safe fetch (no .single())
     const { data, error } = await supabase
-  .from("nutrition_profiles")
-  .select("*")
-  .eq("user_id", userId);
+      .from("nutrition_profiles")
+      .select("*")
+      .eq("user_id", userId);
 
-if (error) {
-  console.error(error);
-} else {
-  setResult(data?.[0] || null);
-
-    setResult(data);
+    if (error) {
+      console.error(error);
+    } else {
+      setResult(data?.[0] || null);
+    }
   };
 
   if (loading) return <div className="p-6">Loading...</div>;
