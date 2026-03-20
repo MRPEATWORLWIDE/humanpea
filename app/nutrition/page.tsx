@@ -40,7 +40,7 @@ export default function NutritionPage() {
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // 1. Create assessment
+    // 1. Assessment
     const { data: assessment, error: assessmentError } = await supabase
       .from("assessments")
       .insert({
@@ -50,87 +50,39 @@ export default function NutritionPage() {
       .select()
       .single();
 
-    if (assessmentError) {
-      console.error(assessmentError);
-      return;
-    }
+    if (assessmentError) return;
 
     const assessmentId = assessment.id;
 
-    // 2. Save responses
+    // 2. Responses
     const responses = [
-      {
-        assessment_id: assessmentId,
-        user_id: userId,
-        question_key: "carb_response",
-        variable: "CH",
-        value: mapValue(carb),
-      },
-      {
-        assessment_id: assessmentId,
-        user_id: userId,
-        question_key: "sugar_craving",
-        variable: "AR",
-        value: mapValue(sugar),
-      },
-      {
-        assessment_id: assessmentId,
-        user_id: userId,
-        question_key: "lactose_tolerance",
-        variable: "DR",
-        value: mapValue(lactose),
-      },
+      { assessment_id: assessmentId, user_id: userId, question_key: "carb_response", variable: "CH", value: mapValue(carb) },
+      { assessment_id: assessmentId, user_id: userId, question_key: "sugar_craving", variable: "AR", value: mapValue(sugar) },
+      { assessment_id: assessmentId, user_id: userId, question_key: "lactose_tolerance", variable: "DR", value: mapValue(lactose) },
     ];
 
-    const { error: responseError } = await supabase
-      .from("nutrition_responses")
-      .insert(responses);
+    await supabase.from("nutrition_responses").insert(responses);
 
-    if (responseError) {
-      console.error(responseError);
-      return;
-    }
-
-    // ✅ 3. CALL SCORING FUNCTION
-    const { error: scoreError } = await supabase.rpc(
-      "calculate_user_scores",
-      { p_assessment_id: assessmentId }
-    );
-
-    if (scoreError) {
-      console.error("Score error:", scoreError);
-      return;
-    }
-
-    console.log("Scores calculated");
-
-    // TEMP legacy flow (ignore later)
-    await supabase.from("nutrition_profiles").upsert({
-      user_id: userId,
-      carb_sensitivity: carb,
-      sugar_risk: sugar,
-      lactose_tolerance: lactose,
+    // 3. Scores
+    await supabase.rpc("calculate_user_scores", {
+      p_assessment_id: assessmentId,
     });
 
-    await supabase.from("client_profiles_extended").upsert({
-      user_id: userId,
-      height_cm: Number(height),
-      weight_kg: Number(weight),
-      age: Number(age),
-      goal: goal,
-      activity_level: activity,
+    // ✅ 4. Archetype (NEW)
+    await supabase.rpc("assign_archetype_v2", {
+      p_assessment_id: assessmentId,
     });
 
-    await supabase.rpc("assign_archetype", {
-      p_user_id: userId,
-    });
+    console.log("Archetype assigned");
 
+    // TEMP display
     const { data } = await supabase
-      .from("nutrition_profiles")
+      .from("user_archetype")
       .select("*")
-      .eq("user_id", userId);
+      .eq("assessment_id", assessmentId)
+      .single();
 
-    setResult(data?.[0] || null);
+    setResult(data);
   };
 
   if (loading) return <div className="p-6">Loading...</div>;
@@ -203,7 +155,9 @@ export default function NutritionPage() {
       {result && (
         <div className="border p-4 rounded">
           <h2 className="font-semibold mb-2">Your Results</h2>
+          <p>Type: {result.type}</p>
           <p>Archetype: {result.archetype}</p>
+          <p>Variant: {result.variant}</p>
         </div>
       )}
     </div>
