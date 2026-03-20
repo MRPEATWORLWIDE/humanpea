@@ -5,17 +5,17 @@ import { supabase } from "../../lib/supabaseClient";
 
 const questions = [
   { id: "q1", text: "My energy levels remain stable throughout the day", variable: "ES" },
-  { id: "q2", text: "I experience noticeable energy crashes", variable: "ES", reverse: true },
+  { id: "q2", text: "I experience energy crashes during the day", variable: "ES" },
+
   { id: "q3", text: "I feel energised after eating carbs", variable: "CH" },
-  { id: "q4", text: "Carbohydrates make me feel sluggish or bloated", variable: "CH", reverse: true },
-  { id: "q5", text: "I feel in control of my hunger", variable: "AR" },
-  { id: "q6", text: "I struggle with cravings for sugar or snacks", variable: "AR", reverse: true },
-  { id: "q7", text: "I can go several hours without thinking about food", variable: "AR" },
-  { id: "q8", text: "I often feel hungry even after eating", variable: "AR", reverse: true },
-  { id: "q9", text: "Stress does not affect my eating habits", variable: "SS" },
-  { id: "q10", text: "I eat more when I am stressed", variable: "SS", reverse: true },
-  { id: "q11", text: "I can maintain structure even under pressure", variable: "SS" },
-  { id: "q12", text: "My eating habits become inconsistent when stressed", variable: "SS", reverse: true },
+  { id: "q4", text: "Carbs make me feel sluggish", variable: "CH" },
+
+  { id: "q5", text: "I feel in control of my eating", variable: "AR" },
+  { id: "q6", text: "I struggle with cravings", variable: "AR" },
+  { id: "q7", text: "I can go hours without thinking about food", variable: "AR" },
+
+  { id: "q8", text: "Stress does not affect my eating", variable: "SS" },
+  { id: "q9", text: "I eat more when stressed", variable: "SS" },
 ];
 
 const archetypeDescriptions = {
@@ -39,9 +39,8 @@ export default function NutritionPage() {
     });
   }, []);
 
-  const mapLikert = (value, reverse = false) => {
-    let score = (value - 4) * 2;
-    return reverse ? -score : score;
+  const mapLikert = (value) => {
+    return (value - 4) * 2;
   };
 
   const handleSubmit = async () => {
@@ -66,7 +65,7 @@ export default function NutritionPage() {
       user_id: userId,
       question_key: q.id,
       variable: q.variable,
-      value: mapLikert(answers[q.id] ?? 4, q.reverse), // ✅ FIXED
+      value: mapLikert(answers[q.id]),
     }));
 
     const { error } = await supabase
