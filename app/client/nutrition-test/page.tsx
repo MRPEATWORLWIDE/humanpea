@@ -102,4 +102,3 @@ export default function NutritionTestPage() {
   <div className="mt-4">
     <h2 className="font-bold">Your Results</h2>
   </div>
-)}
