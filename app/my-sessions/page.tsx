@@ -2,155 +2,199 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
-import { useRouter } from "next/navigation";
 
-type Transaction = {
-  id: string;
-  amount: number;
-  type: string;
-  note: string;
-  created_at: string;
-  paid_at: string | null;
-};
-
-export default function MySessionsPage() {
-  const router = useRouter();
-  const [sessions, setSessions] = useState<number>(0);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+export default function NutritionPage() {
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [email, setEmail] = useState("");
+
+  const [height, setHeight] = useState("");
+  const [weight, setWeight] = useState("");
+  const [age, setAge] = useState("");
+  const [goal, setGoal] = useState("");
+  const [activity, setActivity] = useState("");
+
+  const [carb, setCarb] = useState("");
+  const [sugar, setSugar] = useState("");
+  const [lactose, setLactose] = useState("");
+
+  const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
-    const loadData = async () => {
-      const { data: userData } = await supabase.auth.getUser();
-
-      if (!userData?.user) {
-        router.push("/login");
-        return;
-      }
-
-      setEmail(userData.user.email || "");
-
-      const userId = userData.user.id;
-
-      const { data, error } = await supabase
-        .from("pt_session_transactions")
-        .select("*")
-        .eq("client_id", userId)
-        .order("paid_at", { ascending: false })
-        .order("created_at", { ascending: false });
-
-      if (error) {
-        console.error(error);
-        setLoading(false);
-        return;
-      }
-
-      setTransactions(data || []);
-
-      const total = (data || []).reduce(
-        (sum, tx) => sum + tx.amount,
-        0
-      );
-
-      setSessions(total);
+    const getUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data?.user) setUserId(data.user.id);
       setLoading(false);
     };
+    getUser();
+  }, []);
 
-    loadData();
-  }, [router]);
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    router.push("/login");
+  const mapValue = (val: string) => {
+    if (val === "low") return 2;
+    if (val === "moderate") return 0;
+    if (val === "high") return -2;
+    if (val === "tolerant") return 2;
+    if (val === "intolerant") return -2;
+    return 0;
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  const handleSubmit = async () => {
+    if (!userId) return;
+
+    // 1. Create assessment
+    const { data: assessment, error: assessmentError } = await supabase
+      .from("assessments")
+      .insert({
+        user_id: userId,
+        version: "beta_v1",
+      })
+      .select()
+      .single();
+
+    if (assessmentError) {
+      console.error(assessmentError);
+      return;
+    }
+
+    const assessmentId = assessment.id;
+
+    // 2. Build responses
+    const responses = [
+      {
+        assessment_id: assessmentId,
+        user_id: userId,
+        question_key: "carb_response",
+        value: mapValue(carb),
+      },
+      {
+        assessment_id: assessmentId,
+        user_id: userId,
+        question_key: "sugar_craving",
+        value: mapValue(sugar),
+      },
+      {
+        assessment_id: assessmentId,
+        user_id: userId,
+        question_key: "lactose_tolerance",
+        value: mapValue(lactose),
+      },
+    ];
+
+    // 3. Insert responses (batch)
+    const { error: responseError } = await supabase
+      .from("nutrition_responses")
+      .insert(responses);
+
+    if (responseError) {
+      console.error(responseError);
+      return;
+    }
+
+    console.log("Responses saved");
+
+    // TEMP keep existing logic
+    await supabase.from("nutrition_profiles").upsert({
+      user_id: userId,
+      carb_sensitivity: carb,
+      sugar_risk: sugar,
+      lactose_tolerance: lactose,
+    });
+
+    await supabase.from("client_profiles_extended").upsert({
+      user_id: userId,
+      height_cm: Number(height),
+      weight_kg: Number(weight),
+      age: Number(age),
+      goal: goal,
+      activity_level: activity,
+    });
+
+    await supabase.rpc("assign_archetype", {
+      p_user_id: userId,
+    });
+
+    const { data } = await supabase
+      .from("nutrition_profiles")
+      .select("*")
+      .eq("user_id", userId);
+
+    setResult(data?.[0] || null);
+  };
+
+  if (loading) return <div className="p-6">Loading...</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-8">
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Nutrition</h1>
 
-      <div className="flex justify-between items-center mb-8">
+      <div className="space-y-6 border p-4 rounded">
+
         <div>
-          <h1 className="text-2xl font-semibold">My Sessions</h1>
-          <p className="text-sm text-gray-500">
-            Logged in as: {email}
-          </p>
+          <h2 className="font-semibold mb-2">Profile</h2>
+
+          <div className="grid grid-cols-2 gap-4">
+            <input placeholder="Height (cm)" onChange={(e) => setHeight(e.target.value)} className="border p-2" />
+            <input placeholder="Weight (kg)" onChange={(e) => setWeight(e.target.value)} className="border p-2" />
+            <input placeholder="Age" onChange={(e) => setAge(e.target.value)} className="border p-2" />
+          </div>
         </div>
 
-        <button
-          onClick={handleLogout}
-          className="border px-4 py-2 rounded"
-        >
-          Logout
+        <div>
+          <h2 className="font-semibold mb-2">Goals</h2>
+
+          <select onChange={(e) => setGoal(e.target.value)}>
+            <option value="">Select Goal</option>
+            <option value="fat_loss">Fat Loss</option>
+            <option value="muscle_gain">Muscle Gain</option>
+            <option value="recomp">Recomposition</option>
+          </select>
+
+          <select onChange={(e) => setActivity(e.target.value)}>
+            <option value="">Activity Level</option>
+            <option value="low">Low</option>
+            <option value="moderate">Moderate</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <div>
+          <h2 className="font-semibold mb-2">Nutrition Behaviour</h2>
+
+          <p>How do you feel after carbs?</p>
+          <select onChange={(e) => setCarb(e.target.value)}>
+            <option value="">Select</option>
+            <option value="low">Energised</option>
+            <option value="moderate">Normal</option>
+            <option value="high">Sluggish</option>
+          </select>
+
+          <p>Do you crave sugar?</p>
+          <select onChange={(e) => setSugar(e.target.value)}>
+            <option value="">Select</option>
+            <option value="low">Rarely</option>
+            <option value="moderate">Sometimes</option>
+            <option value="high">Often</option>
+          </select>
+
+          <p>Dairy tolerance?</p>
+          <select onChange={(e) => setLactose(e.target.value)}>
+            <option value="">Select</option>
+            <option value="tolerant">No issues</option>
+            <option value="low">Some discomfort</option>
+            <option value="intolerant">Bloating</option>
+          </select>
+        </div>
+
+        <button onClick={handleSubmit} className="bg-black text-white px-4 py-2 rounded">
+          Generate Plan
         </button>
       </div>
 
-      <div className="mb-8 p-6 border rounded-xl">
-        <p className="text-lg">Sessions Remaining:</p>
-        <p className="text-3xl font-bold">{sessions}</p>
-      </div>
-
-      <h2 className="text-xl font-semibold mb-4">Session History</h2>
-
-      <div className="space-y-4">
-        {transactions.map((tx) => {
-
-          let title = "";
-          let note = "";
-
-          if (tx.type === "purchase") {
-            title = tx.note || "Pack Added";
-          }
-
-          if (tx.type === "usage") {
-            title = "Session Used";
-            if (tx.note && tx.note !== "Session Used") {
-              note = tx.note;
-            }
-          }
-
-          if (tx.type === "event") {
-            title = "Trainer Notes";
-            note = tx.note;
-          }
-
-          return (
-            <div
-              key={tx.id}
-              className="p-4 border rounded-lg flex justify-between"
-            >
-              <div>
-
-                <p className="font-medium">{title}</p>
-
-                {note && (
-                  <p className="text-sm text-gray-600">
-                    {note}
-                  </p>
-                )}
-
-                <p className="text-sm text-gray-500">
-                  {new Date(tx.paid_at || tx.created_at).toLocaleDateString()}
-                </p>
-
-              </div>
-
-              <div
-                className={
-                  tx.amount > 0
-                    ? "text-green-600"
-                    : tx.amount < 0
-                    ? "text-red-600"
-                    : "text-gray-500"
-                }
-              >
-                {tx.amount > 0 ? `+${tx.amount}` : tx.amount}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {result && (
+        <div className="border p-4 rounded">
+          <h2 className="font-semibold mb-2">Your Results</h2>
+          <p>Archetype: {result.archetype}</p>
+        </div>
+      )}
     </div>
   );
 }
