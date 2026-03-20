@@ -40,7 +40,7 @@ export default function NutritionPage() {
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // 1. Assessment
+    // 1. Create assessment
     const { data: assessment, error: assessmentError } = await supabase
       .from("assessments")
       .insert({
@@ -50,37 +50,55 @@ export default function NutritionPage() {
       .select()
       .single();
 
-    if (assessmentError) return;
+    if (assessmentError) {
+      console.error(assessmentError);
+      return;
+    }
 
     const assessmentId = assessment.id;
 
-    // 2. Responses
+    // 2. Save responses
     const responses = [
       { assessment_id: assessmentId, user_id: userId, question_key: "carb_response", variable: "CH", value: mapValue(carb) },
       { assessment_id: assessmentId, user_id: userId, question_key: "sugar_craving", variable: "AR", value: mapValue(sugar) },
       { assessment_id: assessmentId, user_id: userId, question_key: "lactose_tolerance", variable: "DR", value: mapValue(lactose) },
     ];
 
-    await supabase.from("nutrition_responses").insert(responses);
+    const { error: responseError } = await supabase
+      .from("nutrition_responses")
+      .insert(responses);
 
-    // 3. Scores
+    if (responseError) {
+      console.error(responseError);
+      return;
+    }
+
+    // 3. Calculate scores
     await supabase.rpc("calculate_user_scores", {
       p_assessment_id: assessmentId,
     });
 
-    // ✅ 4. Archetype (NEW)
+    // 4. Assign archetype
     await supabase.rpc("assign_archetype_v2", {
       p_assessment_id: assessmentId,
     });
 
-    console.log("Archetype assigned");
+    // 5. Generate nutrition output
+    await supabase.rpc("generate_nutrition_output", {
+      p_assessment_id: assessmentId,
+    });
 
-    // TEMP display
-    const { data } = await supabase
-      .from("user_archetype")
+    // 6. Fetch final output
+    const { data, error } = await supabase
+      .from("nutrition_outputs")
       .select("*")
       .eq("assessment_id", assessmentId)
       .single();
+
+    if (error) {
+      console.error(error);
+      return;
+    }
 
     setResult(data);
   };
@@ -154,10 +172,15 @@ export default function NutritionPage() {
 
       {result && (
         <div className="border p-4 rounded">
-          <h2 className="font-semibold mb-2">Your Results</h2>
-          <p>Type: {result.type}</p>
-          <p>Archetype: {result.archetype}</p>
-          <p>Variant: {result.variant}</p>
+          <h2 className="font-semibold mb-2">Your Plan</h2>
+
+          <p>Calories: {result.calories}</p>
+          <p>Protein: {result.protein}</p>
+          <p>Carbs: {result.carbs}</p>
+          <p>Fats: {result.fats}</p>
+
+          <p className="mt-2">Diet: {result.diet_route}</p>
+          <p>Structure: {result.meal_structure}</p>
         </div>
       )}
     </div>
