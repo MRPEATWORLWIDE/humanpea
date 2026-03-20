@@ -34,6 +34,24 @@ export default function NutritionPage() {
   const handleSubmit = async () => {
     if (!userId) return;
 
+    // ✅ NEW: Create assessment
+    const { data: assessment, error: assessmentError } = await supabase
+      .from("assessments")
+      .insert({
+        user_id: userId,
+        version: "beta_v1",
+      })
+      .select()
+      .single();
+
+    if (assessmentError) {
+      console.error(assessmentError);
+      return;
+    }
+
+    const assessmentId = assessment.id;
+    console.log("Assessment ID:", assessmentId);
+
     // save temp to DB (still needed for RPC to work)
     await supabase.from("nutrition_profiles").upsert({
       user_id: userId,
@@ -72,7 +90,6 @@ export default function NutritionPage() {
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">Nutrition</h1>
 
-      {/* ALWAYS SHOW FORM */}
       <div className="space-y-6 border p-4 rounded">
 
         {/* PROFILE */}
@@ -154,7 +171,6 @@ export default function NutritionPage() {
         </button>
       </div>
 
-      {/* RESULTS (TEMP DISPLAY) */}
       {result && (
         <div className="border p-4 rounded">
           <h2 className="font-semibold mb-2">Your Results</h2>
