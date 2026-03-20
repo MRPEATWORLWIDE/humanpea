@@ -7,19 +7,16 @@ export default function NutritionPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // profile inputs
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [age, setAge] = useState("");
   const [goal, setGoal] = useState("");
   const [activity, setActivity] = useState("");
 
-  // nutrition inputs
   const [carb, setCarb] = useState("");
   const [sugar, setSugar] = useState("");
   const [lactose, setLactose] = useState("");
 
-  // TEMP result (not saved)
   const [result, setResult] = useState<any>(null);
 
   useEffect(() => {
@@ -31,10 +28,19 @@ export default function NutritionPage() {
     getUser();
   }, []);
 
+  const mapValue = (val: string) => {
+    if (val === "low") return 2;
+    if (val === "moderate") return 0;
+    if (val === "high") return -2;
+    if (val === "tolerant") return 2;
+    if (val === "intolerant") return -2;
+    return 0;
+  };
+
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // ✅ Create assessment
+    // CREATE ASSESSMENT
     const { data: assessment, error: assessmentError } = await supabase
       .from("assessments")
       .insert({
@@ -45,14 +51,46 @@ export default function NutritionPage() {
       .single();
 
     if (assessmentError) {
-      console.error(assessmentError);
+      console.error("Assessment error:", assessmentError);
       return;
     }
 
     const assessmentId = assessment.id;
     console.log("Assessment ID:", assessmentId);
 
-    // TEMP saves (legacy - will be removed later)
+    // BUILD RESPONSES
+    const responses = [
+      {
+        assessment_id: assessmentId,
+        user_id: userId,
+        question_key: "carb_response",
+        value: mapValue(carb),
+      },
+      {
+        assessment_id: assessmentId,
+        user_id: userId,
+        question_key: "sugar_craving",
+        value: mapValue(sugar),
+      },
+      {
+        assessment_id: assessmentId,
+        user_id: userId,
+        question_key: "lactose_tolerance",
+        value: mapValue(lactose),
+      },
+    ];
+
+    console.log("Responses to insert:", responses);
+
+    // INSERT RESPONSES
+    const { data: responseData, error: responseError } = await supabase
+      .from("nutrition_responses")
+      .insert(responses);
+
+    console.log("Response insert result:", responseData);
+    console.log("Response insert error:", responseError);
+
+    // KEEP LEGACY FLOW
     await supabase.from("nutrition_profiles").upsert({
       user_id: userId,
       carb_sensitivity: carb,
@@ -69,22 +107,16 @@ export default function NutritionPage() {
       activity_level: activity,
     });
 
-    // TEMP RPC
     await supabase.rpc("assign_archetype", {
       p_user_id: userId,
     });
 
-    // ✅ FIXED: safe fetch (no .single())
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("nutrition_profiles")
       .select("*")
       .eq("user_id", userId);
 
-    if (error) {
-      console.error(error);
-    } else {
-      setResult(data?.[0] || null);
-    }
+    setResult(data?.[0] || null);
   };
 
   if (loading) return <div className="p-6">Loading...</div>;
@@ -95,30 +127,16 @@ export default function NutritionPage() {
 
       <div className="space-y-6 border p-4 rounded">
 
-        {/* PROFILE */}
         <div>
           <h2 className="font-semibold mb-2">Profile</h2>
 
           <div className="grid grid-cols-2 gap-4">
-            <input
-              placeholder="Height (cm)"
-              onChange={(e) => setHeight(e.target.value)}
-              className="border p-2"
-            />
-            <input
-              placeholder="Weight (kg)"
-              onChange={(e) => setWeight(e.target.value)}
-              className="border p-2"
-            />
-            <input
-              placeholder="Age"
-              onChange={(e) => setAge(e.target.value)}
-              className="border p-2"
-            />
+            <input placeholder="Height (cm)" onChange={(e) => setHeight(e.target.value)} className="border p-2" />
+            <input placeholder="Weight (kg)" onChange={(e) => setWeight(e.target.value)} className="border p-2" />
+            <input placeholder="Age" onChange={(e) => setAge(e.target.value)} className="border p-2" />
           </div>
         </div>
 
-        {/* GOALS */}
         <div>
           <h2 className="font-semibold mb-2">Goals</h2>
 
@@ -137,7 +155,6 @@ export default function NutritionPage() {
           </select>
         </div>
 
-        {/* NUTRITION */}
         <div>
           <h2 className="font-semibold mb-2">Nutrition Behaviour</h2>
 
@@ -166,10 +183,7 @@ export default function NutritionPage() {
           </select>
         </div>
 
-        <button
-          onClick={handleSubmit}
-          className="bg-black text-white px-4 py-2 rounded"
-        >
+        <button onClick={handleSubmit} className="bg-black text-white px-4 py-2 rounded">
           Generate Plan
         </button>
       </div>
@@ -177,14 +191,7 @@ export default function NutritionPage() {
       {result && (
         <div className="border p-4 rounded">
           <h2 className="font-semibold mb-2">Your Results</h2>
-
-          <p>Carb Sensitivity: {result.carb_sensitivity}</p>
-          <p>Sugar Risk: {result.sugar_risk}</p>
-          <p>Lactose: {result.lactose_tolerance}</p>
-
-          <p className="mt-3 font-bold">
-            Archetype: {result.archetype}
-          </p>
+          <p>Archetype: {result.archetype}</p>
         </div>
       )}
     </div>
