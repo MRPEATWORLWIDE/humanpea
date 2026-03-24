@@ -182,7 +182,7 @@ export default function NutritionPage() {
             className="border p-2 w-full"
             onChange={(e) => {
               const value = Number(e.target.value);
-              if (value && (value < 40 || value > 90)) {
+              if (value > 0 && (value < 40 || value > 150)) {
                 alert("Warning: Please consider that your goal weight may be unsafe.");
               }
               setInputs({...inputs, goal_weight: value});
