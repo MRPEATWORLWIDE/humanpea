@@ -186,7 +186,7 @@ export default function NutritionPage() {
         </select>
 
         <input placeholder="Training days per week" type="number"
-          onChange={(e) => setInputs({...inputs, training_days: e.target.value})}
+          onChange={(e) => setInputs({...inputs, training_days: Number(e.target.value)})}
           className="border p-2 w-full"
         />
       </div>
