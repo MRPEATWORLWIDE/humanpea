@@ -33,7 +33,6 @@ export default function NutritionPage() {
   const [output, setOutput] = useState(null);
   const [identity, setIdentity] = useState(null);
 
-  // ✅ NEW INPUT STATE
   const [inputs, setInputs] = useState({
     weight: "",
     height: "",
@@ -58,19 +57,16 @@ export default function NutritionPage() {
   const handleSubmit = async () => {
     if (!userId) return;
 
-    // ✅ INPUT VALIDATION
     if (!inputs.weight || !inputs.height || !inputs.age) {
       alert("Please complete your details");
       return;
     }
 
-    // questionnaire validation
     if (Object.keys(answers).length !== questions.length) {
       alert("Please answer all questions");
       return;
     }
 
-    // ✅ INSERT INPUTS
     await supabase.from("nutrition_inputs").insert({
       user_id: userId,
       weight: Number(inputs.weight),
@@ -83,7 +79,6 @@ export default function NutritionPage() {
       training_days: Number(inputs.training_days),
     });
 
-    // existing flow
     const { data: assessment } = await supabase
       .from("assessments")
       .insert({ user_id: userId, version: "beta_v1" })
@@ -133,85 +128,116 @@ export default function NutritionPage() {
     <div className="p-6 space-y-6 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold">Nutrition Assessment</h1>
 
-      {/* ✅ NEW INPUT BLOCK */}
+      {/* STEP 1 */}
       <div className="border p-4 space-y-4">
-        <h2 className="font-semibold">Your Details</h2>
+        <h2 className="font-semibold">Step 1: Your Details</h2>
 
         <input placeholder="Weight (kg)" type="number"
-          onChange={(e) => setInputs({...inputs, weight: e.target.value})}
+          onChange={(e) => setInputs({...inputs, weight: Number(e.target.value)})}
           className="border p-2 w-full"
         />
 
         <input placeholder="Height (cm)" type="number"
-          onChange={(e) => setInputs({...inputs, height: e.target.value})}
+          onChange={(e) => setInputs({...inputs, height: Number(e.target.value)})}
           className="border p-2 w-full"
         />
 
         <input placeholder="Age" type="number"
-          onChange={(e) => setInputs({...inputs, age: e.target.value})}
+          onChange={(e) => setInputs({...inputs, age: Number(e.target.value)})}
           className="border p-2 w-full"
         />
 
-        <select
-          onChange={(e) => setInputs({...inputs, sex: e.target.value})}
-          className="border p-2 w-full"
-        >
-          <option value="M">Male</option>
-          <option value="F">Female</option>
-        </select>
+        <div>
+          <label>Gender</label>
+          <select
+            onChange={(e) => setInputs({...inputs, sex: e.target.value})}
+            className="border p-2 w-full"
+          >
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
 
-        <select
-          onChange={(e) => setInputs({...inputs, goal: e.target.value})}
-          className="border p-2 w-full"
-        >
-          <option value="fat_loss">Fat loss</option>
-          <option value="muscle_gain">Muscle gain</option>
-          <option value="recomp">Recomposition</option>
-          <option value="performance">Performance</option>
-        </select>
+        <div>
+          <label>What is your primary goal?</label>
+          <select
+            onChange={(e) => setInputs({...inputs, goal: e.target.value})}
+            className="border p-2 w-full"
+          >
+            <option value="fat_loss">Fat loss</option>
+            <option value="muscle_gain">Muscle gain</option>
+            <option value="recomp">Recomposition</option>
+            <option value="performance">Performance</option>
+          </select>
+        </div>
 
-        <input placeholder="Goal weight (kg)" type="number"
-          onChange={(e) => setInputs({...inputs, goal_weight: e.target.value})}
-          className="border p-2 w-full"
-        />
+        <div>
+          <label>What is your goal weight? (optional)</label>
+          <p className="text-sm text-gray-500">
+            Your coach will review this with you to ensure it aligns with your goal.
+          </p>
+          <input
+            type="number"
+            placeholder="Goal weight (kg)"
+            className="border p-2 w-full"
+            onChange={(e) => {
+              const value = Number(e.target.value);
+              if (value && (value < 40 || value > 90)) {
+                alert("Warning: Please consider that your goal weight may be unsafe.");
+              }
+              setInputs({...inputs, goal_weight: value});
+            }}
+          />
+        </div>
 
-        <select
-          onChange={(e) => setInputs({...inputs, activity_level: e.target.value})}
-          className="border p-2 w-full"
-        >
-          <option value="desk">Desk-based (mostly sitting)</option>
-          <option value="light">Light movement</option>
-          <option value="active">Active</option>
-          <option value="physical">Physically demanding</option>
-        </select>
+        <div>
+          <label>What best describes your daily activity level?</label>
+          <select
+            onChange={(e) => setInputs({...inputs, activity_level: e.target.value})}
+            className="border p-2 w-full"
+          >
+            <option value="desk">Desk-based (mostly sitting)</option>
+            <option value="light">Light movement</option>
+            <option value="active">Active</option>
+            <option value="physical">Physically demanding</option>
+          </select>
+        </div>
 
-        <input placeholder="Training days per week" type="number"
-          onChange={(e) => setInputs({...inputs, training_days: Number(e.target.value)})}
-          className="border p-2 w-full"
-        />
+        <div>
+          <label>How many days per week can you train?</label>
+          <input
+            type="number"
+            className="border p-2 w-full"
+            onChange={(e) => setInputs({...inputs, training_days: Number(e.target.value)})}
+          />
+        </div>
       </div>
 
-      {/* EXISTING QUESTIONS */}
-      {questions.map((q) => (
-        <div key={q.id} className="space-y-2">
-          <p>{q.text}</p>
-          <div className="flex gap-2">
-            {[1,2,3,4,5,6,7].map((num) => (
-              <button
-                key={num}
-                onClick={() =>
-                  setAnswers((prev) => ({ ...prev, [q.id]: num }))
-                }
-                className={`px-3 py-1 border ${
-                  answers[q.id] === num ? "bg-black text-white" : ""
-                }`}
-              >
-                {num}
-              </button>
-            ))}
+      {/* STEP 2 */}
+      <div>
+        <h2 className="font-semibold">Step 2: Behaviour Assessment</h2>
+
+        {questions.map((q) => (
+          <div key={q.id} className="space-y-2">
+            <p>{q.text}</p>
+            <div className="flex gap-2">
+              {[1,2,3,4,5,6,7].map((num) => (
+                <button
+                  key={num}
+                  onClick={() =>
+                    setAnswers((prev) => ({ ...prev, [q.id]: num }))
+                  }
+                  className={`px-3 py-1 border ${
+                    answers[q.id] === num ? "bg-black text-white" : ""
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       <button
         onClick={handleSubmit}
