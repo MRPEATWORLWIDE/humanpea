@@ -34,14 +34,14 @@ export default function NutritionPage() {
   const [identity, setIdentity] = useState(null);
 
   const [inputs, setInputs] = useState({
-    weight: "",
-    height: "",
-    age: "",
+    weight: 0,
+    height: 0,
+    age: 0,
     sex: "M",
     goal: "muscle_gain",
-    goal_weight: "",
+    goal_weight: 0,
     activity_level: "light",
-    training_days: 3,
+    training_days: 0,
   });
 
   useEffect(() => {
