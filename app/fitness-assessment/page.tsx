@@ -27,7 +27,6 @@ export default function FitnessAssessmentPage() {
         }
       `}</style>
 
-      {/* HERO */}
       <section
         className="border-b border-black/10"
         style={{ minHeight: "var(--hp-hero-min-h)" }}
@@ -49,7 +48,6 @@ export default function FitnessAssessmentPage() {
         </div>
       </section>
 
-      {/* CONTENT */}
       <section className="py-10 border-b border-black/10">
         <div
           className="mx-auto"
@@ -59,8 +57,6 @@ export default function FitnessAssessmentPage() {
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hp-grid-gap)]">
-
-            {/* LEFT CARD */}
             <article className="rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <h3 className="text-lg font-semibold tracking-wide">
                 ASSESSMENT OVERVIEW
@@ -73,29 +69,26 @@ export default function FitnessAssessmentPage() {
                 <li>• Personalised training direction</li>
               </ul>
 
-              {/* IMAGE */}
-              <div className="mt-6 flex justify-center">
-                <Image
-                  src="/images/human-anatomy.png"
-                  alt="Human Anatomy"
-                  width={180}
-                  height={400}
-                  className="opacity-90"
-                />
-              </div>
-
-              <p className="mt-6 text-sm text-black/65">
+              <p className="mt-4 text-sm text-black/65">
                 Designed for individuals looking to build structure, improve performance and gain clarity on their training approach.{" "}
-                <Link
-                  href="/vista-gym"
-                  className="underline hover:opacity-70"
-                >
+                <Link href="/vista-gym" className="underline hover:opacity-70">
                   To see our current Vista PT packages click here.
                 </Link>
               </p>
+
+              <div className="mt-8 flex justify-center">
+                <div className="relative w-full max-w-[280px] aspect-[2/3]">
+                  <Image
+                    src="/images/human-anatomy.png"
+                    alt="Human anatomy reference"
+                    fill
+                    className="object-contain opacity-95"
+                    priority
+                  />
+                </div>
+              </div>
             </article>
 
-            {/* RIGHT SIDE */}
             <div>
               <iframe
                 src="https://cal.com/human-pea-28vrwm/fitness-assessment?embed=true"
@@ -106,7 +99,6 @@ export default function FitnessAssessmentPage() {
                 }}
               />
             </div>
-
           </div>
         </div>
       </section>
