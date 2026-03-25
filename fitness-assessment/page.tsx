@@ -73,7 +73,7 @@ export default function FitnessAssessmentPage() {
               </div>
             </article>
 
-            {/* RIGHT CARD (BOOKING) */}
+            {/* RIGHT CARD */}
             <article className="rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <h3 className="text-lg font-semibold tracking-wide mb-4">
                 BOOK SESSION
