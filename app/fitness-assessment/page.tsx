@@ -27,6 +27,11 @@ export default function FitnessAssessmentPage() {
         }
       `}</style>
 
+      {/* PROMO BANNER */}
+      <section className="bg-[#00C853] text-black text-center py-2 text-sm font-medium">
+        CLAIM YOUR 30-MIN COMPLIMENTARY SESSION — VISTA RESIDENTS
+      </section>
+
       {/* HERO */}
       <section
         className="border-b border-black/10"
@@ -69,7 +74,7 @@ export default function FitnessAssessmentPage() {
                   ASSESSMENT OVERVIEW
                 </h3>
 
-                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#00C853] text-black">
+                <span className="text-xs px-3 py-1 rounded-full border border-[#00C853] text-black">
                   COMPLIMENTARY
                 </span>
               </div>
@@ -82,7 +87,7 @@ export default function FitnessAssessmentPage() {
                 <li>• Personalised training direction</li>
               </ul>
 
-              {/* PARAGRAPH (CORRECT POSITION) */}
+              {/* PARAGRAPH */}
               <p className="mt-4 text-sm text-black/65">
                 A Fitness Assessment helps individuals understand their current fitness level and how best to improve performance and gain clarity on their training approach going forward.{" "}
                 <Link href="/vista-gym" className="underline hover:opacity-70">
@@ -90,7 +95,7 @@ export default function FitnessAssessmentPage() {
                 </Link>
               </p>
 
-              {/* IMAGE (INTENTIONAL PLACEMENT) */}
+              {/* IMAGE */}
               <div className="mt-8 flex justify-center">
                 <div className="relative w-full max-w-[260px] aspect-[2/3]">
                   <Image
