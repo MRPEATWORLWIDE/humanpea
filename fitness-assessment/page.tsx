@@ -17,7 +17,6 @@ export default function FitnessAssessmentPage() {
           --hp-hero-max-w: 920px;
           --hp-grid-gap: 1.25rem;
           --hp-card-pad: 1.25rem;
-          --hp-card-radius: 1rem;
           --hp-accent: #00C853;
         }
       `}</style>
@@ -55,10 +54,10 @@ export default function FitnessAssessmentPage() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hp-grid-gap)]">
 
-            {/* LEFT CARD */}
+            {/* INFO CARD */}
             <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <div>
-                <h3 className="text-lg font-semibold tracking-wide">WHAT TO EXPECT</h3>
+                <h3 className="text-lg font-semibold tracking-wide">ASSESSMENT OVERVIEW</h3>
 
                 <ul className="mt-4 text-sm text-black/75 space-y-2">
                   <li>• Movement & mobility assessment</li>
@@ -73,7 +72,7 @@ export default function FitnessAssessmentPage() {
               </div>
             </article>
 
-            {/* RIGHT CARD */}
+            {/* BOOKING CARD */}
             <article className="rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <h3 className="text-lg font-semibold tracking-wide mb-4">
                 BOOK SESSION
