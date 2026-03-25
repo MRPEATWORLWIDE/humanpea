@@ -1,8 +1,17 @@
+"use client";
+
 export const dynamic = "force-dynamic";
 
 import React from "react";
 
 export default function FitnessAssessmentPage() {
+  const openBooking = () => {
+    window.open(
+      "https://cal.com/human-pea-28vrwm/fitness-assessment",
+      "_blank"
+    );
+  };
+
   return (
     <main
       className="min-h-screen bg-white text-black"
@@ -36,7 +45,7 @@ export default function FitnessAssessmentPage() {
           }}
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-[650] leading-tight max-w-[var(--hp-hero-max-w)]">
-            30-Min <span className="opacity-70">&apos;FITNESS&apos;</span> ASSESSMENT
+            30-MIN <span className="opacity-70">&apos;FITNESS&apos;</span> ASSESSMENT
           </h1>
 
           <p className="mt-4 max-w-prose text-sm text-black/70">
@@ -56,7 +65,7 @@ export default function FitnessAssessmentPage() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hp-grid-gap)]">
 
-            {/* LEFT SIDE (KEPT AS CARD) */}
+            {/* LEFT */}
             <article className="rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <h3 className="text-lg font-semibold tracking-wide">
                 ASSESSMENT OVERVIEW
@@ -73,22 +82,24 @@ export default function FitnessAssessmentPage() {
                 Designed for individuals looking to build structure, improve performance and gain clarity on their training approach.
               </p>
 
-              {/* CTA */}
-              <a
-                href="mailto:hello@humanpea.com"
+              {/* BOOK BUTTON */}
+              <button
+                onClick={openBooking}
                 className="mt-6 inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
               >
-                Enquire
-              </a>
+                BOOK NOW
+              </button>
             </article>
 
-            {/* RIGHT SIDE (NO CARD) */}
+            {/* RIGHT — CLEAN (NO SCROLL FEEL) */}
             <div>
               <iframe
                 src="https://cal.com/human-pea-28vrwm/fitness-assessment?embed=true"
-                width="100%"
-                height="600"
-                frameBorder="0"
+                style={{
+                  width: "100%",
+                  height: "750px",
+                  border: "none",
+                }}
               />
             </div>
 
