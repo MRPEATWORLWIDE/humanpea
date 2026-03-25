@@ -27,6 +27,7 @@ export default function FitnessAssessmentPage() {
         }
       `}</style>
 
+      {/* HERO */}
       <section
         className="border-b border-black/10"
         style={{ minHeight: "var(--hp-hero-min-h)" }}
@@ -43,11 +44,12 @@ export default function FitnessAssessmentPage() {
           </h1>
 
           <p className="mt-4 max-w-prose text-sm text-black/70">
-            A focused 1-1 session to assess your current level, movement patterns and training direction.
+            A focused 30-minute complimentary 1-1 session to assess your current level, movement patterns, and training direction.
           </p>
         </div>
       </section>
 
+      {/* CONTENT */}
       <section className="py-10 border-b border-black/10">
         <div
           className="mx-auto"
@@ -57,11 +59,22 @@ export default function FitnessAssessmentPage() {
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hp-grid-gap)]">
-            <article className="rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
-              <h3 className="text-lg font-semibold tracking-wide">
-                ASSESSMENT OVERVIEW
-              </h3>
 
+            {/* LEFT CARD */}
+            <article className="rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
+
+              {/* HEADER + TAG */}
+              <div className="flex items-start justify-between">
+                <h3 className="text-lg font-semibold tracking-wide">
+                  ASSESSMENT OVERVIEW
+                </h3>
+
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#00C853] text-black">
+                  COMPLIMENTARY
+                </span>
+              </div>
+
+              {/* BULLETS */}
               <ul className="mt-4 text-sm text-black/75 space-y-2">
                 <li>• Movement & mobility assessment</li>
                 <li>• Strength baseline</li>
@@ -69,15 +82,17 @@ export default function FitnessAssessmentPage() {
                 <li>• Personalised training direction</li>
               </ul>
 
+              {/* PARAGRAPH (CORRECT POSITION) */}
               <p className="mt-4 text-sm text-black/65">
-                Designed for individuals looking to build structure, improve performance and gain clarity on their training approach.{" "}
+                A Fitness Assessment helps individuals understand their current fitness level and how best to improve performance and gain clarity on their training approach going forward.{" "}
                 <Link href="/vista-gym" className="underline hover:opacity-70">
                   To see our current Vista PT packages click here.
                 </Link>
               </p>
 
+              {/* IMAGE (INTENTIONAL PLACEMENT) */}
               <div className="mt-8 flex justify-center">
-                <div className="relative w-full max-w-[280px] aspect-[2/3]">
+                <div className="relative w-full max-w-[260px] aspect-[2/3]">
                   <Image
                     src="/images/human-anatomy.png"
                     alt="Human anatomy reference"
@@ -87,8 +102,10 @@ export default function FitnessAssessmentPage() {
                   />
                 </div>
               </div>
+
             </article>
 
+            {/* RIGHT SIDE */}
             <div>
               <iframe
                 src="https://cal.com/human-pea-28vrwm/fitness-assessment?embed=true"
@@ -99,6 +116,7 @@ export default function FitnessAssessmentPage() {
                 }}
               />
             </div>
+
           </div>
         </div>
       </section>
