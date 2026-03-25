@@ -3,15 +3,10 @@
 export const dynamic = "force-dynamic";
 
 import React from "react";
+import Link from "next/link";
+import Image from "next/image";
 
 export default function FitnessAssessmentPage() {
-  const openBooking = () => {
-    window.open(
-      "https://cal.com/human-pea-28vrwm/fitness-assessment",
-      "_blank"
-    );
-  };
-
   return (
     <main
       className="min-h-screen bg-white text-black"
@@ -65,7 +60,7 @@ export default function FitnessAssessmentPage() {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hp-grid-gap)]">
 
-            {/* LEFT */}
+            {/* LEFT CARD */}
             <article className="rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <h3 className="text-lg font-semibold tracking-wide">
                 ASSESSMENT OVERVIEW
@@ -78,20 +73,29 @@ export default function FitnessAssessmentPage() {
                 <li>• Personalised training direction</li>
               </ul>
 
-              <p className="mt-4 text-sm text-black/65">
-                Designed for individuals looking to build structure, improve performance and gain clarity on their training approach.
-              </p>
+              {/* IMAGE */}
+              <div className="mt-6 flex justify-center">
+                <Image
+                  src="/images/human-anatomy.png"
+                  alt="Human Anatomy"
+                  width={180}
+                  height={400}
+                  className="opacity-90"
+                />
+              </div>
 
-              {/* BOOK BUTTON */}
-              <button
-                onClick={openBooking}
-                className="mt-6 inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
-              >
-                BOOK NOW
-              </button>
+              <p className="mt-6 text-sm text-black/65">
+                Designed for individuals looking to build structure, improve performance and gain clarity on their training approach.{" "}
+                <Link
+                  href="/vista-gym"
+                  className="underline hover:opacity-70"
+                >
+                  To see our current Vista PT packages click here.
+                </Link>
+              </p>
             </article>
 
-            {/* RIGHT — CLEAN (NO SCROLL FEEL) */}
+            {/* RIGHT SIDE */}
             <div>
               <iframe
                 src="https://cal.com/human-pea-28vrwm/fitness-assessment?embed=true"
