@@ -32,7 +32,7 @@ export default function NutritionPage() {
   const [answers, setAnswers] = useState({});
   const [output, setOutput] = useState(null);
   const [identity, setIdentity] = useState(null);
-  const [plan, setPlan] = useState(null); // ✅ ADDED
+  const [plan, setPlan] = useState(null);
 
   const [inputs, setInputs] = useState({
     weight: 0,
@@ -119,7 +119,6 @@ export default function NutritionPage() {
       .eq("assessment_id", assessmentId)
       .single();
 
-    // ✅ PLAN MATCHING (ADDED)
     if (outputData) {
       const { data: planData } = await supabase
         .from("nutrition_plans")
@@ -284,22 +283,22 @@ export default function NutritionPage() {
           </div>
 
           <div className="mt-3">
-           <p className="font-semibold">Structure</p>
+            <p className="font-semibold">Structure</p>
 
-           <p>
+            <p>
               {output.diet_route === "LOWER_CARB" && "Lower Carb Approach"}
               {output.diet_route === "BALANCED" && "Balanced Approach"}
               {output.diet_route === "STABLE_ENERGY" && "Stable Energy Approach"}
               {output.diet_route === "PERFORMANCE" && "Performance Fueling"}
-           </p>
-
-           <p>
-             {output.meal_structure === "Structured" && "3–4 structured meals per day"}
             </p>
-           </div>
+
+            <p>
+              {output.meal_structure === "Structured" && "3–4 structured meals per day"}
+            </p>
+          </div>
+        </div>
       )}
 
-      {/* ✅ NEW BLOCK ONLY */}
       {plan && (
         <div className="border p-4 mt-4">
           <h2 className="font-semibold">Recommended Plan</h2>
