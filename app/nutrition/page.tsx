@@ -32,7 +32,6 @@ export default function NutritionPage() {
   const [answers, setAnswers] = useState({});
   const [output, setOutput] = useState(null);
   const [identity, setIdentity] = useState(null);
-  const [plan, setPlan] = useState(null); // ✅ added
 
   const [inputs, setInputs] = useState({
     weight: 0,
@@ -68,7 +67,14 @@ export default function NutritionPage() {
 
     await supabase.from("nutrition_inputs").insert({
       user_id: userId,
-      ...inputs,
+      weight: inputs.weight,
+      height: inputs.height,
+      age: inputs.age,
+      sex: inputs.sex,
+      goal: inputs.goal,
+      goal_weight: inputs.goal_weight,
+      activity_level: inputs.activity_level,
+      training_days: inputs.training_days,
     });
 
     const { data: assessment } = await supabase
@@ -87,7 +93,14 @@ export default function NutritionPage() {
       value: mapLikert(answers[q.id]),
     }));
 
-    await supabase.from("nutrition_responses").insert(responseRows);
+    const { error } = await supabase
+      .from("nutrition_responses")
+      .insert(responseRows);
+
+    if (error) {
+      console.error("Insert error:", error);
+      return;
+    }
 
     await supabase.rpc("calculate_user_scores", { p_assessment_id: assessmentId });
     await supabase.rpc("assign_archetype_v3", { p_assessment_id: assessmentId });
@@ -105,18 +118,6 @@ export default function NutritionPage() {
       .eq("assessment_id", assessmentId)
       .single();
 
-    // ✅ PLAN MATCHING
-    if (outputData) {
-      const { data: planData } = await supabase
-        .from("nutrition_plans")
-        .select("*")
-        .eq("calorie_band", outputData.calorie_band)
-        .eq("structure_type", outputData.structure_type)
-        .maybeSingle();
-
-      setPlan(planData);
-    }
-
     setIdentity(identityData);
     setOutput(outputData);
   };
@@ -130,24 +131,24 @@ export default function NutritionPage() {
         <h2 className="font-semibold">Step 1: Your Details</h2>
 
         <input placeholder="Weight (kg)" type="number"
-          onChange={(e) => setInputs({...inputs, weight: Number(e.target.value)})}
+          onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })}
           className="border p-2 w-full"
         />
 
         <input placeholder="Height (cm)" type="number"
-          onChange={(e) => setInputs({...inputs, height: Number(e.target.value)})}
+          onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })}
           className="border p-2 w-full"
         />
 
         <input placeholder="Age" type="number"
-          onChange={(e) => setInputs({...inputs, age: Number(e.target.value)})}
+          onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })}
           className="border p-2 w-full"
         />
 
         <div>
           <label>Gender</label>
           <select
-            onChange={(e) => setInputs({...inputs, sex: e.target.value})}
+            onChange={(e) => setInputs({ ...inputs, sex: e.target.value })}
             className="border p-2 w-full"
           >
             <option value="M">Male</option>
@@ -158,7 +159,7 @@ export default function NutritionPage() {
         <div>
           <label>What is your primary goal?</label>
           <select
-            onChange={(e) => setInputs({...inputs, goal: e.target.value})}
+            onChange={(e) => setInputs({ ...inputs, goal: e.target.value })}
             className="border p-2 w-full"
           >
             <option value="fat_loss">Fat loss</option>
@@ -170,46 +171,58 @@ export default function NutritionPage() {
 
         <div>
           <label>What is your goal weight? (optional)</label>
+          <p className="text-sm text-gray-500">
+            Your coach will review this with you to ensure it aligns with your goal.
+          </p>
           <input
             type="number"
+            placeholder="Goal weight (kg)"
             className="border p-2 w-full"
-            onChange={(e) => setInputs({...inputs, goal_weight: Number(e.target.value)})}
+            onChange={(e) => setInputs({ ...inputs, goal_weight: Number(e.target.value) })}
+            onBlur={(e) => {
+              const value = Number(e.target.value);
+              if (value > 0 && (value < 40 || value > 150)) {
+                alert("Warning: Please consider that your goal weight may be unsafe.");
+              }
+            }}
           />
         </div>
 
         <div>
-          <label>Activity level</label>
+          <label>What best describes your daily activity level?</label>
           <select
-            onChange={(e) => setInputs({...inputs, activity_level: e.target.value})}
+            onChange={(e) => setInputs({ ...inputs, activity_level: e.target.value })}
             className="border p-2 w-full"
           >
-            <option value="desk">Desk</option>
-            <option value="light">Light</option>
+            <option value="desk">Desk-based (mostly sitting)</option>
+            <option value="light">Light movement</option>
             <option value="active">Active</option>
-            <option value="physical">Physical</option>
+            <option value="physical">Physically demanding</option>
           </select>
         </div>
 
-        <input
-          type="number"
-          placeholder="Training days"
-          onChange={(e) => setInputs({...inputs, training_days: Number(e.target.value)})}
-          className="border p-2 w-full"
-        />
+        <div>
+          <label>How many days per week can you train?</label>
+          <input
+            type="number"
+            className="border p-2 w-full"
+            onChange={(e) => setInputs({ ...inputs, training_days: Number(e.target.value) })}
+          />
+        </div>
       </div>
 
       {/* STEP 2 */}
       <div>
+        <h2 className="font-semibold">Step 2: Behaviour Assessment</h2>
+
         {questions.map((q) => (
-          <div key={q.id}>
+          <div key={q.id} className="space-y-2">
             <p>{q.text}</p>
             <div className="flex gap-2">
               {[1,2,3,4,5,6,7].map((num) => (
                 <button
                   key={num}
-                  onClick={() =>
-                    setAnswers((prev) => ({ ...prev, [q.id]: num }))
-                  }
+                  onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: num }))}
                   className={`px-3 py-1 border ${
                     answers[q.id] === num ? "bg-black text-white" : ""
                   }`}
@@ -222,19 +235,46 @@ export default function NutritionPage() {
         ))}
       </div>
 
-      <button onClick={handleSubmit}>Generate</button>
+      <button
+        onClick={handleSubmit}
+        className="bg-black text-white px-4 py-2 rounded"
+      >
+        Generate Plan
+      </button>
 
-      {output && (
-        <div>
-          <p>Target: {output.calories_target}</p>
-          <p>Plan: {output.calorie_band}</p>
+      {identity && (
+        <div className="border p-4 mt-4 space-y-2">
+          <h2 className="font-semibold text-lg">Your Profile</h2>
+          <p>Type: {identity.type}</p>
+          <p>Archetype: {identity.archetype}</p>
+          <p>Variant: {identity.variant}</p>
+          <p>Code: {identity.archetype}-{identity.variant}</p>
+          <p className="mt-2 text-sm text-gray-600">
+            {archetypeDescriptions[identity.archetype]}
+          </p>
         </div>
       )}
 
-      {plan && (
-        <div>
-          <h3>{plan.title}</h3>
-          <p>£{plan.price}</p>
+      {output && (
+        <div className="border p-4 mt-4">
+          <h2 className="font-semibold">Your Plan</h2>
+
+          <p>Target Calories: {output.calories_target}</p>
+          <p>Recommended Plan: {output.calorie_band}</p>
+
+          <div className="mt-3">
+            <p className="font-semibold">Macros</p>
+            <p>Calories: {output.calories}</p>
+            <p>Protein: {output.protein}</p>
+            <p>Carbs: {output.carbs}</p>
+            <p>Fats: {output.fats}</p>
+          </div>
+
+          <div className="mt-3">
+            <p className="font-semibold">Structure</p>
+            <p>{output.diet_route}</p>
+            <p>{output.meal_structure}</p>
+          </div>
         </div>
       )}
     </div>
