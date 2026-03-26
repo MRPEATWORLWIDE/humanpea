@@ -284,11 +284,19 @@ export default function NutritionPage() {
           </div>
 
           <div className="mt-3">
-            <p className="font-semibold">Structure</p>
-            <p>{output.diet_route}</p>
-            <p>{output.meal_structure}</p>
-          </div>
-        </div>
+           <p className="font-semibold">Structure</p>
+
+           <p>
+              {output.diet_route === "LOWER_CARB" && "Lower Carb Approach"}
+              {output.diet_route === "BALANCED" && "Balanced Approach"}
+              {output.diet_route === "STABLE_ENERGY" && "Stable Energy Approach"}
+              {output.diet_route === "PERFORMANCE" && "Performance Fueling"}
+           </p>
+
+           <p>
+             {output.meal_structure === "Structured" && "3–4 structured meals per day"}
+            </p>
+           </div>
       )}
 
       {/* ✅ NEW BLOCK ONLY */}
