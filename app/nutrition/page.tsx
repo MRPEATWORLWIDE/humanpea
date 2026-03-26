@@ -32,7 +32,7 @@ export default function NutritionPage() {
   const [answers, setAnswers] = useState({});
   const [output, setOutput] = useState(null);
   const [identity, setIdentity] = useState(null);
-  const [plan, setPlan] = useState(null); // ✅ NEW
+  const [plan, setPlan] = useState(null); // ✅ added
 
   const [inputs, setInputs] = useState({
     weight: 0,
@@ -51,9 +51,7 @@ export default function NutritionPage() {
     });
   }, []);
 
-  const mapLikert = (value) => {
-    return (value - 4) * 2;
-  };
+  const mapLikert = (value) => (value - 4) * 2;
 
   const handleSubmit = async () => {
     if (!userId) return;
@@ -70,14 +68,7 @@ export default function NutritionPage() {
 
     await supabase.from("nutrition_inputs").insert({
       user_id: userId,
-      weight: inputs.weight,
-      height: inputs.height,
-      age: inputs.age,
-      sex: inputs.sex,
-      goal: inputs.goal,
-      goal_weight: inputs.goal_weight,
-      activity_level: inputs.activity_level,
-      training_days: inputs.training_days,
+      ...inputs,
     });
 
     const { data: assessment } = await supabase
@@ -96,11 +87,7 @@ export default function NutritionPage() {
       value: mapLikert(answers[q.id]),
     }));
 
-    const { error } = await supabase
-      .from("nutrition_responses")
-      .insert(responseRows);
-
-    if (error) return;
+    await supabase.from("nutrition_responses").insert(responseRows);
 
     await supabase.rpc("calculate_user_scores", { p_assessment_id: assessmentId });
     await supabase.rpc("assign_archetype_v3", { p_assessment_id: assessmentId });
@@ -125,7 +112,7 @@ export default function NutritionPage() {
         .select("*")
         .eq("calorie_band", outputData.calorie_band)
         .eq("structure_type", outputData.structure_type)
-        .single();
+        .maybeSingle();
 
       setPlan(planData);
     }
@@ -138,55 +125,116 @@ export default function NutritionPage() {
     <div className="p-6 space-y-6 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold">Nutrition Assessment</h1>
 
-      {/* KEEP ALL YOUR EXISTING UI HERE (unchanged) */}
+      {/* STEP 1 */}
+      <div className="border p-4 space-y-4">
+        <h2 className="font-semibold">Step 1: Your Details</h2>
 
-      {identity && (
-        <div className="border p-4 mt-4 space-y-2">
-          <h2 className="font-semibold text-lg">Your Profile</h2>
-          <p>Type: {identity.type}</p>
-          <p>Archetype: {identity.archetype}</p>
-          <p>Variant: {identity.variant}</p>
-          <p>Code: {identity.archetype}-{identity.variant}</p>
-          <p className="mt-2 text-sm text-gray-600">
-            {archetypeDescriptions[identity.archetype]}
-          </p>
+        <input placeholder="Weight (kg)" type="number"
+          onChange={(e) => setInputs({...inputs, weight: Number(e.target.value)})}
+          className="border p-2 w-full"
+        />
+
+        <input placeholder="Height (cm)" type="number"
+          onChange={(e) => setInputs({...inputs, height: Number(e.target.value)})}
+          className="border p-2 w-full"
+        />
+
+        <input placeholder="Age" type="number"
+          onChange={(e) => setInputs({...inputs, age: Number(e.target.value)})}
+          className="border p-2 w-full"
+        />
+
+        <div>
+          <label>Gender</label>
+          <select
+            onChange={(e) => setInputs({...inputs, sex: e.target.value})}
+            className="border p-2 w-full"
+          >
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
         </div>
-      )}
+
+        <div>
+          <label>What is your primary goal?</label>
+          <select
+            onChange={(e) => setInputs({...inputs, goal: e.target.value})}
+            className="border p-2 w-full"
+          >
+            <option value="fat_loss">Fat loss</option>
+            <option value="muscle_gain">Muscle gain</option>
+            <option value="recomp">Recomposition</option>
+            <option value="performance">Performance</option>
+          </select>
+        </div>
+
+        <div>
+          <label>What is your goal weight? (optional)</label>
+          <input
+            type="number"
+            className="border p-2 w-full"
+            onChange={(e) => setInputs({...inputs, goal_weight: Number(e.target.value)})}
+          />
+        </div>
+
+        <div>
+          <label>Activity level</label>
+          <select
+            onChange={(e) => setInputs({...inputs, activity_level: e.target.value})}
+            className="border p-2 w-full"
+          >
+            <option value="desk">Desk</option>
+            <option value="light">Light</option>
+            <option value="active">Active</option>
+            <option value="physical">Physical</option>
+          </select>
+        </div>
+
+        <input
+          type="number"
+          placeholder="Training days"
+          onChange={(e) => setInputs({...inputs, training_days: Number(e.target.value)})}
+          className="border p-2 w-full"
+        />
+      </div>
+
+      {/* STEP 2 */}
+      <div>
+        {questions.map((q) => (
+          <div key={q.id}>
+            <p>{q.text}</p>
+            <div className="flex gap-2">
+              {[1,2,3,4,5,6,7].map((num) => (
+                <button
+                  key={num}
+                  onClick={() =>
+                    setAnswers((prev) => ({ ...prev, [q.id]: num }))
+                  }
+                  className={`px-3 py-1 border ${
+                    answers[q.id] === num ? "bg-black text-white" : ""
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button onClick={handleSubmit}>Generate</button>
 
       {output && (
-        <div className="border p-4 mt-4">
-          <h2 className="font-semibold">Your Plan</h2>
-
-          <p>Target Calories: {output.calories_target}</p>
-          <p>Recommended Plan: {output.calorie_band}</p>
-
-          <div className="mt-3">
-            <p className="font-semibold">Macros</p>
-            <p>Calories: {output.calories}</p>
-            <p>Protein: {output.protein}</p>
-            <p>Carbs: {output.carbs}</p>
-            <p>Fats: {output.fats}</p>
-          </div>
-
-          <div className="mt-3">
-            <p className="font-semibold">Structure</p>
-            <p>{output.diet_route}</p>
-            <p>{output.meal_structure}</p>
-          </div>
+        <div>
+          <p>Target: {output.calories_target}</p>
+          <p>Plan: {output.calorie_band}</p>
         </div>
       )}
 
-      {/* ✅ NEW PLAN UI */}
       {plan && (
-        <div className="border p-4 mt-4">
-          <h2 className="font-semibold">Recommended Plan</h2>
-
-          <p>{plan.title}</p>
+        <div>
+          <h3>{plan.title}</h3>
           <p>£{plan.price}</p>
-
-          <button className="mt-3 bg-black text-white px-4 py-2 rounded">
-            Unlock Plan
-          </button>
         </div>
       )}
     </div>
