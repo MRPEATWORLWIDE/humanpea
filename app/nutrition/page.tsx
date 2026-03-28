@@ -92,8 +92,7 @@ export default function NutritionPage() {
       value: mapLikert(answers[q.id]),
     }));
 
-    const { error } = await supabase.from("nutrition_responses").insert(responseRows);
-    if (error) return;
+    await supabase.from("nutrition_responses").insert(responseRows);
 
     await supabase.rpc("calculate_user_scores", { p_assessment_id: assessmentId });
     await supabase.rpc("assign_archetype_v3", { p_assessment_id: assessmentId });
@@ -131,11 +130,7 @@ export default function NutritionPage() {
           .order("meal_number", { ascending: true });
 
         setMeals(mealsData || []);
-      } else {
-        setMeals([]);
       }
-    } else {
-      setMeals([]);
     }
 
     setIdentity(identityData);
@@ -149,26 +144,10 @@ export default function NutritionPage() {
       {/* STEP 1 */}
       <div className="border p-4 space-y-4">
         <h2 className="font-semibold">Step 1: Your Details</h2>
-
-        <input type="number" placeholder="Weight (kg)"
-          onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })}
-          className="border p-2 w-full"
-        />
-
-        <input type="number" placeholder="Height (cm)"
-          onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })}
-          className="border p-2 w-full"
-        />
-
-        <input type="number" placeholder="Age"
-          onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })}
-          className="border p-2 w-full"
-        />
-
-        <select
-          onChange={(e) => setInputs({ ...inputs, sex: e.target.value })}
-          className="border p-2 w-full"
-        >
+        <input type="number" placeholder="Weight (kg)" onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })} className="border p-2 w-full" />
+        <input type="number" placeholder="Height (cm)" onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })} className="border p-2 w-full" />
+        <input type="number" placeholder="Age" onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })} className="border p-2 w-full" />
+        <select onChange={(e) => setInputs({ ...inputs, sex: e.target.value })} className="border p-2 w-full">
           <option value="M">Male</option>
           <option value="F">Female</option>
         </select>
@@ -177,18 +156,15 @@ export default function NutritionPage() {
       {/* STEP 2 */}
       <div>
         <h2 className="font-semibold">Step 2: Behaviour Assessment</h2>
-
         {questions.map((q) => (
-          <div key={q.id} className="space-y-2">
+          <div key={q.id}>
             <p>{q.text}</p>
             <div className="flex gap-2">
               {[1,2,3,4,5,6,7].map((num) => (
                 <button
                   key={num}
                   onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: num }))}
-                  className={`px-3 py-1 border ${
-                    answers[q.id] === num ? "bg-black text-white" : ""
-                  }`}
+                  className={`px-3 py-1 border ${answers[q.id] === num ? "bg-black text-white" : ""}`}
                 >
                   {num}
                 </button>
@@ -202,9 +178,30 @@ export default function NutritionPage() {
         Generate Plan
       </button>
 
+      {identity && (
+        <div className="border p-4 mt-4">
+          <h2>Your Profile</h2>
+          <p>{identity.archetype}</p>
+        </div>
+      )}
+
+      {output && (
+        <div className="border p-4 mt-4">
+          <h2>Your Plan</h2>
+          <p>{output.calories}</p>
+        </div>
+      )}
+
+      {plan && (
+        <div className="border p-4 mt-4">
+          <h2>{plan.title}</h2>
+          <p>£{plan.price}</p>
+        </div>
+      )}
+
       {meals.length > 0 && (
         <div className="border p-4 mt-4">
-          <h2 className="font-semibold">Preview (Day 1)</h2>
+          <h2>Preview</h2>
 
           {meals.map((meal) => (
             <div key={meal.id}>
@@ -215,7 +212,7 @@ export default function NutritionPage() {
 
           <button
             onClick={async () => {
-              const fallback = "prod_UESgTcXZZt3jjA";
+              const fallback = "price_XXXXXXXX";
               const priceId = plan?.stripe_product_id || fallback;
 
               const res = await fetch("/api/create-checkout-session", {
