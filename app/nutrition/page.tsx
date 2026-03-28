@@ -33,7 +33,7 @@ export default function NutritionPage() {
   const [output, setOutput] = useState(null);
   const [identity, setIdentity] = useState(null);
   const [plan, setPlan] = useState(null);
-  const [meals, setMeals] = useState([]); // ✅ ADDED
+  const [meals, setMeals] = useState([]); // added
 
   const [inputs, setInputs] = useState({
     weight: 0,
@@ -130,7 +130,6 @@ export default function NutritionPage() {
 
       setPlan(planData);
 
-      // ✅ FETCH PREVIEW MEALS (ADDED)
       if (planData) {
         const { data: mealsData } = await supabase
           .from("nutrition_plan_meals")
@@ -141,7 +140,11 @@ export default function NutritionPage() {
           .order("meal_number", { ascending: true });
 
         setMeals(mealsData || []);
+      } else {
+        setMeals([]);
       }
+    } else {
+      setMeals([]);
     }
 
     setIdentity(identityData);
@@ -152,7 +155,172 @@ export default function NutritionPage() {
     <div className="p-6 space-y-6 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold">Nutrition Assessment</h1>
 
-      {/* existing UI unchanged above */}
+      {/* STEP 1 */}
+      <div className="border p-4 space-y-4">
+        <h2 className="font-semibold">Step 1: Your Details</h2>
+
+        <input
+          placeholder="Weight (kg)"
+          type="number"
+          onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })}
+          className="border p-2 w-full"
+        />
+
+        <input
+          placeholder="Height (cm)"
+          type="number"
+          onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })}
+          className="border p-2 w-full"
+        />
+
+        <input
+          placeholder="Age"
+          type="number"
+          onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })}
+          className="border p-2 w-full"
+        />
+
+        <div>
+          <label>Gender</label>
+          <select
+            onChange={(e) => setInputs({ ...inputs, sex: e.target.value })}
+            className="border p-2 w-full"
+          >
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
+
+        <div>
+          <label>What is your primary goal?</label>
+          <select
+            onChange={(e) => setInputs({ ...inputs, goal: e.target.value })}
+            className="border p-2 w-full"
+          >
+            <option value="fat_loss">Fat loss</option>
+            <option value="muscle_gain">Muscle gain</option>
+            <option value="recomp">Recomposition</option>
+            <option value="performance">Performance</option>
+          </select>
+        </div>
+
+        <div>
+          <label>What is your goal weight? (optional)</label>
+          <p className="text-sm text-gray-500">
+            Your coach will review this with you to ensure it aligns with your goal.
+          </p>
+          <input
+            type="number"
+            placeholder="Goal weight (kg)"
+            className="border p-2 w-full"
+            onChange={(e) => setInputs({ ...inputs, goal_weight: Number(e.target.value) })}
+            onBlur={(e) => {
+              const value = Number(e.target.value);
+              if (value > 0 && (value < 40 || value > 150)) {
+                alert("Warning: Please consider that your goal weight may be unsafe.");
+              }
+            }}
+          />
+        </div>
+
+        <div>
+          <label>What best describes your daily activity level?</label>
+          <select
+            onChange={(e) => setInputs({ ...inputs, activity_level: e.target.value })}
+            className="border p-2 w-full"
+          >
+            <option value="desk">Desk-based (mostly sitting)</option>
+            <option value="light">Light movement</option>
+            <option value="active">Active</option>
+            <option value="physical">Physically demanding</option>
+          </select>
+        </div>
+
+        <div>
+          <label>How many days per week can you train?</label>
+          <input
+            type="number"
+            className="border p-2 w-full"
+            onChange={(e) => setInputs({ ...inputs, training_days: Number(e.target.value) })}
+          />
+        </div>
+      </div>
+
+      {/* STEP 2 */}
+      <div>
+        <h2 className="font-semibold">Step 2: Behaviour Assessment</h2>
+
+        {questions.map((q) => (
+          <div key={q.id} className="space-y-2">
+            <p>{q.text}</p>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5, 6, 7].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: num }))}
+                  className={`px-3 py-1 border ${
+                    answers[q.id] === num ? "bg-black text-white" : ""
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button
+        onClick={handleSubmit}
+        className="bg-black text-white px-4 py-2 rounded"
+      >
+        Generate Plan
+      </button>
+
+      {identity && (
+        <div className="border p-4 mt-4 space-y-2">
+          <h2 className="font-semibold text-lg">Your Profile</h2>
+          <p>Type: {identity.type}</p>
+          <p>Archetype: {identity.archetype}</p>
+          <p>Variant: {identity.variant}</p>
+          <p>Code: {identity.archetype}-{identity.variant}</p>
+          <p className="mt-2 text-sm text-gray-600">
+            {archetypeDescriptions[identity.archetype]}
+          </p>
+        </div>
+      )}
+
+      {output && (
+        <div className="border p-4 mt-4">
+          <h2 className="font-semibold">Your Plan</h2>
+
+          <p>Target Calories: {output.calories_target}</p>
+          <p>Recommended Plan: {output.calorie_band}</p>
+
+          <div className="mt-3">
+            <p className="font-semibold">Macros</p>
+            <p>Calories: {output.calories}</p>
+            <p>Protein: {output.protein}</p>
+            <p>Carbs: {output.carbs}</p>
+            <p>Fats: {output.fats}</p>
+          </div>
+
+          <div className="mt-3">
+            <p className="font-semibold">Structure</p>
+
+            <p>
+              {output.diet_route === "LOWER_CARB" && "Lower Carb Approach"}
+              {output.diet_route === "BALANCED" && "Balanced Approach"}
+              {output.diet_route === "STABLE_ENERGY" && "Stable Energy Approach"}
+              {output.diet_route === "PERFORMANCE" && "Performance Fueling"}
+            </p>
+
+            <p>
+              {output.meal_structure === "Structured" && "3–4 structured meals per day"}
+            </p>
+          </div>
+        </div>
+      )}
 
       {plan && (
         <div className="border p-4 mt-4">
@@ -166,13 +334,12 @@ export default function NutritionPage() {
         </div>
       )}
 
-      {/* ✅ MEAL PREVIEW */}
       {meals.length > 0 && (
         <div className="border p-4 mt-4">
           <h2 className="font-semibold">Preview (Day 1)</h2>
 
           {meals.map((meal) => (
-            <div key={meal.id} className="mt-2">
+            <div key={meal.id} className="mt-3">
               <p className="font-semibold">{meal.meal_name}</p>
               <p>{meal.food_items}</p>
             </div>
