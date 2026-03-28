@@ -31,6 +31,7 @@ export default function NutritionPage() {
   const [identity, setIdentity] = useState(null);
   const [plan, setPlan] = useState(null);
   const [meals, setMeals] = useState([]);
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
   const [inputs, setInputs] = useState({
     weight: 0,
@@ -51,32 +52,55 @@ export default function NutritionPage() {
 
   const mapLikert = (value) => (value - 4) * 2;
 
+  const handleSubscribe = async () => {
+    const priceId = plan?.stripe_product_id;
+    if (!priceId) {
+      alert("No Stripe price linked to this plan");
+      return;
+    }
+
+    setIsSubscribing(true);
+
+    try {
+      const res = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ priceId, userId }),
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert("Checkout failed: " + (data.error || "Unknown error"));
+        setIsSubscribing(false);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred. Please try again.");
+      setIsSubscribing(false);
+    }
+  };
+
   const handleSubmit = async () => {
     if (!userId) return;
-
     if (!inputs.weight || !inputs.height || !inputs.age) {
       alert("Please complete your details");
       return;
     }
-
     if (Object.keys(answers).length !== questions.length) {
       alert("Please answer all questions");
       return;
     }
 
-    await supabase.from("nutrition_inputs").insert({
-      user_id: userId,
-      ...inputs,
-    });
+    await supabase.from("nutrition_inputs").insert({ user_id: userId, ...inputs });
 
     const { data: assessment } = await supabase
       .from("assessments")
       .insert({ user_id: userId, version: "beta_v1" })
-      .select()
-      .single();
+      .select().single();
 
     const assessmentId = assessment.id;
-
     const responseRows = questions.map((q) => ({
       assessment_id: assessmentId,
       user_id: userId,
@@ -86,22 +110,15 @@ export default function NutritionPage() {
     }));
 
     await supabase.from("nutrition_responses").insert(responseRows);
-
     await supabase.rpc("calculate_user_scores", { p_assessment_id: assessmentId });
     await supabase.rpc("assign_archetype_v3", { p_assessment_id: assessmentId });
     await supabase.rpc("generate_nutrition_output", { p_assessment_id: assessmentId });
 
     const { data: identityData } = await supabase
-      .from("user_archetype")
-      .select("*")
-      .eq("assessment_id", assessmentId)
-      .single();
+      .from("user_archetype").select("*").eq("assessment_id", assessmentId).single();
 
     const { data: outputData } = await supabase
-      .from("nutrition_outputs")
-      .select("*")
-      .eq("assessment_id", assessmentId)
-      .single();
+      .from("nutrition_outputs").select("*").eq("assessment_id", assessmentId).single();
 
     if (outputData) {
       const { data: planData } = await supabase
@@ -134,49 +151,45 @@ export default function NutritionPage() {
     <div className="p-6 space-y-6 max-w-xl mx-auto">
       <h1 className="text-2xl font-bold">Nutrition Assessment</h1>
 
-      {/* STEP 1 */}
+      {/* STEP 1: Details */}
       <div className="border p-4 space-y-4">
-        <h2 className="font-semibold">Step 1: Your Details</h2>
-
-        <input placeholder="Weight (kg)" type="number"
-          onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })}
-          className="border p-2 w-full"
-        />
-
-        <input placeholder="Height (cm)" type="number"
-          onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })}
-          className="border p-2 w-full"
-        />
-
+        <h2 className="font-semibold text-lg">Step 1: Your Details</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <input placeholder="Weight (kg)" type="number"
+            onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })}
+            className="border p-2 rounded"
+          />
+          <input placeholder="Height (cm)" type="number"
+            onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })}
+            className="border p-2 rounded"
+          />
+        </div>
         <input placeholder="Age" type="number"
           onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })}
-          className="border p-2 w-full"
+          className="border p-2 w-full rounded"
         />
-
         <div>
-          <label>Gender</label>
+          <label className="text-sm text-gray-500">Gender</label>
           <select onChange={(e) => setInputs({ ...inputs, sex: e.target.value })}
-            className="border p-2 w-full">
+            className="border p-2 w-full rounded bg-white">
             <option value="M">Male</option>
             <option value="F">Female</option>
           </select>
         </div>
       </div>
 
-      {/* STEP 2 */}
+      {/* STEP 2: Assessment */}
       <div>
-        <h2 className="font-semibold">Step 2: Behaviour Assessment</h2>
-
+        <h2 className="font-semibold text-lg">Step 2: Behaviour Assessment</h2>
         {questions.map((q) => (
-          <div key={q.id} className="space-y-2">
-            <p>{q.text}</p>
-            <div className="flex gap-2">
+          <div key={q.id} className="mt-6">
+            <p className="text-sm font-medium mb-2">{q.text}</p>
+            <div className="flex justify-between">
               {[1,2,3,4,5,6,7].map((num) => (
-                <button
-                  key={num}
+                <button key={num}
                   onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: num }))}
-                  className={`px-3 py-1 border ${
-                    answers[q.id] === num ? "bg-black text-white" : ""
+                  className={`w-10 h-10 border rounded transition ${
+                    answers[q.id] === num ? "bg-black text-white" : "hover:bg-gray-100"
                   }`}
                 >
                   {num}
@@ -187,39 +200,49 @@ export default function NutritionPage() {
         ))}
       </div>
 
-      <button onClick={handleSubmit} className="bg-black text-white px-4 py-2 rounded">
-        Generate Plan
+      <button onClick={handleSubmit} className="w-full bg-black text-white py-3 rounded-lg font-bold">
+        Generate My Profile
       </button>
 
-      {plan && (
-        <div className="border p-4 mt-4">
-          <h2 className="font-semibold">Recommended Plan</h2>
-          <p>{plan.title}</p>
-          <p>£{plan.price}</p>
-
-          <button className="mt-3 bg-black text-white px-4 py-2 rounded">
-            Unlock Plan
-          </button>
-
-          {/* 🔥 FIXED BLOCK */}
-          <div className="mt-4">
-            <h3 className="font-semibold">Preview (Day 1)</h3>
-
-            {meals.length > 0 ? (
-              meals.map((meal) => (
-                <div key={meal.id} className="mt-2">
-                  <p className="font-semibold">{meal.meal_name}</p>
-                  <p>{meal.food_items}</p>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-gray-500">No preview available</p>
-            )}
-
-            <button className="mt-3 bg-black text-white px-4 py-2 rounded">
-              Subscribe
-            </button>
+      {/* RESULTS DISPLAY */}
+      {identity && (
+        <div className="mt-8 space-y-6">
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <h2 className="font-bold text-blue-900">Your Result: {identity.archetype_code}</h2>
+            <p className="text-sm text-blue-800 mt-1">
+              {archetypeDescriptions[identity.archetype_code]}
+            </p>
           </div>
+
+          {plan && (
+            <div className="border p-6 rounded-xl bg-white shadow-sm border-gray-200">
+              <h2 className="font-semibold text-gray-500 text-sm uppercase tracking-wider">Recommended Plan</h2>
+              <p className="text-2xl font-bold mt-1">{plan.title}</p>
+              <p className="text-xl text-green-600 font-semibold">£{plan.price}</p>
+
+              <div className="mt-6">
+                <h3 className="font-bold text-sm">Preview (Day 1)</h3>
+                <div className="space-y-2 mt-2">
+                  {meals.map((meal) => (
+                    <div key={meal.id} className="p-3 bg-gray-50 rounded border border-gray-100">
+                      <p className="font-bold text-xs uppercase text-gray-500">{meal.meal_name}</p>
+                      <p className="text-sm mt-1">{meal.food_items}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button 
+                onClick={handleSubscribe} 
+                disabled={isSubscribing}
+                className={`mt-8 w-full py-4 rounded-xl font-bold text-white transition ${
+                  isSubscribing ? "bg-gray-400 cursor-not-allowed" : "bg-black hover:bg-gray-900"
+                }`}
+              >
+                {isSubscribing ? "Setting up checkout..." : "Subscribe & Unlock Full Plan"}
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
