@@ -127,50 +127,89 @@ export default function NutritionPage() {
     <div className="p-6 space-y-6 max-w-xl mx-auto bg-gray-50 min-h-screen">
       <h1 className="text-3xl font-black italic uppercase tracking-tighter">Nutrition Assessment</h1>
 
-      {/* STEP 1 */}
+      {/* STEP 1: PHYSICAL DETAILS */}
       <div className="border p-6 space-y-4 rounded-2xl bg-white shadow-sm">
         <h2 className="font-bold text-lg uppercase tracking-tight border-b pb-2">1. Physical Details</h2>
+        
         <div className="grid grid-cols-2 gap-4">
-          <input placeholder="Weight (kg)" type="number" onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
-          <input placeholder="Height (cm)" type="number" onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <input placeholder="Age" type="number" onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
-          <input placeholder="Goal Weight (kg)" type="number" onChange={(e) => setInputs({ ...inputs, goal_weight: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
-        </div>
-        <select onChange={(e) => setInputs({ ...inputs, sex: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-        </select>
-        <select onChange={(e) => setInputs({ ...inputs, goal: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
-            <option value="fat_loss">Fat Loss</option>
-            <option value="muscle_gain">Muscle Gain</option>
-        </select>
-        <select onChange={(e) => setInputs({ ...inputs, activity_level: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
-            <option value="sedentary">Sedentary</option>
-            <option value="light">Lightly Active</option>
-            <option value="moderate">Moderately Active</option>
-            <option value="very_active">Very Active</option>
-        </select>
-        <input placeholder="Training Days (0-7)" type="number" onChange={(e) => setInputs({ ...inputs, training_days: Number(e.target.value) })} className="border p-3 w-full rounded-xl bg-gray-50" />
-      </div>
-
-      {/* STEP 2 */}
-      <div className="space-y-4">
-        <h2 className="font-bold text-lg uppercase tracking-tight">2. Behaviour</h2>
-        {questions.map((q) => (
-          <div key={q.id} className="p-4 border rounded-2xl bg-white shadow-sm">
-            <p className="text-sm font-bold mb-4">{q.text}</p>
-            <div className="flex justify-between">
-              {[1,2,3,4,5,6,7].map((num) => (
-                <button key={num} onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: num }))}
-                  className={`w-10 h-10 border rounded-full font-bold transition-all ${answers[q.id] === num ? "bg-black text-white scale-110" : "bg-gray-100 text-gray-400"}`}>
-                  {num}
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase text-gray-500 ml-1">Weight (kg)</label>
+            <input placeholder="e.g. 80" type="number" onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
           </div>
-        ))}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase text-gray-500 ml-1">Height (cm)</label>
+            <input placeholder="e.g. 180" type="number" onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase text-gray-500 ml-1">Age</label>
+            <input placeholder="e.g. 25" type="number" onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-bold uppercase text-gray-500 ml-1">Goal Weight (kg)</label>
+            <input 
+              placeholder="e.g. 75" 
+              type="number" 
+              onChange={(e) => setInputs({ ...inputs, goal_weight: Number(e.target.value) })} 
+              onBlur={(e) => {
+                const value = Number(e.target.value);
+                if (value > 0 && (value < 40 || value > 150)) {
+                  alert("Warning: Please consider that your goal weight may be unsafe.");
+                }
+              }}
+              className="border p-3 rounded-xl bg-gray-50" 
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-bold uppercase text-gray-500 ml-1">Gender</label>
+          <select onChange={(e) => setInputs({ ...inputs, sex: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
+              <option value="">Select option</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-bold uppercase text-gray-500 ml-1">Fitness Goal</label>
+          <select onChange={(e) => setInputs({ ...inputs, goal: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
+              <option value="">Select option</option>
+              <option value="fat_loss">Fat Loss</option>
+              <option value="muscle_gain">Muscle Gain</option>
+              <option value="recomposition">Recomposition</option>
+              <option value="athlete_performance">Athlete Performance</option>
+              <option value="maintenance">Maintenance</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-bold uppercase text-gray-500 ml-1">Activity Level</label>
+          <select onChange={(e) => setInputs({ ...inputs, activity_level: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
+              <option value="">Select option</option>
+              <option value="sedentary">Sedentary</option>
+              <option value="light">Lightly Active</option>
+              <option value="moderate">Moderately Active</option>
+              <option value="very_active">Very Active</option>
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <label className="text-xs font-bold uppercase text-gray-500 ml-1">Days you are willing to train per week?</label>
+          <input 
+            type="number" 
+            min="1" 
+            max="7" 
+            placeholder="1-7"
+            onChange={(e) => {
+              const val = Math.max(1, Math.min(7, Number(e.target.value)));
+              setInputs({ ...inputs, training_days: val });
+            }} 
+            className="border p-3 w-full rounded-xl bg-gray-50" 
+          />
+        </div>
       </div>
 
       <button onClick={handleSubmit} disabled={isCalculating} className="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest disabled:bg-gray-400 shadow-xl">
