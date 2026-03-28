@@ -351,7 +351,7 @@ export default function NutritionPage() {
 
          <button
   onClick={async () => {
-    const fallbackPriceId = "prod_UESgTcXZZt3jjA";
+    const fallbackPriceId = "price_XXXXXXXX";
 
     const priceId = plan?.stripe_product_id || fallbackPriceId;
 
@@ -365,7 +365,7 @@ export default function NutritionPage() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ priceId }),
+      body: JSON.stringify({ priceId: priceId }),
     });
 
     const data = await res.json();
