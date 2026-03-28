@@ -92,7 +92,8 @@ export default function NutritionPage() {
       value: mapLikert(answers[q.id]),
     }));
 
-    await supabase.from("nutrition_responses").insert(responseRows);
+    const { error } = await supabase.from("nutrition_responses").insert(responseRows);
+    if (error) return;
 
     await supabase.rpc("calculate_user_scores", { p_assessment_id: assessmentId });
     await supabase.rpc("assign_archetype_v3", { p_assessment_id: assessmentId });
@@ -173,24 +174,33 @@ export default function NutritionPage() {
         </select>
       </div>
 
-      <button
-        onClick={handleSubmit}
-        className="bg-black text-white px-4 py-2 rounded"
-      >
+      {/* STEP 2 */}
+      <div>
+        <h2 className="font-semibold">Step 2: Behaviour Assessment</h2>
+
+        {questions.map((q) => (
+          <div key={q.id} className="space-y-2">
+            <p>{q.text}</p>
+            <div className="flex gap-2">
+              {[1,2,3,4,5,6,7].map((num) => (
+                <button
+                  key={num}
+                  onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: num }))}
+                  className={`px-3 py-1 border ${
+                    answers[q.id] === num ? "bg-black text-white" : ""
+                  }`}
+                >
+                  {num}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button onClick={handleSubmit} className="bg-black text-white px-4 py-2 rounded">
         Generate Plan
       </button>
-
-      {plan && (
-        <div className="border p-4 mt-4">
-          <h2 className="font-semibold">Recommended Plan</h2>
-          <p>{plan.title}</p>
-          <p>£{plan.price}</p>
-
-          <button className="mt-3 bg-black text-white px-4 py-2 rounded">
-            Unlock Plan
-          </button>
-        </div>
-      )}
 
       {meals.length > 0 && (
         <div className="border p-4 mt-4">
@@ -198,15 +208,15 @@ export default function NutritionPage() {
 
           {meals.map((meal) => (
             <div key={meal.id}>
-              <p className="font-semibold">{meal.meal_name}</p>
+              <p>{meal.meal_name}</p>
               <p>{meal.food_items}</p>
             </div>
           ))}
 
           <button
             onClick={async () => {
-              const fallbackPriceId = "prod_UESgTcXZZt3jjA";
-              const priceId = plan?.stripe_product_id || fallbackPriceId;
+              const fallback = "prod_UESgTcXZZt3jjA";
+              const priceId = plan?.stripe_product_id || fallback;
 
               const res = await fetch("/api/create-checkout-session", {
                 method: "POST",
@@ -215,7 +225,6 @@ export default function NutritionPage() {
               });
 
               const data = await res.json();
-
               if (data.url) window.location.href = data.url;
             }}
             className="mt-3 bg-black text-white px-4 py-2 rounded"
