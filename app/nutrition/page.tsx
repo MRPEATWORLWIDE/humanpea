@@ -15,19 +15,11 @@ const questions = [
   { id: "q9", text: "I eat more when stressed", variable: "SS" },
 ];
 
-const archetypeDescriptions = {
-  RFU: "Your system struggles with carbohydrate regulation, leading to energy crashes and reactive hunger.",
-  AE: "You are metabolically flexible and can handle a wide range of foods with stable energy output.",
-  EP: "Your body stores energy efficiently, meaning fat loss requires tighter structure and consistency.",
-  CR: "Your nutrition is heavily influenced by stress, requiring structure and stability.",
-  MF: "You tend to under-eat relative to your needs, which impacts recovery and performance.",
-  OD: "You have high output demands and require consistent fuelling to maintain performance.",
-};
-
 export default function NutritionPage() {
   const [userId, setUserId] = useState(null);
   const [answers, setAnswers] = useState({});
   const [identity, setIdentity] = useState(null);
+  const [output, setOutput] = useState(null);
   const [plan, setPlan] = useState(null);
   const [meals, setMeals] = useState([]);
   const [isSubscribing, setIsSubscribing] = useState(false);
@@ -61,20 +53,17 @@ export default function NutritionPage() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert(`Stripe Error: ${data.error}. Check your Vercel Environment Variables.`);
+        alert(`Checkout Error: ${data.error}`);
         setIsSubscribing(false);
       }
     } catch (err) {
-      alert("Connection error. Try again.");
+      alert("Checkout failed. Please check your connection.");
       setIsSubscribing(false);
     }
   };
 
   const handleSubmit = async () => {
     if (!userId) { alert("Please login first"); return; }
-    if (!inputs.weight || !inputs.height || !inputs.age) { alert("Please complete Step 1"); return; }
-    if (Object.keys(answers).length !== questions.length) { alert("Please answer all questions in Step 2"); return; }
-
     setIsCalculating(true);
 
     try {
@@ -87,86 +76,87 @@ export default function NutritionPage() {
 
       await supabase.from("nutrition_responses").insert(responseRows);
       
-      // Run Calculations
       await supabase.rpc("calculate_user_scores", { p_assessment_id: assessment.id });
       await supabase.rpc("assign_archetype_v3", { p_assessment_id: assessment.id });
       await supabase.rpc("generate_nutrition_output", { p_assessment_id: assessment.id });
 
-      // Retry Logic: Wait for DB to catch up
+      // Fetch Results with Retry
       let attempts = 0;
-      let identityData = null;
-      let outputData = null;
+      let idD = null;
+      let outD = null;
 
-      while (attempts < 3 && !identityData) {
-        await new Promise(r => setTimeout(r, 1000)); // Wait 1 second
-        const { data: idD } = await supabase.from("user_archetype").select("*").eq("assessment_id", assessment.id).maybeSingle();
-        const { data: outD } = await supabase.from("nutrition_outputs").select("*").eq("assessment_id", assessment.id).maybeSingle();
-        identityData = idD;
-        outputData = outD;
+      while (attempts < 3 && !idD) {
+        await new Promise(r => setTimeout(r, 1200));
+        const { data: i } = await supabase.from("user_archetype").select("*").eq("assessment_id", assessment.id).maybeSingle();
+        const { data: o } = await supabase.from("nutrition_outputs").select("*").eq("assessment_id", assessment.id).maybeSingle();
+        idD = i;
+        outD = o;
         attempts++;
       }
 
-      if (outputData) {
+      setIdentity(idD);
+      setOutput(outD);
+
+      if (outD) {
         const { data: planData } = await supabase.from("nutrition_plans")
-          .select("*").eq("calorie_band", outputData.calorie_band).eq("structure_type", outputData.structure_type).maybeSingle();
+          .select("*").eq("calorie_band", outD.calorie_band).eq("structure_type", outD.structure_type).maybeSingle();
 
         setPlan(planData);
         if (planData) {
-          const { data: mealsData } = await supabase.from("nutrition_plan_meals")
+          const { data: mD } = await supabase.from("nutrition_plan_meals")
             .select("*").eq("plan_id", planData.id).eq("day", 1).in("meal_number", [1, 2]).order("meal_number", { ascending: true });
-          setMeals(mealsData || []);
+          setMeals(mD || []);
         }
       }
-      setIdentity(identityData);
     } catch (e) {
-      alert("Calculation timed out. Please refresh and try again.");
+      alert("Error generating output.");
     } finally {
       setIsCalculating(false);
     }
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold">Nutrition Assessment</h1>
+    <div className="p-6 space-y-6 max-w-xl mx-auto bg-gray-50 min-h-screen">
+      <h1 className="text-3xl font-black italic uppercase tracking-tighter">Nutrition Assessment</h1>
 
-      <div className="border p-4 space-y-4 rounded-lg bg-white">
-        <h2 className="font-semibold text-lg border-b pb-2">Step 1: Your Details</h2>
+      {/* STEP 1 */}
+      <div className="border p-6 space-y-4 rounded-2xl bg-white shadow-sm">
+        <h2 className="font-bold text-lg uppercase tracking-tight border-b pb-2">1. Physical Details</h2>
         <div className="grid grid-cols-2 gap-4">
-          <input placeholder="Weight (kg)" type="number" onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })} className="border p-2 rounded" />
-          <input placeholder="Height (cm)" type="number" onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })} className="border p-2 rounded" />
+          <input placeholder="Weight (kg)" type="number" onChange={(e) => setInputs({ ...inputs, weight: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
+          <input placeholder="Height (cm)" type="number" onChange={(e) => setInputs({ ...inputs, height: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <input placeholder="Age" type="number" onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })} className="border p-2 rounded" />
-          <input placeholder="Goal Weight (kg)" type="number" onChange={(e) => setInputs({ ...inputs, goal_weight: Number(e.target.value) })} className="border p-2 rounded" />
+          <input placeholder="Age" type="number" onChange={(e) => setInputs({ ...inputs, age: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
+          <input placeholder="Goal Weight (kg)" type="number" onChange={(e) => setInputs({ ...inputs, goal_weight: Number(e.target.value) })} className="border p-3 rounded-xl bg-gray-50" />
         </div>
-        <div className="grid grid-cols-1 gap-4">
-            <select onChange={(e) => setInputs({ ...inputs, sex: e.target.value })} className="border p-2 rounded bg-white">
-                <option value="M">Male</option>
-                <option value="F">Female</option>
-            </select>
-            <select onChange={(e) => setInputs({ ...inputs, goal: e.target.value })} className="border p-2 rounded bg-white">
-                <option value="fat_loss">Fat Loss</option>
-                <option value="muscle_gain">Muscle Gain</option>
-            </select>
-            <select onChange={(e) => setInputs({ ...inputs, activity_level: e.target.value })} className="border p-2 rounded bg-white">
-                <option value="sedentary">Sedentary</option>
-                <option value="light">Lightly Active</option>
-                <option value="moderate">Moderately Active</option>
-                <option value="very_active">Very Active</option>
-            </select>
-            <input placeholder="Training Days (0-7)" type="number" onChange={(e) => setInputs({ ...inputs, training_days: Number(e.target.value) })} className="border p-2 rounded" />
-        </div>
+        <select onChange={(e) => setInputs({ ...inputs, sex: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+        </select>
+        <select onChange={(e) => setInputs({ ...inputs, goal: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
+            <option value="fat_loss">Fat Loss</option>
+            <option value="muscle_gain">Muscle Gain</option>
+        </select>
+        <select onChange={(e) => setInputs({ ...inputs, activity_level: e.target.value })} className="border p-3 w-full rounded-xl bg-gray-50">
+            <option value="sedentary">Sedentary</option>
+            <option value="light">Lightly Active</option>
+            <option value="moderate">Moderately Active</option>
+            <option value="very_active">Very Active</option>
+        </select>
+        <input placeholder="Training Days (0-7)" type="number" onChange={(e) => setInputs({ ...inputs, training_days: Number(e.target.value) })} className="border p-3 w-full rounded-xl bg-gray-50" />
       </div>
 
-      <div className="space-y-6">
-        <h2 className="font-semibold text-lg">Step 2: Behaviour Assessment</h2>
+      {/* STEP 2 */}
+      <div className="space-y-4">
+        <h2 className="font-bold text-lg uppercase tracking-tight">2. Behaviour</h2>
         {questions.map((q) => (
-          <div key={q.id} className="p-4 border rounded-lg bg-white">
-            <p className="text-sm font-medium mb-3">{q.text}</p>
+          <div key={q.id} className="p-4 border rounded-2xl bg-white shadow-sm">
+            <p className="text-sm font-bold mb-4">{q.text}</p>
             <div className="flex justify-between">
               {[1,2,3,4,5,6,7].map((num) => (
                 <button key={num} onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: num }))}
-                  className={`w-10 h-10 border rounded-full transition ${answers[q.id] === num ? "bg-black text-white" : "bg-gray-50"}`}>
+                  className={`w-10 h-10 border rounded-full font-bold transition-all ${answers[q.id] === num ? "bg-black text-white scale-110" : "bg-gray-100 text-gray-400"}`}>
                   {num}
                 </button>
               ))}
@@ -175,39 +165,82 @@ export default function NutritionPage() {
         ))}
       </div>
 
-      <button onClick={handleSubmit} disabled={isCalculating} className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg disabled:bg-gray-400">
-        {isCalculating ? "Calculating Your Archetype..." : "Generate My Plan"}
+      <button onClick={handleSubmit} disabled={isCalculating} className="w-full bg-black text-white py-5 rounded-2xl font-black uppercase tracking-widest disabled:bg-gray-400 shadow-xl">
+        {isCalculating ? "Calculating..." : "Generate My Nutrition Plan"}
       </button>
 
-      {identity && (
-        <div className="mt-8 space-y-6 animate-in fade-in duration-500">
-          <div className="p-6 bg-blue-600 text-white rounded-xl shadow-lg">
-            <h2 className="text-sm uppercase tracking-widest opacity-80">Your Archetype</h2>
-            <p className="text-3xl font-black">{identity.archetype_code}</p>
-            <p className="mt-3 text-sm leading-relaxed opacity-90">
-                {archetypeDescriptions[identity.archetype_code] || "Analysis complete. View your plan below."}
-            </p>
+      {/* RESULTS BLOCK */}
+      {identity && output && (
+        <div className="mt-10 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          
+          {/* ARCHETYPE DISPLAY */}
+          <div className="p-6 bg-black text-white rounded-3xl">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Result Identification</p>
+            <h2 className="text-4xl font-black italic uppercase">{identity.archetype}-{identity.variant}</h2>
+            <div className="mt-4 grid grid-cols-3 gap-2 text-[10px] font-bold uppercase">
+                <div className="bg-white/10 p-2 rounded">Type: {identity.type}</div>
+                <div className="bg-white/10 p-2 rounded">Arch: {identity.archetype}</div>
+                <div className="bg-white/10 p-2 rounded">Var: {identity.variant}</div>
+            </div>
           </div>
 
-          {plan && (
-            <div className="border p-6 rounded-xl bg-white shadow-xl border-gray-100">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Recommended Plan</p>
-              <h2 className="text-2xl font-black mt-1 uppercase italic">{plan.title.replace(/_/g, ' ')}</h2>
-              <p className="text-2xl text-green-600 font-black mt-1">£{plan.price}</p>
+          {/* NUTRITION OUTPUTS */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="p-4 bg-white border rounded-2xl shadow-sm">
+                <p className="text-[10px] font-bold text-gray-400 uppercase">Target Calories</p>
+                <p className="text-2xl font-black">{output.target_calories} kcal</p>
+            </div>
+            <div className="p-4 bg-white border rounded-2xl shadow-sm">
+                <p className="text-[10px] font-bold text-gray-400 uppercase">Protein</p>
+                <p className="text-2xl font-black">{output.protein}g</p>
+            </div>
+            <div className="p-4 bg-white border rounded-2xl shadow-sm">
+                <p className="text-[10px] font-bold text-gray-400 uppercase">Carbs</p>
+                <p className="text-2xl font-black">{output.carbs}g</p>
+            </div>
+            <div className="p-4 bg-white border rounded-2xl shadow-sm">
+                <p className="text-[10px] font-bold text-gray-400 uppercase">Fats</p>
+                <p className="text-2xl font-black">{output.fats}g</p>
+            </div>
+          </div>
 
-              <div className="mt-6 space-y-3">
-                <p className="text-xs font-bold text-gray-400 uppercase">Day 1 Preview</p>
-                {meals.map((meal) => (
-                  <div key={meal.id} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                    <p className="font-black text-[10px] text-gray-400 uppercase">{meal.meal_name}</p>
-                    <p className="text-sm font-medium text-gray-800">{meal.food_items}</p>
-                  </div>
-                ))}
+          {/* PLAN BLOCK */}
+          {plan && (
+            <div className="border-4 border-black p-8 rounded-3xl bg-white shadow-2xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-black text-white px-4 py-1 text-[10px] font-black uppercase">Recommended</div>
+              <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Recommended Plan</p>
+              <h2 className="text-3xl font-black mt-2 uppercase italic leading-none">{plan.title.replace(/_/g, ' ')}</h2>
+              <p className="text-3xl text-green-600 font-black mt-2">£{plan.price}</p>
+
+              <div className="mt-8 space-y-4">
+                <div className="flex justify-between border-b pb-2 text-sm">
+                    <span className="font-bold text-gray-400 uppercase">Diet Route</span>
+                    <span className="font-black italic uppercase">{output.diet_route}</span>
+                </div>
+                <div className="flex justify-between border-b pb-2 text-sm">
+                    <span className="font-bold text-gray-400 uppercase">Structure</span>
+                    <span className="font-black italic uppercase">{output.meal_structure}</span>
+                </div>
+              </div>
+
+              {/* MEAL PREVIEW */}
+              <div className="mt-8 space-y-3">
+                <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Day 1 Preview</p>
+                {meals.length > 0 ? (
+                    meals.map((meal) => (
+                    <div key={meal.id} className="p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                        <p className="font-black text-[10px] text-gray-400 uppercase tracking-tighter">{meal.meal_name}</p>
+                        <p className="text-sm font-bold text-gray-900 mt-1 uppercase leading-tight">{meal.food_items}</p>
+                    </div>
+                    ))
+                ) : (
+                    <p className="text-xs text-gray-400 italic">Plan preview loading...</p>
+                )}
               </div>
 
               <button onClick={handleSubscribe} disabled={isSubscribing}
-                className="mt-8 w-full py-4 bg-black text-white rounded-xl font-black uppercase tracking-tighter hover:scale-[1.02] transition-transform disabled:bg-gray-400">
-                {isSubscribing ? "Opening Secure Checkout..." : "Unlock Full 12-Week Plan"}
+                className="mt-10 w-full py-5 bg-black text-white rounded-2xl font-black uppercase tracking-widest hover:bg-gray-900 transition-all shadow-xl active:scale-95 disabled:bg-gray-400">
+                {isSubscribing ? "Securing Checkout..." : "Unlock Full 12-Week Plan"}
               </button>
             </div>
           )}
