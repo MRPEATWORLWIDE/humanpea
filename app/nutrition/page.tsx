@@ -3,6 +3,15 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 
+const archetypeDescriptions = {
+  RFU: "Your system struggles with carbohydrate regulation, leading to energy crashes and reactive hunger.",
+  AE: "You are metabolically flexible and can handle a wide range of foods with stable energy output.",
+  EP: "Your body stores energy efficiently, meaning fat loss requires tighter structure and consistency.",
+  CR: "Your nutrition is heavily influenced by stress, requiring structure and stability.",
+  MF: "You tend to under-eat relative to your needs, which impacts recovery and performance.",
+  OD: "You have high output demands and require consistent fuelling to maintain performance.",
+};
+
 const questions = [
   { id: "q1", text: "My energy levels remain stable throughout the day", variable: "ES" },
   { id: "q2", text: "I experience energy crashes during the day", variable: "ES" },
@@ -80,13 +89,12 @@ export default function NutritionPage() {
       await supabase.rpc("assign_archetype_v3", { p_assessment_id: assessment.id });
       await supabase.rpc("generate_nutrition_output", { p_assessment_id: assessment.id });
 
-      // Fetch Results with Retry
       let attempts = 0;
       let idD = null;
       let outD = null;
 
       while (attempts < 3 && !idD) {
-        await new Promise(r => setTimeout(r, 1200));
+        await new Promise(r => setTimeout(r, 1500));
         const { data: i } = await supabase.from("user_archetype").select("*").eq("assessment_id", assessment.id).maybeSingle();
         const { data: o } = await supabase.from("nutrition_outputs").select("*").eq("assessment_id", assessment.id).maybeSingle();
         idD = i;
@@ -173,22 +181,23 @@ export default function NutritionPage() {
       {identity && output && (
         <div className="mt-10 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
           
-          {/* ARCHETYPE DISPLAY */}
           <div className="p-6 bg-black text-white rounded-3xl">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Result Identification</p>
             <h2 className="text-4xl font-black italic uppercase">{identity.archetype}-{identity.variant}</h2>
-            <div className="mt-4 grid grid-cols-3 gap-2 text-[10px] font-bold uppercase">
+            <p className="mt-3 text-sm text-white/70">
+                {archetypeDescriptions[identity.archetype] || "Analysis complete."}
+            </p>
+            <div className="mt-4 grid grid-cols-3 gap-2 text-[10px] font-bold uppercase text-center">
                 <div className="bg-white/10 p-2 rounded">Type: {identity.type}</div>
                 <div className="bg-white/10 p-2 rounded">Arch: {identity.archetype}</div>
                 <div className="bg-white/10 p-2 rounded">Var: {identity.variant}</div>
             </div>
           </div>
 
-          {/* NUTRITION OUTPUTS */}
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 bg-white border rounded-2xl shadow-sm">
                 <p className="text-[10px] font-bold text-gray-400 uppercase">Target Calories</p>
-                <p className="text-2xl font-black">{output.target_calories} kcal</p>
+                <p className="text-2xl font-black">{output.calories_target} kcal</p>
             </div>
             <div className="p-4 bg-white border rounded-2xl shadow-sm">
                 <p className="text-[10px] font-bold text-gray-400 uppercase">Protein</p>
@@ -204,7 +213,6 @@ export default function NutritionPage() {
             </div>
           </div>
 
-          {/* PLAN BLOCK */}
           {plan && (
             <div className="border-4 border-black p-8 rounded-3xl bg-white shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-black text-white px-4 py-1 text-[10px] font-black uppercase">Recommended</div>
@@ -223,7 +231,6 @@ export default function NutritionPage() {
                 </div>
               </div>
 
-              {/* MEAL PREVIEW */}
               <div className="mt-8 space-y-3">
                 <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Day 1 Preview</p>
                 {meals.length > 0 ? (
