@@ -285,7 +285,7 @@ export default function NutritionPage() {
           {plan && (
             <div className="border-4 border-black p-8 rounded-3xl bg-white shadow-2xl relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-black text-white px-4 py-1 text-[10px] font-black uppercase">Recommended</div>
-              <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Recommended Plan</p>
+              <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Nutrition Strategy</p>
               <h2 className="text-3xl font-black mt-2 uppercase italic leading-none">{plan.title.replace(/_/g, ' ')}</h2>
               <p className="text-3xl text-green-600 font-black mt-2">£{plan.price}</p>
 
@@ -316,7 +316,7 @@ export default function NutritionPage() {
 
               <button onClick={handleSubscribe} disabled={isSubscribing}
                 className="mt-10 w-full py-5 bg-black text-white rounded-2xl font-black uppercase tracking-widest hover:bg-gray-900 transition-all shadow-xl active:scale-95 disabled:bg-gray-400">
-                {isSubscribing ? "Securing Checkout..." : "Unlock Full 12-Week Plan"}
+                {isSubscribing ? "Securing Checkout..." : "Generate My Full 12-Week Plan"}
               </button>
             </div>
           )}
