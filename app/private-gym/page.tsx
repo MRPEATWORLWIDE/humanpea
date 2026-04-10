@@ -39,7 +39,7 @@ export default function PrivateGymPage() {
             <span className="opacity-70">&apos;FUNCTIONAL&apos;</span> PRIVATE GYM TRAINING SYSTEM
           </h1>
           <p className="mt-4 max-w-prose text-sm text-black/70">
-            1-1 PT sessions from my private garage gym. Structured coaching, progressive training, and transformation-focused support.
+            1-1 PT sessions from a private garage-based training studio. Structured coaching, progressive training, and transformation-focused support.
           </p>
         </div>
       </section>
@@ -54,23 +54,23 @@ export default function PrivateGymPage() {
           }}
         >
           <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-[var(--hp-grid-gap)]">
-            {/* STARTER */}
+            {/* STARTER_30 */}
             <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <div>
-                <h3 className="text-lg font-semibold tracking-wide">STARTER</h3>
+                <h3 className="text-lg font-semibold tracking-wide">STARTER_30</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  5 Sessions | Private Gym | Technique | Baseline | Entry-Level Structure
+                  5 Sessions | 30 Minutes | Private Gym | Technique | Baseline
                 </p>
                 <p className="mt-3 text-sm text-black/65">
-                  Designed for those looking to build momentum, improve form, and establish a strong training foundation.
+                  Designed to build initial momentum, improve movement quality, and establish a strong training foundation. Ideal for those starting out or returning to training.
                 </p>
               </div>
               <div className="mt-6">
-                <div className="text-2xl font-bold">£200</div>
+                <div className="text-2xl font-bold">£150</div>
                 <div className="mt-3">
                   <Link
                     href="#"
-                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-black/15 px-4 py-2 text-sm font-medium text-black hover:bg-black/5 transition"
                   >
                     Buy now
                   </Link>
@@ -78,15 +78,15 @@ export default function PrivateGymPage() {
               </div>
             </article>
 
-            {/* CONSISTENCY */}
-            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
+            {/* CONSISTENCY_45 */}
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/10 p-[var(--hp-card-pad)]">
               <div>
-                <h3 className="text-lg font-semibold tracking-wide">CONSISTENCY</h3>
+                <h3 className="text-lg font-semibold tracking-wide">CONSISTENCY_45</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  10 Sessions | Private Gym | Structured Progression | Coaching | Accountability
+                  10 Sessions | 45 Minutes | Private Gym | Structured Progression | Coaching
                 </p>
                 <p className="mt-3 text-sm text-black/65">
-                  Designed for building consistency through structured training, improved movement quality, and light nutrition guidance.
+                  Designed for building consistency through structured training and progressive overload. Includes light nutrition guidance with simple calorie ranges, protein targets, and key habits to support your training.
                 </p>
               </div>
               <div className="mt-6">
@@ -94,7 +94,7 @@ export default function PrivateGymPage() {
                 <div className="mt-3">
                   <Link
                     href="#"
-                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
+                    className="inline-flex items-center justify-center rounded-lg border border-black/15 px-4 py-2 text-sm font-medium text-black hover:bg-black/5 transition"
                   >
                     Buy now
                   </Link>
@@ -102,15 +102,15 @@ export default function PrivateGymPage() {
               </div>
             </article>
 
-            {/* TRANSFORMATION */}
-            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
+            {/* TRANSFORMATION_60 */}
+            <article className="flex flex-col justify-between rounded-xl border-2 border-purple-500 bg-black/15 p-[var(--hp-card-pad)]">
               <div>
-                <h3 className="text-lg font-semibold tracking-wide">TRANSFORMATION</h3>
+                <h3 className="text-lg font-semibold tracking-wide">TRANSFORMATION_60</h3>
                 <p className="mt-2 text-sm text-black/75">
-                  20 Sessions | Private Gym | Transformation | Precision Coaching | Nutrition Plan
+                  20 Sessions | 60 Minutes | Private Gym | Transformation | Precision Coaching | Nutrition System
                 </p>
                 <p className="mt-3 text-sm text-black/65">
-                  Designed for measurable body composition change, progressive training, full nutrition setup, weekly check-ins, and progress tracking.
+                  Designed for measurable body composition change. Includes a full nutrition plan with exact calorie targets, macros, structured meal setup, weekly check-ins, and ongoing adjustments to ensure consistent progress.
                 </p>
               </div>
               <div className="mt-6">
@@ -118,7 +118,7 @@ export default function PrivateGymPage() {
                 <div className="mt-3">
                   <Link
                     href="#"
-                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
+                    className="inline-flex items-center justify-center rounded-lg bg-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/90 transition"
                   >
                     Buy now
                   </Link>
