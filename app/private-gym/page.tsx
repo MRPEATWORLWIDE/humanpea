@@ -67,7 +67,7 @@ export default function PrivateGymPage() {
                 <div className="text-2xl font-bold">£150</div>
                 <div className="mt-3">
                   <Link
-                    href="https://buy.stripe.com/aFa7sL26GcT4gSxgDN67S09"
+                    href="https://buy.stripe.com/7sY3cvaDc5qC9q52MX67S0a"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
