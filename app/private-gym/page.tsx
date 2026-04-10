@@ -24,10 +24,7 @@ export default function PrivateGymPage() {
       `}</style>
 
       {/* HERO */}
-      <section
-        className="border-b border-black/10"
-        style={{ minHeight: "var(--hp-hero-min-h)" }}
-      >
+      <section className="border-b border-black/10" style={{ minHeight: "var(--hp-hero-min-h)" }}>
         <div
           className="mx-auto flex h-full w-full flex-col justify-center"
           style={{
@@ -53,7 +50,8 @@ export default function PrivateGymPage() {
             padding: "0 var(--hp-section-pad-x)",
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-3 grid-flow-row gap-[var(--hp-grid-gap)]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
+
             {/* STARTER_30 */}
             <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <div>
@@ -69,8 +67,10 @@ export default function PrivateGymPage() {
                 <div className="text-2xl font-bold">£150</div>
                 <div className="mt-3">
                   <Link
-                    href="#"
-                    className="inline-flex items-center justify-center rounded-lg border border-black/15 px-4 py-2 text-sm font-medium text-black hover:bg-black/5 transition"
+                    href="https://buy.stripe.com/aFa7sL26GcT4gSxgDN67S09"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
@@ -79,7 +79,7 @@ export default function PrivateGymPage() {
             </article>
 
             {/* CONSISTENCY_45 */}
-            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/10 p-[var(--hp-card-pad)]">
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">CONSISTENCY_45</h3>
                 <p className="mt-2 text-sm text-black/75">
@@ -93,8 +93,10 @@ export default function PrivateGymPage() {
                 <div className="text-2xl font-bold">£375</div>
                 <div className="mt-3">
                   <Link
-                    href="#"
-                    className="inline-flex items-center justify-center rounded-lg border border-black/15 px-4 py-2 text-sm font-medium text-black hover:bg-black/5 transition"
+                    href="https://buy.stripe.com/aFa7sL26GcT4gSxgDN67S09"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
@@ -103,7 +105,7 @@ export default function PrivateGymPage() {
             </article>
 
             {/* TRANSFORMATION_60 */}
-            <article className="flex flex-col justify-between rounded-xl border-2 border-purple-500 bg-black/15 p-[var(--hp-card-pad)]">
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">TRANSFORMATION_60</h3>
                 <p className="mt-2 text-sm text-black/75">
@@ -117,14 +119,17 @@ export default function PrivateGymPage() {
                 <div className="text-2xl font-bold">£560</div>
                 <div className="mt-3">
                   <Link
-                    href="#"
-                    className="inline-flex items-center justify-center rounded-lg bg-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/90 transition"
+                    href="https://buy.stripe.com/28EbJ1fXw4my6dT2MX67S08"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                   >
                     Buy now
                   </Link>
                 </div>
               </div>
             </article>
+
           </div>
         </div>
       </section>
