@@ -40,7 +40,7 @@ export default function PayPage() {
           </h1>
 
           <p className="mt-4 max-w-prose text-sm text-black/70">
-            10 Session Couple Training Block for Vista residents.
+            Structured partner training for Vista residents.
           </p>
         </div>
       </section>
@@ -53,15 +53,45 @@ export default function PayPage() {
             padding: "0 var(--hp-section-pad-x)",
           }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-[var(--hp-grid-gap)]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-[var(--hp-grid-gap)]">
+
+            {/* 45 MIN */}
+
             <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
+
               <div>
                 <h3 className="text-lg font-semibold tracking-wide">
-                  VISTA_COUPLE
+                  VISTA_COUPLE_45
                 </h3>
 
                 <p className="mt-2 text-sm text-black/75">
-                  10 Sessions | Vista Gym | Partner Training | Structured Progression | Adaptive Programming
+                  10 x 45-Minute Sessions | Vista Gym | Partner Training
+                </p>
+
+                <p className="mt-3 text-sm text-black/65">
+                  Structured shared training designed for couples looking to
+                  build consistency, accountability and progression together
+                  within a focused 45-minute training format.
+                </p>
+              </div>
+
+              <div className="mt-6">
+                <div className="text-2xl font-bold">£620</div>
+              </div>
+
+            </article>
+
+            {/* 60 MIN */}
+
+            <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
+
+              <div>
+                <h3 className="text-lg font-semibold tracking-wide">
+                  VISTA_COUPLE_60
+                </h3>
+
+                <p className="mt-2 text-sm text-black/75">
+                  10 x 60-Minute Sessions | Vista Gym | Partner Training
                 </p>
 
                 <p className="mt-3 text-sm text-black/65">
@@ -75,20 +105,26 @@ export default function PayPage() {
               <div className="mt-6">
                 <div className="text-2xl font-bold">£720</div>
               </div>
+
             </article>
 
+            {/* BANK DETAILS */}
+
             <article className="flex flex-col justify-between rounded-xl border border-black/10 bg-black/5 p-[var(--hp-card-pad)]">
+
               <div>
+
                 <h3 className="text-lg font-semibold tracking-wide">
                   Bank Transfer
                 </h3>
 
                 <p className="mt-2 text-sm text-black/75">
-                  Please include the reference below when making your transfer so
-                  your session block can be allocated correctly.
+                  Please include the reference below when making your transfer
+                  so your session block can be allocated correctly.
                 </p>
 
                 <div className="mt-6 space-y-3 text-sm">
+
                   <div className="flex justify-between">
                     <span className="text-black/60">Account Name</span>
                     <span className="font-medium">Joshua Peat</span>
@@ -108,18 +144,24 @@ export default function PayPage() {
                     <span className="text-black/60">Reference</span>
                     <span className="font-medium">COUPLE BLOCK</span>
                   </div>
+
                 </div>
+
               </div>
 
               <div className="mt-6">
+
                 <button
                   onClick={() => navigator.clipboard.writeText("COUPLE BLOCK")}
                   className="inline-flex items-center justify-center rounded-lg border border-[#00C853] px-4 py-2 text-sm font-medium text-black hover:bg-[#00C853]/10 transition"
                 >
                   Copy Payment Reference
                 </button>
+
               </div>
+
             </article>
+
           </div>
         </div>
       </section>
